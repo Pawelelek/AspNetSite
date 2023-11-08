@@ -25,7 +25,7 @@ pipeline  {
             steps {
                 echo 'Creating docker image ...'
                 dir('.'){
-                    sh "docker build -t Pawelelek/aspnetsite . "
+                    sh "docker build -t pawelelek32/topnews . "
                 }
             }
         }
@@ -43,7 +43,7 @@ pipeline  {
             steps {
                 echo " ============== pushing image =================="
                 sh '''
-                docker push Pawelelek/aspnetsite:latest
+                docker push pawelelek32/topnews:latest
                 '''
             }
         }
@@ -51,7 +51,7 @@ pipeline  {
             steps {
                 echo " ============== pushing image =================="
                 sh '''
-                docker run -d --name aspnetsite -p 80:80 Pawelelek/aspnetsite:latest
+                docker run -d --name topnews -p 80:80 pawelelek32/topnews:latest
                 '''
             }
         }
