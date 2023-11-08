@@ -18,14 +18,14 @@ pipeline  {
           }
          stage ("Run MSSQL container"){
             steps{
-                sh 'docker run -v /home/db:/var/opt/mssql -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Qwerty-1" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest'
+                sh 'docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Qwerty-1" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest'
             }
         }
         stage("Create docker image") {
             steps {
                 echo 'Creating docker image ...'
                 dir('.'){
-                    sh "docker build -t macnaer/walter . "
+                    sh "docker build -t Pawelelek/aspnetsite . "
                 }
             }
         }
@@ -43,7 +43,7 @@ pipeline  {
             steps {
                 echo " ============== pushing image =================="
                 sh '''
-                docker push macnaer/walter:latest
+                docker push Pawelelek/aspnetsite:latest
                 '''
             }
         }
@@ -51,7 +51,7 @@ pipeline  {
             steps {
                 echo " ============== pushing image =================="
                 sh '''
-                docker run -d --name walter -p 80:80 macnaer/walter:latest
+                docker run -d --name aspnetsite -p 80:80 Pawelelek/aspnetsite:latest
                 '''
             }
         }
