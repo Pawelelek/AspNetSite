@@ -24,7 +24,7 @@ namespace TopNewsApi.Infrastructure
         {
             services.AddIdentity<AppUser, IdentityRole>(options =>
             {
-                options.SignIn.RequireConfirmedEmail = true;
+                options.SignIn.RequireConfirmedEmail = false;
                 options.Lockout.MaxFailedAccessAttempts = 5;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(5);
                 options.Password.RequireDigit = true;

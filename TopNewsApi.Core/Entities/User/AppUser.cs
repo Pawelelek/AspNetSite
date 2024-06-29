@@ -12,5 +12,6 @@ namespace TopNewsApi.Core.Entities.User
     {
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
+        List<IEnumerable<SongUser>> SongList { get; set; }
     }
 }

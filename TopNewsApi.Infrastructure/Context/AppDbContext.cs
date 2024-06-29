@@ -17,5 +17,7 @@ namespace TopNewsApi.Infrastructure.Context
 
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<RefreshToken> RefreshToken { get; set; }
+        public DbSet<Song> Songs { get; set; }
+        public DbSet<SongUser> SongsUsers { get; set; }
     }
 }
