@@ -1,9 +1,16 @@
 ﻿using AutoMapper;
+using Google.Apis.Services;
+using Google.Apis.YouTube.v3;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +18,9 @@ using TopNewsApi.Core.DTO_s.Token;
 using TopNewsApi.Core.DTO_s.User;
 using TopNewsApi.Core.Entities.Tokens;
 using TopNewsApi.Core.Entities.User;
+using TopNewsApi.Core.Interfaces;
+using YoutubeDLSharp;
+using YoutubeDLSharp.Options;
 
 namespace TopNewsApi.Core.Services
 {
@@ -22,8 +32,9 @@ namespace TopNewsApi.Core.Services
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
         private readonly JwtService _jwtService;
-
-        public UserService(JwtService jwtService, RoleManager<IdentityRole> roleManager, IConfiguration config, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IMapper mapper)
+        private readonly ISongUserService _songUserService;
+        private readonly ISongService _songService;
+        public UserService(JwtService jwtService, RoleManager<IdentityRole> roleManager, IConfiguration config, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IMapper mapper, ISongUserService songUserService, ISongService songService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -31,6 +42,8 @@ namespace TopNewsApi.Core.Services
             _config = config;
             _roleManager = roleManager;
             _jwtService = jwtService;
+            _songService = songService;
+            _songUserService = songUserService;
         }
 
         public async Task<ServiceResponse> CreateAsync(CreateUserDto model)
@@ -74,6 +87,122 @@ namespace TopNewsApi.Core.Services
             };
 
         }
+
+        public async Task<ServiceResponse> GetSongsAsync(string userId)
+        {
+            List<Song> songList = new List<Song>();
+            var res = await _songUserService.GetAll(userId);
+            if (res != null)
+            {
+                foreach (var item in res)
+                {
+                    var result = await _songService.GetById(item.SongId);
+                    if (!result.Success)
+                    {
+                        return new ServiceResponse
+                        {
+                            Success = false,
+                            Message = "Error converting and fetching video.",
+                            Payload = null
+                        };
+                    }
+                    songList.Add(result.Payload as Song);
+                }
+                return new ServiceResponse
+                {
+                    Success = true,
+                    Message = "Success.",
+                    Payload = songList
+                };
+            }
+            return new ServiceResponse
+            {
+                Success = false,
+                Message = "res is null.",
+                Payload = null
+            };
+        }
+
+        public async Task<ServiceResponse> DeleteSongAsync(int id)
+        {
+            await _songService.Delete(id);
+            return new ServiceResponse
+            {
+                Success = true,
+                Message = "Song successfully deleted."
+            };
+        }
+
+        public async Task<ServiceResponse> ConvertAndFetchVideoAsync(string videoUrl, string userId)
+        {
+            try
+            {
+                var res1 = await _songService.GetAll();
+                var youtubeDl = new YoutubeDL();
+                SongsDto song = new SongsDto();
+                SongUserDto songUser = new SongUserDto();
+                string finalUrl = "";
+                var videoInfo = await youtubeDl.RunVideoDataFetch(videoUrl);
+                if (videoInfo.Data == null)
+                {
+                    return new ServiceResponse
+                    {
+                        Success = false,
+                        Message = "Bad url."
+                    };
+                }
+                var songUserList = await _songUserService.GetAll(userId);
+                if (songUserList != null)
+                {
+                    foreach (var item in songUserList)
+                    {
+                        var result = await _songService.GetById(item.SongId);
+                        if (result.Success)
+                        {
+                            if ((result.Payload as Song).Name == videoInfo.Data.Title)
+                            {
+                                return new ServiceResponse
+                                {
+                                    Success = false,
+                                    Message = "This song already exist in playlist"
+                                };
+                            }
+                        }
+                    }
+                }
+                var desiredUrl = videoInfo.Data.Formats.Where(format => format.FormatId == "251");
+                foreach (var item in desiredUrl)
+                {
+                    finalUrl = item.Url;
+                    break;
+                }
+                song.SongUrl = finalUrl;
+                song.Name = videoInfo.Data.Title;
+                await _songService.Create(song);
+                songUser.UserId = userId;
+                var res = await _songService.GetByName(videoInfo.Data.Title);
+                songUser.SongId = (int)res.Payload;
+                await _songUserService.Create(songUser);
+                string[] res2 = { song.Name, song.SongUrl};             
+                return new ServiceResponse
+                {
+                    Success = true,
+                    Message = "Video successfully converted and fetched.",
+                    Payload = res2
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error converting and fetching video: {ex.Message}");
+                return new ServiceResponse
+                {
+                    Success = false,
+                    Message = "Error converting and fetching video.",
+                    Payload = null
+                };
+            }
+        }
+
 
         public async Task<ServiceResponse> GetAllAsync()
         {

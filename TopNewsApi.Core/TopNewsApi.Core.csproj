@@ -7,6 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Google.Apis.YouTube.v3" Version="1.64.0.3205" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.0" />
 		<PackageReference Include="Ardalis.Specification" Version="7.0.0" />
 		<PackageReference Include="AutoMapper" Version="12.0.1" />
@@ -14,6 +15,8 @@
 		<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
 		<PackageReference Include="MailKit" Version="4.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.11" />
+		<PackageReference Include="Y2Sharp" Version="4.10.0" />
+		<PackageReference Include="YoutubeDLSharp" Version="1.0.0" />
 	</ItemGroup>
 
 </Project>
