@@ -29,6 +29,13 @@ namespace TopNewsApi.Api.Controllers
             return Ok(result);
         }
 
+        [HttpGet("GetById")]
+        public async Task<IActionResult> GetById(string Id)
+        {
+            var result = await _userService.GetByIdAsync(Id);
+            return Ok(result);
+        }
+
         [AllowAnonymous]
         [HttpPost("Create")]
         public async Task<IActionResult> Create(CreateUserDto model)
