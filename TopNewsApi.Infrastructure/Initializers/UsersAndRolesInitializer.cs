@@ -25,11 +25,22 @@ namespace TopNewsApi.Infrastructure.Initializers
                     AppUser admin = new AppUser()
                     {
                         UserName = "admin@email.com",
-                        FirstName = "John",
-                        LastName = "Snow",
+                        FirstName = "Pasha",
+                        LastName = "Panchuk",
                         Email = "admin@email.com",
                         EmailConfirmed = true,
                         PhoneNumber = "+xx(xxx)xxx-xx-xx",
+                        PhoneNumberConfirmed = true
+                    };
+
+                    AppUser user = new AppUser()
+                    {
+                        UserName = "user@email.com",
+                        FirstName = "Artem",
+                        LastName = "Slobodeniuk",
+                        Email = "user@email.com",
+                        EmailConfirmed = false,
+                        PhoneNumber = "+38(099)999-99-99",
                         PhoneNumberConfirmed = true,
                     };
 
@@ -50,6 +61,11 @@ namespace TopNewsApi.Infrastructure.Initializers
                     if (adminResult.Succeeded)
                     {
                         userManager.AddToRoleAsync(admin, "Administrator").Wait();
+                    }
+                    IdentityResult userResult = userManager.CreateAsync(user, "Qwerty-1").Result;
+                    if (userResult.Succeeded)
+                    {
+                        userManager.AddToRoleAsync(user, "User").Wait();
                     }
                 }
             }

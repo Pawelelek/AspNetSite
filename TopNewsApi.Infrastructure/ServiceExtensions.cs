@@ -26,7 +26,7 @@ namespace TopNewsApi.Infrastructure
             {
                 options.SignIn.RequireConfirmedEmail = false;
                 options.Lockout.MaxFailedAccessAttempts = 5;
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(5);
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(30);
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireUppercase = true;
