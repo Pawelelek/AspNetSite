@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TopNewsApi.Core.DTO_s.Token;
 using TopNewsApi.Core.DTO_s.User;
+using TopNewsApi.Core.Entities.Specifications;
 using TopNewsApi.Core.Entities.Tokens;
 using TopNewsApi.Core.Entities.User;
 using TopNewsApi.Core.Interfaces;
@@ -128,6 +129,31 @@ namespace TopNewsApi.Core.Services
                 Success = true,
                 Message = "All users loaded.",
                 Payload = mappedUsers
+            };
+        }
+
+        public async Task<ServiceResponse> GetByIdAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user != null)
+            {
+                var model = new UsersDto();
+                var updatedUser = _mapper.Map(user, model);
+
+                return new ServiceResponse
+                {
+                    Message = "Success",
+                    Success = true,
+                    Payload = updatedUser,
+                };
+            }
+
+            return new ServiceResponse
+            {
+                Message = "User not found",
+                Success = false,
+                Payload = null
             };
         }
 
