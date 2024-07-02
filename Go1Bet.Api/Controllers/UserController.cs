@@ -21,7 +21,13 @@ namespace Go1Bet.Api.Controllers
         {
             _userService = userService;
         }
-
+        [HttpPost]
+        [Route("GoogleExternalLogin")]
+        public async Task<IActionResult> GoogleExternalLogin([FromForm] GoogleExternalLoginDTO model)
+        {
+            var result = await _userService.GoogleExternalLogin(model);
+            return Ok(result);
+        }
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {

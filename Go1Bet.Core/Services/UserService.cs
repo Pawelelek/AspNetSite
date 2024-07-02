@@ -18,6 +18,8 @@ using Go1Bet.Core.Entities.Tokens;
 using Go1Bet.Core.Entities.User;
 using Go1Bet.Core.Interfaces;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Go1Bet.Core.Constants;
+using Google.Apis.Auth;
 
 namespace Go1Bet.Core.Services
 {
@@ -259,6 +261,79 @@ namespace Go1Bet.Core.Services
                 Message = "Something wrong. Connect with your admin.",
                 Errors = result.Errors.Select(e => e.Description)
             };
+        }
+        public async Task<ServiceResponse> GoogleExternalLogin(GoogleExternalLoginDTO model)
+        {
+            //Install packet Google.Apis.Auth
+            //So that the backend checks whether the user is authorized through Google
+            var settings = new GoogleJsonWebSignature.ValidationSettings()
+            {
+                Audience = new List<string>()
+                {
+                    "85911906235-mpbk79c4do3jhbf2drgemm9q2n2sd6ca.apps.googleusercontent.com"
+                }
+            };
+
+            var payload = await GoogleJsonWebSignature.ValidateAsync(model.Token, settings);
+            if (payload != null)
+            {
+                var info = new UserLoginInfo(model.Provider, payload.Subject, model.Provider);
+                var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+                //var user = await _userRepository.GetUserByLoginAsync(info.LoginProvider, info.ProviderKey);
+                if (user == null)
+                {
+                    user = await _userManager.FindByEmailAsync(payload.Email);
+                    if (user == null)
+                    {
+                        user = new AppUser()
+                        {
+                            Email = payload.Email,
+                            UserName = payload.Email,
+                            FirstName = payload.GivenName,
+                            LastName = payload.FamilyName,
+                            //Image = payload.Picture,
+                            IsGoogle = true
+                        };
+                        var resultCreate = await _userManager.CreateAsync(user);
+                        if (!resultCreate.Succeeded)
+                        {
+                            return new ServiceResponse
+                            {
+                                Success = false,
+                                Message = "Something went wrong"
+                            };
+                        }
+                        if (user.IsGoogle == false)
+                        {
+                            await _userManager.AddToRoleAsync(user, Roles.User);
+                        }
+                    }
+                    var resultAddLogin = await _userManager.AddLoginAsync(user, info);
+                    if (!resultAddLogin.Succeeded)
+                    {
+                        return new ServiceResponse
+                        {
+                            Success = false,
+                            Message = "Something went wrong"
+                        };
+                    }
+
+                }
+
+                var result = new { Id = user.Id, email = user.Email, firstname = user.FirstName, lastname = user.LastName, phoneNumber = user.PhoneNumber };
+                var token = await _jwtService.GenerateJwtTokensAsync(user);
+                return new ServiceResponse
+                {
+                    Success = true,
+                    Payload = token
+                };
+            }
+            return new ServiceResponse
+            {
+                Success = false,
+                Message = "Something went wrong"
+            };
+
         }
 
     }
