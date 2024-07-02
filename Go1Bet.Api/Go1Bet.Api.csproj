@@ -14,7 +14,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\TopNewsApi.Infrastructure\Go1Bet.Infrastructure.csproj" />
+	  <ProjectReference Include="..\Go1Bet.Infrastructure\Go1Bet.Infrastructure.csproj" />
 	</ItemGroup>
 
 </Project>

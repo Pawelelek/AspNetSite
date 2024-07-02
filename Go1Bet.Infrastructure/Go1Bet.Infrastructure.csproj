@@ -18,11 +18,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\TopNewsApi.Core\Go1Bet.Core.csproj" />
+	  <Folder Include="Migrations\" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Migrations\" />
+	  <ProjectReference Include="..\Go1Bet.Core\Go1Bet.Core.csproj" />
 	</ItemGroup>
 
 </Project>
