@@ -15,6 +15,7 @@ namespace TopNewsApi.Core
         public static void AddCoreServices(this IServiceCollection services)
         {
             services.AddTransient<UserService>();
+            services.AddTransient<RoleService>();
             services.AddTransient<JwtService>();
         }
 

@@ -12,8 +12,8 @@ using TopNewsApi.Infrastructure.Context;
 namespace TopNewsApi.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240630104554_Updates")]
-    partial class Updates
+    [Migration("20240702145156_DbInit")]
+    partial class DbInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

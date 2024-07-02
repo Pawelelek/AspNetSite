@@ -126,7 +126,7 @@ app.UseHttpsRedirection();
 
 app.UseCors(options => options
 
- ////.WithOrigins(new[] { "http://localhost:3000" })
+ ////.WithOrigins(new[]ï¿½{ï¿½"http://localhost:3000"ï¿½})
 
                 .SetIsOriginAllowed(origin => true)
 

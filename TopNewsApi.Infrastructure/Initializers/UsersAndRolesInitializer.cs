@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TopNewsApi.Core.Constants;
 using TopNewsApi.Core.Entities.User;
 using TopNewsApi.Infrastructure.Context;
 
@@ -47,25 +48,25 @@ namespace TopNewsApi.Infrastructure.Initializers
                     context.Roles.AddRange(
                         new IdentityRole()
                         {
-                            Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
+                            Name = Roles.Admin,
+                            NormalizedName = Roles.Admin.ToUpper(),
                         },
                         new IdentityRole()
                         {
-                            Name = "User",
-                            NormalizedName = "USER"
+                            Name = Roles.User,
+                            NormalizedName = Roles.User.ToUpper(),
                         });
                     await context.SaveChangesAsync();
 
                     IdentityResult adminResult = userManager.CreateAsync(admin, "Qwerty-1").Result;
                     if (adminResult.Succeeded)
                     {
-                        userManager.AddToRoleAsync(admin, "Administrator").Wait();
+                        userManager.AddToRoleAsync(admin, Roles.Admin).Wait();
                     }
                     IdentityResult userResult = userManager.CreateAsync(user, "Qwerty-1").Result;
                     if (userResult.Succeeded)
                     {
-                        userManager.AddToRoleAsync(user, "User").Wait();
+                        userManager.AddToRoleAsync(user, Roles.User).Wait();
                     }
                 }
             }

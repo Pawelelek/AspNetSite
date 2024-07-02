@@ -5,7 +5,7 @@ using TopNewsApi.Core.Entities.User;
 
 namespace TopNewsApi.Infrastructure.Context
 {
-    internal class AppDbContext : IdentityDbContext
+    public class AppDbContext : IdentityDbContext
     {
         public AppDbContext() : base() { }
         protected override void OnModelCreating(ModelBuilder builder)
