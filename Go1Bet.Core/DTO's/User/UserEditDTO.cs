@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Go1Bet.Core.DTO_s.User
 {
-    public class UpdateUserDto
+    public class UserEditDTO
     {
         public string Id { get; set; } = string.Empty;
         public string FirstName { get; set; } = string.Empty;

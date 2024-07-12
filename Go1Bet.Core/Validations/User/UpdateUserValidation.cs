@@ -8,7 +8,7 @@ using Go1Bet.Core.DTO_s.User;
 
 namespace Go1Bet.Core.Validations.User
 {
-    public class UpdateUserValidation : AbstractValidator<UpdateUserDto>
+    public class UpdateUserValidation : AbstractValidator<UserEditDTO>
     {
         public UpdateUserValidation()
         {

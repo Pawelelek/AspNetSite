@@ -20,6 +20,7 @@ using Go1Bet.Core.Interfaces;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Go1Bet.Core.Constants;
 using Google.Apis.Auth;
+using Org.BouncyCastle.Bcpg;
 
 namespace Go1Bet.Core.Services
 {
@@ -82,13 +83,61 @@ namespace Go1Bet.Core.Services
             };
 
         }
-
-        public async Task<ServiceResponse> UpdateAsync(UpdateUserDto model)
+        //1. UPDATE > Name, LastName, PhoneNumber
+        //2. UPDATE > Password
+        public async Task<ServiceResponse> UpdateUserPasswordAsync(UserEditPasswordDTO model)
+        {
+            if (model.Password != model.ConfirmPassword)
+            {
+                return new ServiceResponse
+                {
+                    Message = "Passwords do not match",
+                    Success = false,
+                    Payload = null,
+                };
+            }
+            var oldUser = await _userManager.FindByIdAsync(model.Id);
+            var token = await _userManager.GeneratePasswordResetTokenAsync(oldUser);
+            await _userManager.ResetPasswordAsync(oldUser, token, model.ConfirmPassword);
+            oldUser.DateLastPasswordUpdated = DateTime.UtcNow;
+            var result = await _userManager.UpdateAsync(oldUser);
+            return new ServiceResponse
+            {
+                Message = "Password has been updated",
+                Success = true,
+                Payload = result,
+            };
+        }
+        public async Task<ServiceResponse> UpdateUserEmailAsync(UserEditEmailDTO model)
+        {
+            var existUser = await _userManager.FindByEmailAsync(model.Email);
+            if (existUser != null)
+            {
+                return new ServiceResponse
+                {
+                    Message = "A user with this email address already exists",
+                    Success = false,
+                    Payload = null,
+                };
+            }
+            var oldUser = await _userManager.FindByIdAsync(model.Id);
+            oldUser.DateLastEmailUpdated = DateTime.UtcNow;
+            //var newUser = _mapper.Map(model, oldUser);
+            var result = await _userManager.UpdateAsync(oldUser);
+            return new ServiceResponse
+            {
+                Message = "Email has been updated",
+                Success = true,
+                Payload = result,
+            };
+        }
+        public async Task<ServiceResponse> UpdateUserPersonalInfoAsync(UserEditDTO model)
         {
             var oldUser = await _userManager.FindByIdAsync(model.Id.ToString());
             var user = _mapper.Map(model, oldUser);
             if (user != null)
             {
+                user.DateLastPersonalInfoUpdated = DateTime.UtcNow;
                 var result = await _userManager.UpdateAsync(user);
                 if (result.Succeeded)
                 {
@@ -115,22 +164,59 @@ namespace Go1Bet.Core.Services
                 Payload = null,
             };
         }
+        public async Task<ServiceResponse> UpdateUserRoleAsync(UserEditRoleDTO model)
+        {
+            var existUser = await _userManager.FindByIdAsync(model.UserId.ToString());
+            if(existUser != null)
+            {
+                if (model.RoleName != null)
+                {
+
+                    var oldRoles =  await _userManager.GetRolesAsync(existUser);
+                    await _userManager.RemoveFromRolesAsync(existUser, oldRoles);
+
+                    var role = model.RoleName != null ? model.RoleName : Roles.User;
+                    await _userManager.AddToRoleAsync(existUser, role);
+                    await _userManager.UpdateAsync(existUser);
+                    return new ServiceResponse
+                    {
+                        Message = "User > Role: has been updated",
+                        Success = true,
+                        Payload = existUser,
+                    };
+                }
+            }
+            return new ServiceResponse
+            {
+                Message = "User not found",
+                Success = false,
+                Payload = null,
+            };
+        }
 
         public async Task<ServiceResponse> GetAllAsync()
         {
-            List<AppUser> users = await _userManager.Users.ToListAsync();
-            List<UsersDto> mappedUsers = users.Select(u => _mapper.Map<AppUser, UsersDto>(u)).ToList();
-
-            for (int i = 0; i < users.Count; i++)
-            {
-                mappedUsers[i].Role = (await _userManager.GetRolesAsync(users[i])).FirstOrDefault();
-            }
+            var result = await _userManager.Users
+                    .Select(user => new UserItemDTO
+                    {
+                        Id = user.Id,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Email = user.Email,
+                        PhoneNumber = user.PhoneNumber,
+                        DateLastEmailUpdated = user.DateLastEmailUpdated.ToString(),
+                        DateLastPasswordUpdated = user.DateLastPasswordUpdated.ToString(),
+                        DateLastPersonalInfoUpdated = user.DateLastPersonalInfoUpdated.ToString(),
+                        LockedEnd = user.LockoutEnd.ToString(),
+                        Role = _userManager.GetRolesAsync(user).Result.FirstOrDefault(), //Working
+                    }).ToListAsync();
 
             return new ServiceResponse
             {
                 Success = true,
                 Message = "All users loaded.",
-                Payload = mappedUsers
+                countPayload = result.Count,
+                Payload = result
             };
         }
 
@@ -140,14 +226,29 @@ namespace Go1Bet.Core.Services
 
             if (user != null)
             {
-                var model = new UsersDto();
-                var updatedUser = _mapper.Map(user, model);
+                //var updatedUser = _mapper.Map(user, new UserItemDTO());
+                var result = await _userManager.Users.Where(user => user.Id == id)
+                    .Select(user => new UserItemDTO
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber,
+                    DateLastEmailUpdated = user.DateLastEmailUpdated.ToString(),
+                    DateCreated = user.DateCreated.ToString(),
+                    DateLastPasswordUpdated = user.DateLastPasswordUpdated.ToString(),
+                    DateLastPersonalInfoUpdated = user.DateLastPersonalInfoUpdated.ToString(),
+                    LockedEnd = user.LockoutEnd.ToString(),
+                    Role = _userManager.GetRolesAsync(user).Result.FirstOrDefault(), //Working
+                    }).ToListAsync();
 
                 return new ServiceResponse
                 {
                     Message = "Success",
                     Success = true,
-                    Payload = updatedUser,
+                    countPayload = result.Count,
+                    Payload = result
                 };
             }
 
@@ -180,7 +281,7 @@ namespace Go1Bet.Core.Services
                     AccessToken = tokens.Token,
                     RefreshToken = tokens.refreshToken.Token,
                     Message = "User signed in successfully.",
-                    Success = true
+                    Success = true,
                 };
             }
 
@@ -270,7 +371,8 @@ namespace Go1Bet.Core.Services
             {
                 Audience = new List<string>()
                 {
-                    "85911906235-mpbk79c4do3jhbf2drgemm9q2n2sd6ca.apps.googleusercontent.com"
+                    //"85911906235-mpbk79c4do3jhbf2drgemm9q2n2sd6ca.apps.googleusercontent.com",
+                    Encoding.ASCII.GetBytes(_config["GoogleID:Secret"]).ToString()
                 }
             };
 

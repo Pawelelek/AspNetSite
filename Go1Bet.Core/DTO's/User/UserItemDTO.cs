@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Go1Bet.Core.DTO_s.User
 {
-    public class UsersDto
+    public class UserItemDTO
     {
         public string Id { get; set; } = string.Empty;
         public string FirstName { get; set; } = string.Empty;
@@ -16,5 +16,9 @@ namespace Go1Bet.Core.DTO_s.User
         public string LockedEnd { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
+        public string DateCreated { get; set; }
+        public string DateLastPasswordUpdated { get; set; }
+        public string DateLastEmailUpdated { get; set; }
+        public string DateLastPersonalInfoUpdated { get; set; }
     }
 }

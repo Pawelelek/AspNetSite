@@ -13,7 +13,10 @@ namespace Go1Bet.Core.Entities.User
         public bool IsGoogle { get; set; } = false;
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
-        DateTime DateCreated { get; set; } = DateTime.UtcNow;
-        DateTime DateUpdated { get; set; } = DateTime.UtcNow;
+        public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+        //make a migration
+        public DateTime DateLastPasswordUpdated { get; set; } = DateTime.UtcNow;
+        public DateTime DateLastEmailUpdated { get; set; } = DateTime.UtcNow;
+        public DateTime DateLastPersonalInfoUpdated { get; set; } = DateTime.UtcNow;
     }
 }

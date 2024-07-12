@@ -10,7 +10,7 @@ using Go1Bet.Core.Interfaces;
 
 namespace Go1Bet.Api.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -23,20 +23,20 @@ namespace Go1Bet.Api.Controllers
         }
         [HttpPost]
         [Route("GoogleExternalLogin")]
-        public async Task<IActionResult> GoogleExternalLogin([FromForm] GoogleExternalLoginDTO model)
+        public async Task<IActionResult> GoogleExternalLoginAsync([FromForm] GoogleExternalLoginDTO model)
         {
             var result = await _userService.GoogleExternalLogin(model);
             return Ok(result);
         }
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
             var result = await _userService.GetAllAsync();
             return Ok(result);
         }
 
         [HttpGet("GetById")]
-        public async Task<IActionResult> GetById(string Id)
+        public async Task<IActionResult> GetByIdAsync(string Id)
         {
             var result = await _userService.GetByIdAsync(Id);
             return Ok(result);
@@ -44,7 +44,7 @@ namespace Go1Bet.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("Create")]
-        public async Task<IActionResult> Create(CreateUserDto model)
+        public async Task<IActionResult> CreateAsync(CreateUserDto model)
         {
             var validator = new CreateUserValidation();
             var validationResult = await validator.ValidateAsync(model);
@@ -59,15 +59,17 @@ namespace Go1Bet.Api.Controllers
             }
             return NotFound("validation problem");
         }
-
+        //1. UPDATE > Name, LastName, PhoneNumber
+        //2. UPDATE > Password
+        //3. UPDATE > Email
         [HttpPut("Update")]
-        public async Task<IActionResult> Update(UpdateUserDto model)
+        public async Task<IActionResult> UpdatePersonalInfoAsync(UserEditDTO model)
         {
             var validator = new UpdateUserValidation();
             var validationResult = await validator.ValidateAsync(model);
             if (validationResult.IsValid)
             {
-                var result = await _userService.UpdateAsync(model);
+                var result = await _userService.UpdateUserPersonalInfoAsync(model);
                 if (result.Success)
                 {
                     return Ok(result);
@@ -76,9 +78,27 @@ namespace Go1Bet.Api.Controllers
             }
             return NotFound();
         }
+        [HttpPut("UpdateEmail")]
+        public async Task<IActionResult> UpdateEmailAsync(UserEditEmailDTO model)
+        {
+            var result = await _userService.UpdateUserEmailAsync(model);
+            return Ok(result);
+        }
+        [HttpPut("UpdatePassword")]
+        public async Task<IActionResult> UpdatePasswordAsync(UserEditPasswordDTO model)
+        {
+            var result = await _userService.UpdateUserPasswordAsync(model);
+            return Ok(result);
+        }
+        [HttpPut("UpdateUserRole")]
+        public async Task<IActionResult> UpdateUserRoleAsync(UserEditRoleDTO model)
+        {
+            var result = await _userService.UpdateUserRoleAsync(model);
+            return Ok(result);
+        }
 
         [HttpDelete("DeleteById")]
-        public async Task<IActionResult> DeleteById(string id)
+        public async Task<IActionResult> DeleteByIdAsync(string id)
         {
             var result = await _userService.DeleteAsync(id);
             if (result.Success)

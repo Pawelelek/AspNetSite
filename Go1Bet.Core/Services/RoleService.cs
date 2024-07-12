@@ -43,6 +43,7 @@ namespace Go1Bet.Core.Services
             {
                 Success = true,
                 Message = "Get all roles",
+                countPayload = result.Count,
                 Payload = result
             };
         }
@@ -58,7 +59,9 @@ namespace Go1Bet.Core.Services
             {
                 Success = true,
                 Message = "Get role",
+                countPayload = result.Count,
                 Payload = result
+                
             };
         }
         public async Task<ServiceResponse> CreateRoleAsync(RoleCreateDTO model)
