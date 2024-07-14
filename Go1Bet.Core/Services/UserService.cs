@@ -210,7 +210,7 @@ namespace Go1Bet.Core.Services
                         DateLastPasswordUpdated = user.DateLastPasswordUpdated.ToString(),
                         DateLastPersonalInfoUpdated = user.DateLastPersonalInfoUpdated.ToString(),
                         LockedEnd = user.LockoutEnd.ToString(),
-                        Role = _userManager.GetRolesAsync(user).Result.FirstOrDefault(), //Working
+                        Role = _userManager.GetRolesAsync(user).Result.First(), //Working
                     }).ToListAsync();
 
             return new ServiceResponse
@@ -243,7 +243,7 @@ namespace Go1Bet.Core.Services
                     DateLastPasswordUpdated = user.DateLastPasswordUpdated.ToString(),
                     DateLastPersonalInfoUpdated = user.DateLastPersonalInfoUpdated.ToString(),
                     LockedEnd = user.LockoutEnd.ToString(),
-                    Role = _userManager.GetRolesAsync(user).Result.FirstOrDefault(), //Working
+                    Role = _userManager.GetRolesAsync(user).Result.First(), //Working
                     }).ToListAsync();
 
                 return new ServiceResponse
