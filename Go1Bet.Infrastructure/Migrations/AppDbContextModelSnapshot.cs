@@ -241,12 +241,7 @@ namespace Go1Bet.Infrastructure.Migrations
                     b.Property<string>("RoleId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("AppUserId");
 
                     b.HasIndex("RoleId");
 
@@ -342,10 +337,6 @@ namespace Go1Bet.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("Go1Bet.Core.Entities.User.AppUser", null)
-                        .WithMany("UserRole")
-                        .HasForeignKey("AppUserId");
-
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
@@ -366,11 +357,6 @@ namespace Go1Bet.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Go1Bet.Core.Entities.User.AppUser", b =>
-                {
-                    b.Navigation("UserRole");
                 });
 #pragma warning restore 612, 618
         }

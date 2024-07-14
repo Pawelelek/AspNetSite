@@ -205,6 +205,7 @@ namespace Go1Bet.Core.Services
                         Email = user.Email,
                         PhoneNumber = user.PhoneNumber,
                         DateLastEmailUpdated = user.DateLastEmailUpdated.ToString(),
+                        DateCreated = user.DateCreated.ToString(),
                         DateLastPasswordUpdated = user.DateLastPasswordUpdated.ToString(),
                         DateLastPersonalInfoUpdated = user.DateLastPersonalInfoUpdated.ToString(),
                         LockedEnd = user.LockoutEnd.ToString(),

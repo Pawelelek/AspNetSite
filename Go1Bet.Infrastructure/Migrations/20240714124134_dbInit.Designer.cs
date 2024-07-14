@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Go1Bet.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240702205239_userUpdate")]
-    partial class userUpdate
+    [Migration("20240714124134_dbInit")]
+    partial class dbInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -273,6 +273,18 @@ namespace Go1Bet.Infrastructure.Migrations
             modelBuilder.Entity("Go1Bet.Core.Entities.User.AppUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateLastEmailUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateLastPasswordUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateLastPersonalInfoUpdated")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
