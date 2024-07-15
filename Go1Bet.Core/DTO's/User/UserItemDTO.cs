@@ -14,11 +14,13 @@ namespace Go1Bet.Core.DTO_s.User
         public bool EmailConfirmed { get; set; }
         public string Email { get; set; } = string.Empty;
         public string LockedEnd { get; set; } = string.Empty;
-        public string Role { get; set; } = string.Empty;
+        public string Role { get; set; }
         public string PhoneNumber { get; set; } = string.Empty;
         public string DateCreated { get; set; }
         public string DateLastPasswordUpdated { get; set; }
         public string DateLastEmailUpdated { get; set; }
         public string DateLastPersonalInfoUpdated { get; set; }
+        public List<UserRoleItemDTO> Roles { get; set; }
+
     }
 }

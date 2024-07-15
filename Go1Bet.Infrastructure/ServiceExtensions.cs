@@ -22,7 +22,7 @@ namespace Go1Bet.Infrastructure
 
         public static void AddInfrastructureService(this IServiceCollection services)
         {
-            services.AddIdentity<AppUser, IdentityRole>(options =>
+            services.AddIdentity<AppUser, RoleEntity>(options =>
             {
                 options.SignIn.RequireConfirmedEmail = false;
                 options.Lockout.MaxFailedAccessAttempts = 5;

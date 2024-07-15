@@ -27,12 +27,12 @@ namespace Go1Bet.Core.Services
     public class UserService
     {
         private readonly UserManager<AppUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<RoleEntity> _roleManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
         private readonly JwtService _jwtService;
-        public UserService(JwtService jwtService, RoleManager<IdentityRole> roleManager, IConfiguration config, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IMapper mapper)
+        public UserService(JwtService jwtService, RoleManager<RoleEntity> roleManager, IConfiguration config, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -196,6 +196,7 @@ namespace Go1Bet.Core.Services
 
         public async Task<ServiceResponse> GetAllAsync()
         {
+
             var result = await _userManager.Users
                     .Select(user => new UserItemDTO
                     {
@@ -210,7 +211,8 @@ namespace Go1Bet.Core.Services
                         DateLastPasswordUpdated = user.DateLastPasswordUpdated.ToString(),
                         DateLastPersonalInfoUpdated = user.DateLastPersonalInfoUpdated.ToString(),
                         LockedEnd = user.LockoutEnd.ToString(),
-                        Role = _userManager.GetRolesAsync(user).Result.First(), //Working
+                        //Role = _userManager.GetRolesAsync(user) //Working
+                       // Role = _userManager.GetRolesAsync(user).ToString().First().ToString(),
                     }).ToListAsync();
 
             return new ServiceResponse
