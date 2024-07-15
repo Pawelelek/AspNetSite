@@ -16,10 +16,10 @@ namespace Go1Bet.Core.Services
 {
     public class RoleService
     {
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<RoleEntity> _roleManager;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
-        public RoleService(JwtService jwtService, RoleManager<IdentityRole> roleManager, IConfiguration config, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IMapper mapper)
+        public RoleService(JwtService jwtService, RoleManager<RoleEntity> roleManager, IConfiguration config, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IMapper mapper)
         {
             _mapper = mapper;
             _config = config;
@@ -66,7 +66,7 @@ namespace Go1Bet.Core.Services
         }
         public async Task<ServiceResponse> CreateRoleAsync(RoleCreateDTO model)
         {
-            var role = new IdentityRole { Name = model.RoleName };
+            var role = new RoleEntity { Name = model.RoleName };
             var result = await _roleManager.CreateAsync(role);
             return new ServiceResponse()
             {
@@ -77,7 +77,7 @@ namespace Go1Bet.Core.Services
         }
         public async Task<ServiceResponse> EditRoleAsync(RoleEditDTO model)
         {
-            var role = new IdentityRole { Id = model.Id, Name = model.RoleName, ConcurrencyStamp = model.ConcurrencyStamp };
+            var role = new RoleEntity { Id = model.Id, Name = model.RoleName, ConcurrencyStamp = model.ConcurrencyStamp };
             var result = await _roleManager.UpdateAsync(role);
             return new ServiceResponse()
             {

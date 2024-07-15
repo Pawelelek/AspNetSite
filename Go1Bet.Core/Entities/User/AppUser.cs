@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Go1Bet.Core.Entities.User
 {
-    public class AppUser : IdentityUser
+    public class AppUser : IdentityUser<string>
     {
         public bool IsGoogle { get; set; } = false;
         public string FirstName { get; set; } = string.Empty;
@@ -18,5 +18,6 @@ namespace Go1Bet.Core.Entities.User
         public DateTime DateLastPasswordUpdated { get; set; } = DateTime.UtcNow;
         public DateTime DateLastEmailUpdated { get; set; } = DateTime.UtcNow;
         public DateTime DateLastPersonalInfoUpdated { get; set; } = DateTime.UtcNow;
+        public virtual ICollection<UserRoleEntity> UserRoles { get; set; }
     }
 }

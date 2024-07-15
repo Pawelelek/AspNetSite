@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using Go1Bet.Core.Constants;
 using Go1Bet.Core.Entities.User;
 using Go1Bet.Infrastructure.Context;
+using System.Globalization;
+using System.Data;
 
 namespace Go1Bet.Infrastructure.Initializers
 {
@@ -20,11 +22,13 @@ namespace Go1Bet.Infrastructure.Initializers
             {
                 var context = serviceScope.ServiceProvider.GetService<AppDbContext>();
                 UserManager<AppUser> userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+                RoleManager<RoleEntity> roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<RoleEntity>>();
 
                 if (userManager.FindByEmailAsync("admin@email.com").Result == null)
                 {
                     AppUser admin = new AppUser()
                     {
+                        Id = Guid.NewGuid().ToString(),
                         UserName = "admin@email.com",
                         FirstName = "Pasha",
                         LastName = "Panchuk",
@@ -36,6 +40,7 @@ namespace Go1Bet.Infrastructure.Initializers
 
                     AppUser user = new AppUser()
                     {
+                        Id = Guid.NewGuid().ToString(),
                         UserName = "user@email.com",
                         FirstName = "Artem",
                         LastName = "Slobodeniuk",
@@ -45,18 +50,28 @@ namespace Go1Bet.Infrastructure.Initializers
                         PhoneNumberConfirmed = true,
                     };
 
-                    context.Roles.AddRange(
-                        new IdentityRole()
+                    //context.Roles.AddRange(
+                    //    new RoleEntity()
+                    //    {
+                    //        Id= Guid.NewGuid().ToString(),
+                    //        Name = Roles.Admin,
+                    //        NormalizedName = Roles.Admin.ToUpper(),
+                    //    },
+                    //    new RoleEntity()
+                    //    {
+                    //        Id = Guid.NewGuid().ToString(),
+                    //        Name = Roles.User,
+                    //        NormalizedName = Roles.User.ToUpper(),
+                    //    });
+                    //await context.SaveChangesAsync();
+                    if (!roleManager.Roles.Any())
+                    {
+                        var result = roleManager.CreateAsync(new RoleEntity
                         {
-                            Name = Roles.Admin,
-                            NormalizedName = Roles.Admin.ToUpper(),
-                        },
-                        new IdentityRole()
-                        {
-                            Name = Roles.User,
-                            NormalizedName = Roles.User.ToUpper(),
-                        });
-                    await context.SaveChangesAsync();
+                            Id = Guid.NewGuid().ToString(),
+                            Name = Roles.User
+                        }).Result;
+                    }
 
                     IdentityResult adminResult = userManager.CreateAsync(admin, "Qwerty-1").Result;
                     if (adminResult.Succeeded)
