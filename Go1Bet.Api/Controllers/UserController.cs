@@ -62,7 +62,7 @@ namespace Go1Bet.Api.Controllers
         //1. UPDATE > Name, LastName, PhoneNumber
         //2. UPDATE > Password
         //3. UPDATE > Email
-        [HttpPut("Update")]
+        [HttpPut("UpdatePersonalInfo")]
         public async Task<IActionResult> UpdatePersonalInfoAsync(UserEditDTO model)
         {
             var validator = new UpdateUserValidation();
