@@ -211,8 +211,9 @@ namespace Go1Bet.Core.Services
                         DateLastPasswordUpdated = user.DateLastPasswordUpdated.ToString(),
                         DateLastPersonalInfoUpdated = user.DateLastPersonalInfoUpdated.ToString(),
                         LockedEnd = user.LockoutEnd.ToString(),
+                        Roles = user.UserRoles.Select(perm => new UserRoleItemDTO { RoleName = perm.Role.Name }).ToList()
                         //Role = _userManager.GetRolesAsync(user) //Working
-                       // Role = _userManager.GetRolesAsync(user).ToString().First().ToString(),
+                        // Role = _userManager.GetRolesAsync(user).ToString().First().ToString(),
                     }).ToListAsync();
 
             return new ServiceResponse
@@ -245,7 +246,7 @@ namespace Go1Bet.Core.Services
                     DateLastPasswordUpdated = user.DateLastPasswordUpdated.ToString(),
                     DateLastPersonalInfoUpdated = user.DateLastPersonalInfoUpdated.ToString(),
                     LockedEnd = user.LockoutEnd.ToString(),
-                    Role = _userManager.GetRolesAsync(user).Result.First(), //Working
+                    Roles = user.UserRoles.Select(perm => new UserRoleItemDTO { RoleName = perm.Role.Name }).ToList()
                     }).ToListAsync();
 
                 return new ServiceResponse
