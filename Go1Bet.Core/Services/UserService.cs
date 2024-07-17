@@ -422,6 +422,7 @@ namespace Go1Bet.Core.Services
                             //Image = payload.Picture,
                             IsGoogle = true
                         };
+                        user.Id = Guid.NewGuid().ToString();
                         var resultCreate = await _userManager.CreateAsync(user);
                         if (!resultCreate.Succeeded)
                         {
