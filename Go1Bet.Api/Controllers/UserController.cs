@@ -23,7 +23,7 @@ namespace Go1Bet.Api.Controllers
         }
         [HttpPost]
         [Route("GoogleExternalLogin")]
-        public async Task<IActionResult> GoogleExternalLoginAsync([FromForm] GoogleExternalLoginDTO model)
+        public async Task<IActionResult> GoogleExternalLoginAsync([FromBody] GoogleExternalLoginDTO model)
         {
             var result = await _userService.GoogleExternalLogin(model);
             return Ok(result);
@@ -44,7 +44,7 @@ namespace Go1Bet.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("Create")]
-        public async Task<IActionResult> CreateAsync(CreateUserDto model)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateUserDto model)
         {
             var validator = new CreateUserValidation();
             var validationResult = await validator.ValidateAsync(model);
@@ -63,7 +63,7 @@ namespace Go1Bet.Api.Controllers
         //2. UPDATE > Password
         //3. UPDATE > Email
         [HttpPut("UpdatePersonalInfo")]
-        public async Task<IActionResult> UpdatePersonalInfoAsync(UserEditDTO model)
+        public async Task<IActionResult> UpdatePersonalInfoAsync([FromBody] UserEditDTO model)
         {
             var validator = new UpdateUserValidation();
             var validationResult = await validator.ValidateAsync(model);
@@ -79,19 +79,25 @@ namespace Go1Bet.Api.Controllers
             return NotFound();
         }
         [HttpPut("UpdateEmail")]
-        public async Task<IActionResult> UpdateEmailAsync(UserEditEmailDTO model)
+        public async Task<IActionResult> UpdateEmailAsync([FromBody] UserEditEmailDTO model)
         {
             var result = await _userService.UpdateUserEmailAsync(model);
             return Ok(result);
         }
+        [HttpGet("GetPasswordResetTokenByUserId")]
+        public async Task<IActionResult> GetPasswordResetTokenAsync(string userId)
+        {
+            var result = await _userService.GetPasswordResetTokenAsync(userId);
+            return Ok(result);
+        }
         [HttpPut("UpdatePassword")]
-        public async Task<IActionResult> UpdatePasswordAsync(UserEditPasswordDTO model)
+        public async Task<IActionResult> UpdatePasswordAsync([FromBody] UserEditPasswordDTO model)
         {
             var result = await _userService.UpdateUserPasswordAsync(model);
             return Ok(result);
         }
         [HttpPut("UpdateUserRole")]
-        public async Task<IActionResult> UpdateUserRoleAsync(UserEditRoleDTO model)
+        public async Task<IActionResult> UpdateUserRoleAsync([FromBody] UserEditRoleDTO model)
         {
             var result = await _userService.UpdateUserRoleAsync(model);
             return Ok(result);

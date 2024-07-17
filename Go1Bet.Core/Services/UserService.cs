@@ -86,6 +86,25 @@ namespace Go1Bet.Core.Services
         }
         //1. UPDATE > Name, LastName, PhoneNumber
         //2. UPDATE > Password
+        public async Task<ServiceResponse> GetPasswordResetTokenAsync (string userId)
+        {
+            var existUser = await _userManager.FindByIdAsync(userId);
+            if(existUser == null)
+            {
+                return new ServiceResponse
+                {
+                    Message = "User not found",
+                    Success = false
+                };
+            }
+            var token = await _userManager.GeneratePasswordResetTokenAsync(existUser);
+            return new ServiceResponse
+            {
+                Success = true,
+                Payload = token,
+                Message = "Success"
+            };
+        }
         public async Task<ServiceResponse> UpdateUserPasswordAsync(UserEditPasswordDTO model)
         {
             if (model.Password != model.ConfirmPassword)
@@ -98,8 +117,8 @@ namespace Go1Bet.Core.Services
                 };
             }
             var oldUser = await _userManager.FindByIdAsync(model.Id);
-            var token = await _userManager.GeneratePasswordResetTokenAsync(oldUser);
-            await _userManager.ResetPasswordAsync(oldUser, token, model.ConfirmPassword);
+            //var token = await _userManager.GeneratePasswordResetTokenAsync(oldUser);
+            await _userManager.ResetPasswordAsync(oldUser, model.Token, model.ConfirmPassword);
             oldUser.DateLastPasswordUpdated = DateTime.UtcNow;
             var result = await _userManager.UpdateAsync(oldUser);
             return new ServiceResponse
