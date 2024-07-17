@@ -55,6 +55,7 @@ namespace Go1Bet.Core.Services
             }
 
             var mappedUser = _mapper.Map<CreateUserDto, AppUser>(model);
+            mappedUser.Id = Guid.NewGuid().ToString();
             IdentityResult result = await _userManager.CreateAsync(mappedUser, model.Password);
             if (result.Succeeded)
             {
@@ -85,6 +86,25 @@ namespace Go1Bet.Core.Services
         }
         //1. UPDATE > Name, LastName, PhoneNumber
         //2. UPDATE > Password
+        public async Task<ServiceResponse> GetPasswordResetTokenAsync (string userId)
+        {
+            var existUser = await _userManager.FindByIdAsync(userId);
+            if(existUser == null)
+            {
+                return new ServiceResponse
+                {
+                    Message = "User not found",
+                    Success = false
+                };
+            }
+            var token = await _userManager.GeneratePasswordResetTokenAsync(existUser);
+            return new ServiceResponse
+            {
+                Success = true,
+                Payload = token,
+                Message = "Success"
+            };
+        }
         public async Task<ServiceResponse> UpdateUserPasswordAsync(UserEditPasswordDTO model)
         {
             if (model.Password != model.ConfirmPassword)
@@ -97,8 +117,8 @@ namespace Go1Bet.Core.Services
                 };
             }
             var oldUser = await _userManager.FindByIdAsync(model.Id);
-            var token = await _userManager.GeneratePasswordResetTokenAsync(oldUser);
-            await _userManager.ResetPasswordAsync(oldUser, token, model.ConfirmPassword);
+            //var token = await _userManager.GeneratePasswordResetTokenAsync(oldUser);
+            await _userManager.ResetPasswordAsync(oldUser, model.Token, model.ConfirmPassword);
             oldUser.DateLastPasswordUpdated = DateTime.UtcNow;
             var result = await _userManager.UpdateAsync(oldUser);
             return new ServiceResponse
@@ -121,9 +141,10 @@ namespace Go1Bet.Core.Services
                 };
             }
             var oldUser = await _userManager.FindByIdAsync(model.Id);
-            oldUser.DateLastEmailUpdated = DateTime.UtcNow;
-            //var newUser = _mapper.Map(model, oldUser);
-            var result = await _userManager.UpdateAsync(oldUser);
+
+            var newUser = _mapper.Map(model, oldUser);
+            newUser.DateLastEmailUpdated = DateTime.UtcNow;
+            var result = await _userManager.UpdateAsync(newUser);
             return new ServiceResponse
             {
                 Message = "Email has been updated",
@@ -172,23 +193,22 @@ namespace Go1Bet.Core.Services
                 if (model.RoleName != null)
                 {
 
-                    var oldRoles =  await _userManager.GetRolesAsync(existUser);
+                    var oldRoles = await _userManager.GetRolesAsync(existUser);
                     await _userManager.RemoveFromRolesAsync(existUser, oldRoles);
 
                     var role = model.RoleName != null ? model.RoleName : Roles.User;
-                    await _userManager.AddToRoleAsync(existUser, role);
-                    await _userManager.UpdateAsync(existUser);
+                    var result = await _userManager.AddToRoleAsync(existUser, role);
                     return new ServiceResponse
                     {
-                        Message = "User > Role: has been updated",
+                        Message = "Success",
                         Success = true,
-                        Payload = existUser,
+                        Payload = result,
                     };
                 }
             }
             return new ServiceResponse
             {
-                Message = "User not found",
+                Message = "User not found // model.RoleName is empty",
                 Success = false,
                 Payload = null,
             };
@@ -402,6 +422,7 @@ namespace Go1Bet.Core.Services
                             //Image = payload.Picture,
                             IsGoogle = true
                         };
+                        user.Id = Guid.NewGuid().ToString();
                         var resultCreate = await _userManager.CreateAsync(user);
                         if (!resultCreate.Succeeded)
                         {

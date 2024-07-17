@@ -9,6 +9,7 @@ namespace Go1Bet.Core.DTO_s.User
     public class UserEditPasswordDTO
     {
         public string Id { get; set; }
+        public string Token { get; set; }
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
     }

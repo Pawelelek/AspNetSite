@@ -66,7 +66,7 @@ namespace Go1Bet.Core.Services
         }
         public async Task<ServiceResponse> CreateRoleAsync(RoleCreateDTO model)
         {
-            var role = new RoleEntity { Name = model.RoleName };
+            var role = new RoleEntity { Id = Guid.NewGuid().ToString(), Name = model.RoleName };
             var result = await _roleManager.CreateAsync(role);
             return new ServiceResponse()
             {

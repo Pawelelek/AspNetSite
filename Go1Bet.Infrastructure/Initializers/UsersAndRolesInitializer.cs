@@ -49,28 +49,25 @@ namespace Go1Bet.Infrastructure.Initializers
                         PhoneNumber = "+38(099)999-99-99",
                         PhoneNumberConfirmed = true,
                     };
-
-                    //context.Roles.AddRange(
-                    //    new RoleEntity()
-                    //    {
-                    //        Id= Guid.NewGuid().ToString(),
-                    //        Name = Roles.Admin,
-                    //        NormalizedName = Roles.Admin.ToUpper(),
-                    //    },
-                    //    new RoleEntity()
-                    //    {
-                    //        Id = Guid.NewGuid().ToString(),
-                    //        Name = Roles.User,
-                    //        NormalizedName = Roles.User.ToUpper(),
-                    //    });
-                    //await context.SaveChangesAsync();
                     if (!roleManager.Roles.Any())
                     {
-                        var result = roleManager.CreateAsync(new RoleEntity
+                        //var result = roleManager.CreateAsync(new RoleEntity
+                        //{
+                        //    Id = Guid.NewGuid().ToString(),
+                        //    Name = Roles.User
+                        //}).Result;
+                        //var result2 = roleManager.CreateAsync(new RoleEntity
+                        //{
+                        //    Id = Guid.NewGuid().ToString(),
+                        //    Name = Roles.Admin
+                        //}).Result;
+                        foreach (var role in Roles.All)
                         {
-                            Id = Guid.NewGuid().ToString(),
-                            Name = Roles.User
-                        }).Result;
+                            var result = roleManager.CreateAsync(new RoleEntity
+                            {
+                                Name = role
+                            }).Result;
+                        }
                     }
 
                     IdentityResult adminResult = userManager.CreateAsync(admin, "Qwerty-1").Result;

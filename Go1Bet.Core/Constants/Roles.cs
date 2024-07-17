@@ -14,7 +14,7 @@ namespace Go1Bet.Core.Constants
             User,
         };
 
-        public const string Admin = "Administrator";
+        public const string Admin = "Admin";
         public const string User = "User";
     }
 }
