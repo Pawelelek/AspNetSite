@@ -33,12 +33,6 @@ namespace Go1Bet.Core.Services
                 RoleName = role.Name,
                 ConcurrencyStamp = role.ConcurrencyStamp
             }).ToList();
-            //var result = await _roleRepository.Roles.Select(role => new RoleItemDTO
-            //{
-            //    Id = role.Id,
-            //    RoleName = role.Name,
-            //    ConcurrencyStamp = role.ConcurrencyStamp
-            //}).ToListAsync();
             return new ServiceResponse()
             {
                 Success = true,
@@ -55,13 +49,20 @@ namespace Go1Bet.Core.Services
                 RoleName = role.Name,
                 ConcurrencyStamp = role.ConcurrencyStamp
             }).ToList();
-            return new ServiceResponse()
+            if (result != null)
             {
-                Success = true,
-                Message = "Get role",
-                countPayload = result.Count,
-                Payload = result
-                
+                return new ServiceResponse
+                {
+                    Success = true,
+                    Message = "All roles loaded.",
+                    countPayload = result.Count,
+                    Payload = result
+                };
+            }
+            return new ServiceResponse
+            {
+                Success = false,
+                Message = "Unable to loaded roles",
             };
         }
         public async Task<ServiceResponse> CreateRoleAsync(RoleCreateDTO model)
