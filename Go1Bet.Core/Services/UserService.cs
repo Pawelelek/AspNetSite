@@ -449,7 +449,7 @@ namespace Go1Bet.Core.Services
 
                 }
 
-                var result = new { Id = user.Id, email = user.Email, firstname = user.FirstName, lastname = user.LastName, phoneNumber = user.PhoneNumber };
+                //var result = new { Id = user.Id, email = user.Email, firstname = user.FirstName, lastname = user.LastName, phoneNumber = user.PhoneNumber };
                 var token = await _jwtService.GenerateJwtTokensAsync(user);
                 return new ServiceResponse
                 {

@@ -51,20 +51,11 @@ namespace Go1Bet.Infrastructure.Initializers
                     };
                     if (!roleManager.Roles.Any())
                     {
-                        //var result = roleManager.CreateAsync(new RoleEntity
-                        //{
-                        //    Id = Guid.NewGuid().ToString(),
-                        //    Name = Roles.User
-                        //}).Result;
-                        //var result2 = roleManager.CreateAsync(new RoleEntity
-                        //{
-                        //    Id = Guid.NewGuid().ToString(),
-                        //    Name = Roles.Admin
-                        //}).Result;
                         foreach (var role in Roles.All)
                         {
                             var result = roleManager.CreateAsync(new RoleEntity
                             {
+                                Id = Guid.NewGuid().ToString(),
                                 Name = role
                             }).Result;
                         }
