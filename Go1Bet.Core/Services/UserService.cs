@@ -21,6 +21,8 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using Go1Bet.Core.Constants;
 using Google.Apis.Auth;
 using Org.BouncyCastle.Bcpg;
+using Microsoft.AspNetCore.WebUtilities;
+using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 
 namespace Go1Bet.Core.Services
 {
@@ -59,7 +61,9 @@ namespace Go1Bet.Core.Services
             IdentityResult result = await _userManager.CreateAsync(mappedUser, model.Password);
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(mappedUser, model.Role);
+                var role = model.Role != null ? model.Role : Roles.User;
+                var existRole = await _roleManager.FindByNameAsync(role) != null ? role : Roles.User;
+                await _userManager.AddToRoleAsync(mappedUser, existRole);
 
                 return new ServiceResponse
                 {
@@ -130,6 +134,74 @@ namespace Go1Bet.Core.Services
             {
                 Message = "User not found",
                 Success = false,
+            };
+        }
+        public async Task<ServiceResponse> GenerateConfirmationEmailTokenAsync(string userId)
+        {
+            try
+            {
+                var userExist = await _userManager.FindByIdAsync(userId);
+                if (userExist == null)
+                {
+                    return new ServiceResponse
+                    {
+                        Message = "User not found",
+                        Success = false,
+                    };
+                }
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(userExist);
+
+                var encodedEmailToken = Encoding.UTF8.GetBytes(token);
+                //var validEmailToken = WebEncoders.Base64UrlEncode(encodedEmailToken);
+                var tokenUrl = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+                return new ServiceResponse
+                {
+                    Message = "Email confirmation token has been generated",
+                    Success = true,
+                    Payload = token,
+                };
+            }
+            catch(Exception ex) { }
+            return new ServiceResponse
+            {
+                Message = "Something went wrong!",
+                Success = false,
+            };
+
+        }
+        public async Task<ServiceResponse> SendToEmail_ConfirmationTokenAsync(string email, string userId)
+        {
+            var userExist = await _userManager.FindByEmailAsync(email);
+            if (userExist == null)
+            {
+                return new ServiceResponse
+                {
+                    Message = "User not found",
+                    Success = false,
+                };
+            }
+            return new ServiceResponse
+            {
+                Message = "Success",
+                Success = false,
+            };
+        }
+        public async Task<ServiceResponse> ConfirmationEmailAsync(ConfirmationEmailDTO model)
+        {
+            var userExist = await _userManager.FindByIdAsync(model.userId);
+            if (userExist == null)
+            {
+                return new ServiceResponse
+                {
+                    Message = "User not found",
+                    Success = false,
+                };
+            }
+            await _userManager.ConfirmEmailAsync(userExist, model.token);
+            return new ServiceResponse
+            {
+                Message = "Success",
+                Success = true,
             };
         }
         public async Task<ServiceResponse> UpdateUserEmailAsync(UserEditEmailDTO model)
