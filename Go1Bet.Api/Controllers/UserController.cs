@@ -59,9 +59,6 @@ namespace Go1Bet.Api.Controllers
             }
             return NotFound("validation problem");
         }
-        //1. UPDATE > Name, LastName, PhoneNumber
-        //2. UPDATE > Password
-        //3. UPDATE > Email
         [HttpPut("UpdatePersonalInfo")]
         public async Task<IActionResult> UpdatePersonalInfoAsync([FromBody] UserEditDTO model)
         {
@@ -141,6 +138,18 @@ namespace Go1Bet.Api.Controllers
         public async Task<IActionResult> RefreshTokenAsync([FromBody] TokenRequestDto model)
         {
             var result = await _userService.RefreshTokenAsync(model);
+            return Ok(result);
+        }
+        [HttpGet("GetGenerateConfirmationEmailToken")]
+        public async Task<IActionResult> GenerateConfirmationEmailTokenAsync(string userId)
+        {
+            var result = await _userService.GenerateConfirmationEmailTokenAsync(userId);
+            return Ok(result);
+        }
+        [HttpPost("GetConfirmationEmailToken")]
+        public async Task<IActionResult> ConfirmationEmailTokenAsync([FromBody] ConfirmationEmailDTO model)
+        {
+            var result = await _userService.ConfirmationEmailAsync(model);
             return Ok(result);
         }
     }
