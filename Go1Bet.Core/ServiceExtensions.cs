@@ -17,6 +17,7 @@ namespace Go1Bet.Core
             services.AddTransient<UserService>();
             services.AddTransient<RoleService>();
             services.AddTransient<JwtService>();
+            services.AddTransient<EmailService>();
         }
 
         public static void AddMapping(this IServiceCollection services)

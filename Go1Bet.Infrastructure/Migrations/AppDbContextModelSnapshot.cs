@@ -92,6 +92,9 @@ namespace Go1Bet.Infrastructure.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsGoogle")
                         .HasColumnType("bit");
 

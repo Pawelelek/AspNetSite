@@ -12,6 +12,8 @@ namespace Go1Bet.Core.DTO_s.User
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public bool EmailConfirmed { get; set; }
+        public bool IsGoogle { get; set; }
+        public bool IsDelete { get; set; }
         public string Email { get; set; } = string.Empty;
         public string LockedEnd { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;

@@ -23,6 +23,8 @@ using Google.Apis.Auth;
 using Org.BouncyCastle.Bcpg;
 using Microsoft.AspNetCore.WebUtilities;
 using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
+using MailKit.Security;
+using MimeKit;
 
 namespace Go1Bet.Core.Services
 {
@@ -34,7 +36,9 @@ namespace Go1Bet.Core.Services
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
         private readonly JwtService _jwtService;
-        public UserService(JwtService jwtService, RoleManager<RoleEntity> roleManager, IConfiguration config, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IMapper mapper)
+        private readonly EmailService _emailService;
+        
+        public UserService(EmailService emailService, JwtService jwtService, RoleManager<RoleEntity> roleManager, IConfiguration config, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -42,6 +46,7 @@ namespace Go1Bet.Core.Services
             _config = config;
             _roleManager = roleManager;
             _jwtService = jwtService;
+            _emailService = emailService;
         }
 
         public async Task<ServiceResponse> CreateAsync(CreateUserDto model)
@@ -65,13 +70,19 @@ namespace Go1Bet.Core.Services
                 var existRole = await _roleManager.FindByNameAsync(role) != null ? role : Roles.User;
                 await _userManager.AddToRoleAsync(mappedUser, existRole);
 
+                //Send to email confirmation token
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(mappedUser);
+                string url = $"{_config["BackEndURL"]}/api/User/ConfirmationEmail?userId={mappedUser.Id}&token={token}";
+
+                string emailBody = $"<h1>Confirm your email</h1> <a href='{url}'>Confirm now</a>";
+                await _emailService.SendEmailAsync(mappedUser.Email, "Email confirmation.", emailBody);
+                //==============
                 return new ServiceResponse
                 {
                     Message = "User successfully created.",
                     Success = true,
                 };
             }
-
             List<IdentityError> errorList = result.Errors.ToList();
 
             string errors = "";
@@ -172,6 +183,7 @@ namespace Go1Bet.Core.Services
         public async Task<ServiceResponse> SendToEmail_ConfirmationTokenAsync(string email, string userId)
         {
             var userExist = await _userManager.FindByEmailAsync(email);
+
             if (userExist == null)
             {
                 return new ServiceResponse
@@ -299,9 +311,12 @@ namespace Go1Bet.Core.Services
         {
 
             var result = await _userManager.Users
+                    .Where(user => user.IsDelete == false)
                     .Select(user => new UserItemDTO
                     {
                         Id = user.Id,
+                        IsGoogle = user.IsGoogle,
+                        IsDelete = user.IsDelete,
                         FirstName = user.FirstName,
                         LastName = user.LastName,
                         Email = user.Email,
@@ -330,9 +345,12 @@ namespace Go1Bet.Core.Services
             if (user != null)
             {
                 var result = await _userManager.Users.Where(user => user.Id == id)
+                    .Where(user => user.IsDelete == false)
                     .Select(user => new UserItemDTO
                 {
                     Id = user.Id,
+                    IsGoogle = user.IsGoogle,
+                    IsDelete = user.IsDelete,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Email = user.Email,
@@ -455,14 +473,23 @@ namespace Go1Bet.Core.Services
                     Message = "User not found."
                 };
             }
-
-            var result = await _userManager.DeleteAsync(user);
+            //if(user.EmailConfirmed == true)
+            //{
+            //    return new ServiceResponse
+            //    {
+            //        Success = true,
+            //        Message = "User was not delete. User have Email Confirm!"
+            //    };
+            //}
+            //var result = await _userManager.DeleteAsync(user);
+            user.IsDelete = true;
+            var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
             {
                 return new ServiceResponse
                 {
                     Success = true,
-                    Message = "User successfullt deleted."
+                    Message = "User successfull deleted."
                 };
             }
 
