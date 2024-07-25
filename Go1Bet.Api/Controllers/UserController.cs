@@ -146,7 +146,7 @@ namespace Go1Bet.Api.Controllers
             var result = await _userService.GenerateConfirmationEmailTokenAsync(userId);
             return Ok(result);
         }
-        [HttpPost("GetConfirmationEmailToken")]
+        [HttpPost("ConfirmationEmail")]
         public async Task<IActionResult> ConfirmationEmailTokenAsync([FromBody] ConfirmationEmailDTO model)
         {
             var result = await _userService.ConfirmationEmailAsync(model);

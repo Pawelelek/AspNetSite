@@ -11,6 +11,7 @@ namespace Go1Bet.Core.Entities.User
     public class AppUser : IdentityUser<string>
     {
         public bool IsGoogle { get; set; } = false;
+        public bool IsDelete { get; set; } = false;
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;

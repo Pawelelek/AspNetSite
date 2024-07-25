@@ -29,14 +29,14 @@ namespace Go1Bet.Api.Controllers
         }
         [HttpPost]
         [Route("create")]
-        public async Task<IActionResult> CreateAsync([FromBody] RoleCreateDTO model)
+        public async Task<IActionResult> CreateAsync([FromForm] RoleCreateDTO model)
         {
             var result = await _roleService.CreateRoleAsync(model);
             return Ok(result);
         }
         [HttpPut]
         [Route("edit")]
-        public async Task<IActionResult> EditAsync([FromBody] RoleEditDTO model)
+        public async Task<IActionResult> EditAsync([FromForm] RoleEditDTO model)
         {
             var result = await _roleService.EditRoleAsync(model);
             return Ok(result);

@@ -31,6 +31,7 @@ namespace Go1Bet.Infrastructure.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     IsGoogle = table.Column<bool>(type: "bit", nullable: false),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Go1Bet.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240715092121_first")]
+    [Migration("20240725140903_first")]
     partial class first
     {
         /// <inheritdoc />
@@ -94,6 +94,9 @@ namespace Go1Bet.Infrastructure.Migrations
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsGoogle")
                         .HasColumnType("bit");
