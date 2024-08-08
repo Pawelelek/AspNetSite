@@ -70,6 +70,9 @@ namespace Go1Bet.Infrastructure.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
@@ -82,6 +85,9 @@ namespace Go1Bet.Infrastructure.Migrations
                     b.Property<DateTime>("DateLastPersonalInfoUpdated")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -90,6 +96,9 @@ namespace Go1Bet.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDelete")
@@ -147,6 +156,27 @@ namespace Go1Bet.Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Go1Bet.Core.Entities.User.BalanceEntity", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Money")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Reviewed")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("tbl_Balance");
+                });
+
             modelBuilder.Entity("Go1Bet.Core.Entities.User.RoleEntity", b =>
                 {
                     b.Property<string>("Id")
@@ -172,6 +202,27 @@ namespace Go1Bet.Infrastructure.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Go1Bet.Core.Entities.User.TransactionEntity", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("BalanceId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("TransactionType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BalanceId");
+
+                    b.ToTable("tbl_Transactions");
                 });
 
             modelBuilder.Entity("Go1Bet.Core.Entities.User.UserRoleEntity", b =>
@@ -289,6 +340,22 @@ namespace Go1Bet.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Go1Bet.Core.Entities.User.BalanceEntity", b =>
+                {
+                    b.HasOne("Go1Bet.Core.Entities.User.AppUser", null)
+                        .WithMany("Balances")
+                        .HasForeignKey("AppUserId");
+                });
+
+            modelBuilder.Entity("Go1Bet.Core.Entities.User.TransactionEntity", b =>
+                {
+                    b.HasOne("Go1Bet.Core.Entities.User.BalanceEntity", "Balance")
+                        .WithMany("TransactionHistory")
+                        .HasForeignKey("BalanceId");
+
+                    b.Navigation("Balance");
+                });
+
             modelBuilder.Entity("Go1Bet.Core.Entities.User.UserRoleEntity", b =>
                 {
                     b.HasOne("Go1Bet.Core.Entities.User.RoleEntity", "Role")
@@ -346,7 +413,14 @@ namespace Go1Bet.Infrastructure.Migrations
 
             modelBuilder.Entity("Go1Bet.Core.Entities.User.AppUser", b =>
                 {
+                    b.Navigation("Balances");
+
                     b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("Go1Bet.Core.Entities.User.BalanceEntity", b =>
+                {
+                    b.Navigation("TransactionHistory");
                 });
 
             modelBuilder.Entity("Go1Bet.Core.Entities.User.RoleEntity", b =>
