@@ -13,8 +13,6 @@ namespace Go1Bet.Infrastructure.Context
         >
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
-        //public DbSet<AppUser> AppUsers { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,5 +34,7 @@ namespace Go1Bet.Infrastructure.Context
             });
         }
         public DbSet<RefreshToken> RefreshToken { get; set; }
+        public DbSet<TransactionEntity> Transactions { get; set; }
+        public DbSet<BalanceEntity> Balances { get; set; }
     }
 }

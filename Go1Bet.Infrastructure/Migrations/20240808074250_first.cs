@@ -34,6 +34,9 @@ namespace Go1Bet.Infrastructure.Migrations
                     IsDelete = table.Column<bool>(type: "bit", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateLastPasswordUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateLastEmailUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -188,6 +191,44 @@ namespace Go1Bet.Infrastructure.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "tbl_Balance",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Money = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Reviewed = table.Column<bool>(type: "bit", nullable: false),
+                    AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tbl_Balance", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_tbl_Balance_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tbl_Transactions",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BalanceId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    TransactionType = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tbl_Transactions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_tbl_Transactions_tbl_Balance_BalanceId",
+                        column: x => x.BalanceId,
+                        principalTable: "tbl_Balance",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -231,6 +272,16 @@ namespace Go1Bet.Infrastructure.Migrations
                 name: "IX_RefreshToken_UserId",
                 table: "RefreshToken",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tbl_Balance_AppUserId",
+                table: "tbl_Balance",
+                column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tbl_Transactions_BalanceId",
+                table: "tbl_Transactions",
+                column: "BalanceId");
         }
 
         /// <inheritdoc />
@@ -255,7 +306,13 @@ namespace Go1Bet.Infrastructure.Migrations
                 name: "RefreshToken");
 
             migrationBuilder.DropTable(
+                name: "tbl_Transactions");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "tbl_Balance");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

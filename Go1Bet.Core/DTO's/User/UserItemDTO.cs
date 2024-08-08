@@ -22,6 +22,7 @@ namespace Go1Bet.Core.DTO_s.User
         public string DateLastEmailUpdated { get; set; }
         public string DateLastPersonalInfoUpdated { get; set; }
         public List<UserRoleItemDTO> Roles { get; set; }
+        public List<BalanceItemDTO> Balances { get; set; }
 
     }
 }

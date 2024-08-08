@@ -327,7 +327,12 @@ namespace Go1Bet.Core.Services
                         DateLastPasswordUpdated = user.DateLastPasswordUpdated.ToString(),
                         DateLastPersonalInfoUpdated = user.DateLastPersonalInfoUpdated.ToString(),
                         LockedEnd = user.LockoutEnd.ToString(),
-                        Roles = user.UserRoles.Select(perm => new UserRoleItemDTO { RoleName = perm.Role.Name }).ToList()
+                        Roles = user.UserRoles.Select(perm => new UserRoleItemDTO { RoleName = perm.Role.Name }).ToList(),
+                        Balances = user.Balances
+                        .Select(bal => new BalanceItemDTO { Id = bal.Id, Money = bal.Money, Reviewed = bal.Reviewed, 
+                            Transactions = bal.TransactionHistory
+                            .Select(tr => new TransactionItemDTO { Id = tr.Id }).ToList() 
+                        }).ToList()
                     }).ToListAsync();
             return new ServiceResponse
             {
