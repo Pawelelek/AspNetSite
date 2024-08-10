@@ -5,7 +5,7 @@ using Go1Bet.Core.Entities.User;
 using System.Reflection.Emit;
 using Microsoft.AspNetCore.Identity;
 
-namespace Go1Bet.Infrastructure.Context
+namespace Go1Bet.Core.Context
 {
     public class AppDbContext : IdentityDbContext<
            AppUser, RoleEntity, string, IdentityUserClaim<string>,

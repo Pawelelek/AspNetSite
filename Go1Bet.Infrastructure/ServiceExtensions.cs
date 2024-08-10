@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Go1Bet.Core.Entities.User;
 using Go1Bet.Core.Interfaces;
-using Go1Bet.Infrastructure.Context;
+using Go1Bet.Core.Context;
 using Go1Bet.Infrastructure.Repository;
 
 namespace Go1Bet.Infrastructure

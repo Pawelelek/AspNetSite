@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Go1Bet.Core.DTO_s.User;
 using Go1Bet.Core.Entities.User;
+using Go1Bet.Core.DTO_s.Balance;
 
 namespace Go1Bet.Core.AutoMapper.User
 {
@@ -20,7 +21,9 @@ namespace Go1Bet.Core.AutoMapper.User
             CreateMap<AppUser, UserEditEmailDTO>().ReverseMap();
             CreateMap<AppUser, UserEditPasswordDTO>().ReverseMap();
             CreateMap<BalanceEntity, BalanceItemDTO>().ReverseMap();
+            CreateMap<BalanceEntity, BalanceCreateDTO>().ReverseMap();
             CreateMap<TransactionEntity, TransactionItemDTO>().ReverseMap();
+            CreateMap<TransactionEntity, TransactionCreateDTO>().ReverseMap();
         }
     }
 }

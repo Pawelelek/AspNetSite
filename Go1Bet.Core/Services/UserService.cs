@@ -17,12 +17,10 @@ using Go1Bet.Core.Entities.Specifications;
 using Go1Bet.Core.Entities.Tokens;
 using Go1Bet.Core.Entities.User;
 using Go1Bet.Core.Interfaces;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using Go1Bet.Core.Constants;
 using Google.Apis.Auth;
 using Org.BouncyCastle.Bcpg;
 using Microsoft.AspNetCore.WebUtilities;
-using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 using MailKit.Security;
 using MimeKit;
 
@@ -329,9 +327,10 @@ namespace Go1Bet.Core.Services
                         LockedEnd = user.LockoutEnd.ToString(),
                         Roles = user.UserRoles.Select(perm => new UserRoleItemDTO { RoleName = perm.Role.Name }).ToList(),
                         Balances = user.Balances
-                        .Select(bal => new BalanceItemDTO { Id = bal.Id, Money = bal.Money, Reviewed = bal.Reviewed, 
+                        .Select(bal => new BalanceItemDTO { Id = bal.Id, Money = bal.Money, Reviewed = bal.Reviewed,
+                            DateCreated = bal.DateCreated.ToString(),
                             Transactions = bal.TransactionHistory
-                            .Select(tr => new TransactionItemDTO { Id = tr.Id }).ToList() 
+                            .Select(tr => new TransactionItemDTO { Id = tr.Id, BalanceId = tr.BalanceId, TransactionType = tr.TransactionType.ToString(), Value = tr.Value, DateCreated = tr.DateCreated.ToString() }).ToList() 
                         }).ToList()
                     }).ToListAsync();
             return new ServiceResponse

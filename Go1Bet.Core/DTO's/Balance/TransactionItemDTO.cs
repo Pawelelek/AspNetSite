@@ -14,7 +14,9 @@ namespace Go1Bet.Core.DTO_s.User
     {
         public string Id { get; set; }
         public string Value { get; set; }
+        public string MoneyState { get; set; }
         public string? BalanceId { get; set; }
         public string TransactionType { get; set; }
+        public string DateCreated { get; set; }
     }
 }

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Go1Bet.Core.Constants;
 using Go1Bet.Core.Entities.User;
-using Go1Bet.Infrastructure.Context;
+using Go1Bet.Core.Context;
 using System.Globalization;
 using System.Data;
 
