@@ -12,12 +12,13 @@ namespace Go1Bet.Core.Entities.User
     public class BalanceEntity
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
+        public DateTime DateCreated { get; set; } = DateTime.UtcNow;
         public string Money { get; set; }
         public bool Reviewed { get; set; } = false;
-        //[DisplayName("User")]
-        //public AppUser User { get; set; }
-        //[ForeignKey(nameof(User))]
-        //public string? UserId { get; set; }
+        [DisplayName("User")]
+        public AppUser User { get; set; }
+        [ForeignKey(nameof(User))]
+        public string? UserId { get; set; }
         public ICollection<TransactionEntity> TransactionHistory { get; set; } = new List<TransactionEntity>();
     }
 }

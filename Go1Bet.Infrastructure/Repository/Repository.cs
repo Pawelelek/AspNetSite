@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Go1Bet.Core.Interfaces;
-using Go1Bet.Infrastructure.Context;
+using Go1Bet.Core.Context;
 
 namespace Go1Bet.Infrastructure.Repository
 {

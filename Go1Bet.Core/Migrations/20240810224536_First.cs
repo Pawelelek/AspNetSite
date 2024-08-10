@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Go1Bet.Infrastructure.Migrations
+namespace Go1Bet.Core.Migrations
 {
     /// <inheritdoc />
-    public partial class first : Migration
+    public partial class First : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -196,16 +196,17 @@ namespace Go1Bet.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Money = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Reviewed = table.Column<bool>(type: "bit", nullable: false),
-                    AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_tbl_Balance", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_tbl_Balance_AspNetUsers_AppUserId",
-                        column: x => x.AppUserId,
+                        name: "FK_tbl_Balance_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 });
@@ -215,6 +216,7 @@ namespace Go1Bet.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BalanceId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     TransactionType = table.Column<int>(type: "int", nullable: false)
@@ -274,9 +276,9 @@ namespace Go1Bet.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_tbl_Balance_AppUserId",
+                name: "IX_tbl_Balance_UserId",
                 table: "tbl_Balance",
-                column: "AppUserId");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_tbl_Transactions_BalanceId",

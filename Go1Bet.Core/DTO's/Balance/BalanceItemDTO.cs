@@ -11,6 +11,7 @@ namespace Go1Bet.Core.DTO_s.User
         public string Id { get; set; }
         public string Money { get; set; }
         public bool Reviewed { get; set; }
+        public string DateCreated { get; set; }
         public List<TransactionItemDTO> Transactions { get; set; }
     }
 }
