@@ -23,6 +23,7 @@ using Org.BouncyCastle.Bcpg;
 using Microsoft.AspNetCore.WebUtilities;
 using MailKit.Security;
 using MimeKit;
+using Go1Bet.Core.Context;
 
 namespace Go1Bet.Core.Services
 {
@@ -35,8 +36,9 @@ namespace Go1Bet.Core.Services
         private readonly IMapper _mapper;
         private readonly JwtService _jwtService;
         private readonly EmailService _emailService;
+        private readonly AppDbContext _context;
         
-        public UserService(EmailService emailService, JwtService jwtService, RoleManager<RoleEntity> roleManager, IConfiguration config, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IMapper mapper)
+        public UserService(AppDbContext context, EmailService emailService, JwtService jwtService, RoleManager<RoleEntity> roleManager, IConfiguration config, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -45,6 +47,7 @@ namespace Go1Bet.Core.Services
             _roleManager = roleManager;
             _jwtService = jwtService;
             _emailService = emailService;
+            _context = context;
         }
 
         public async Task<ServiceResponse> CreateAsync(CreateUserDto model)
@@ -64,6 +67,10 @@ namespace Go1Bet.Core.Services
             IdentityResult result = await _userManager.CreateAsync(mappedUser, model.Password);
             if (result.Succeeded)
             {
+                var balance = new BalanceEntity() { Money = "0", UserId = mappedUser.Id };
+                await _context.Balances.AddAsync(balance);
+                await _context.SaveChangesAsync();
+
                 var role = model.Role != null ? model.Role : Roles.User;
                 var existRole = await _roleManager.FindByNameAsync(role) != null ? role : Roles.User;
                 await _userManager.AddToRoleAsync(mappedUser, existRole);
@@ -488,6 +495,7 @@ namespace Go1Bet.Core.Services
             //var result = await _userManager.DeleteAsync(user);
             user.IsDelete = true;
             var result = await _userManager.UpdateAsync(user);
+            await _userManager.DeleteAsync(user); //Видалити цю строку коду на стадії релізу!!!!
             if (result.Succeeded)
             {
                 return new ServiceResponse
