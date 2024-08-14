@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Go1Bet.Core.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240810224536_First")]
+    [Migration("20240814143727_First")]
     partial class First
     {
         /// <inheritdoc />
@@ -24,6 +24,32 @@ namespace Go1Bet.Core.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Go1Bet.Core.Entities.Category.CategoryEntity", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<string>("Image")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ParentId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("tbl_Categories");
+                });
 
             modelBuilder.Entity("Go1Bet.Core.Entities.Tokens.RefreshToken", b =>
                 {
@@ -163,6 +189,9 @@ namespace Go1Bet.Core.Migrations
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
@@ -340,6 +369,15 @@ namespace Go1Bet.Core.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Go1Bet.Core.Entities.Category.CategoryEntity", b =>
+                {
+                    b.HasOne("Go1Bet.Core.Entities.Category.CategoryEntity", "Parent")
+                        .WithMany("Subcategories")
+                        .HasForeignKey("ParentId");
+
+                    b.Navigation("Parent");
+                });
+
             modelBuilder.Entity("Go1Bet.Core.Entities.Tokens.RefreshToken", b =>
                 {
                     b.HasOne("Go1Bet.Core.Entities.User.AppUser", "User")
@@ -420,6 +458,11 @@ namespace Go1Bet.Core.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Go1Bet.Core.Entities.Category.CategoryEntity", b =>
+                {
+                    b.Navigation("Subcategories");
                 });
 
             modelBuilder.Entity("Go1Bet.Core.Entities.User.AppUser", b =>

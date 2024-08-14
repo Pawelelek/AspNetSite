@@ -62,6 +62,26 @@ namespace Go1Bet.Core.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "tbl_Categories",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    ParentId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tbl_Categories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_tbl_Categories_tbl_Categories_ParentId",
+                        column: x => x.ParentId,
+                        principalTable: "tbl_Categories",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -199,6 +219,7 @@ namespace Go1Bet.Core.Migrations
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Money = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Reviewed = table.Column<bool>(type: "bit", nullable: false),
+                    Active = table.Column<bool>(type: "bit", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
@@ -281,6 +302,11 @@ namespace Go1Bet.Core.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_tbl_Categories_ParentId",
+                table: "tbl_Categories",
+                column: "ParentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_tbl_Transactions_BalanceId",
                 table: "tbl_Transactions",
                 column: "BalanceId");
@@ -306,6 +332,9 @@ namespace Go1Bet.Core.Migrations
 
             migrationBuilder.DropTable(
                 name: "RefreshToken");
+
+            migrationBuilder.DropTable(
+                name: "tbl_Categories");
 
             migrationBuilder.DropTable(
                 name: "tbl_Transactions");

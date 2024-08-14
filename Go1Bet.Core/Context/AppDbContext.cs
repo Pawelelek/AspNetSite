@@ -4,6 +4,7 @@ using Go1Bet.Core.Entities.Tokens;
 using Go1Bet.Core.Entities.User;
 using System.Reflection.Emit;
 using Microsoft.AspNetCore.Identity;
+using Go1Bet.Core.Entities.Category;
 
 namespace Go1Bet.Core.Context
 {
@@ -36,5 +37,6 @@ namespace Go1Bet.Core.Context
         public DbSet<RefreshToken> RefreshToken { get; set; }
         public DbSet<TransactionEntity> Transactions { get; set; }
         public DbSet<BalanceEntity> Balances { get; set; }
+        public DbSet<CategoryEntity> Categories { get; set; }
     }
 }
