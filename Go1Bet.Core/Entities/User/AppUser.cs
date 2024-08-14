@@ -23,24 +23,24 @@ namespace Go1Bet.Core.Entities.User
         public DateTime DateLastPersonalInfoUpdated { get; set; } = DateTime.UtcNow;
         public virtual ICollection<BalanceEntity> Balances { get; set; }
         public virtual ICollection<UserRoleEntity> UserRoles { get; set; }
+        //Notification (Reviewd = false), Balance, Bonuces
 
         //Bonuses > Money (Gift) , Bet insurance , Promocode, bool Reviewed = false
 
-        //BettingHistory > id , userId , The Name of the sport , period
+        //BettingHistory > id , userId , The Name of the sport(Event) , period
 
         //List of messages > all, output, incoming > Received from , Send to, Message, bool Reviewed = false
 
         //Favorite SportEvents > Competition , SportEvent
-
 
         // ================== Sport Event =====================
 
         //Country (UA, USA, UK, DE, PL ...)
 
         //TypeTeam()
+
         //Team (Type, Name, ValuePerson, Country)
 
-        //SportEvent > Type, Bet(TypeBet (Coef), ValueBet, Possible Win(ValueBet*Coeficient)), Teams
-        
+        //SportEvent > Type, Bet(TypeBet (Coef), ValueBet, Possible Win(ValueBet*Coeficient)), Teams        
     }
 }
