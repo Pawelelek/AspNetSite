@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Go1Bet.Core.Entities.Bonuses
 {
-    public class PromocodeUserEntity
+    public class ExerciseUserEntity
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
         [DisplayName("User")]
@@ -17,9 +17,9 @@ namespace Go1Bet.Core.Entities.Bonuses
         [ForeignKey(nameof(User))]
         public string? UserId { get; set; }
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
-        [DisplayName("Promocode")]
-        public PromocodeEntity Promocode { get; set; }
-        [ForeignKey(nameof(Promocode))]
-        public string? PromocodeId { get; set; }
+        [DisplayName("Exercise")]
+        public ExerciseEntity Exercise { get; set; }
+        [ForeignKey(nameof(Exercise))]
+        public string? ExerciseId { get; set; }
     }
 }
