@@ -336,8 +336,8 @@ namespace Go1Bet.Core.Services
                         Balances = user.Balances
                         .Select(bal => new BalanceItemDTO { Id = bal.Id, Money = bal.Money, Reviewed = bal.Reviewed,
                             DateCreated = bal.DateCreated.ToString(),
-                            Transactions = bal.TransactionHistory
-                            .Select(tr => new TransactionItemDTO { Id = tr.Id, BalanceId = tr.BalanceId, TransactionType = tr.TransactionType.ToString(), Value = tr.Value, DateCreated = tr.DateCreated.ToString() }).ToList() 
+                            //Transactions = bal.TransactionHistory
+                            //.Select(tr => new TransactionItemDTO { Id = tr.Id, BalanceId = tr.BalanceId, TransactionType = tr.TransactionType.ToString(), Value = tr.Value, DateCreated = tr.DateCreated.ToString() }).ToList() 
                         }).ToList()
                     }).ToListAsync();
             return new ServiceResponse
@@ -372,7 +372,17 @@ namespace Go1Bet.Core.Services
                     DateLastPasswordUpdated = user.DateLastPasswordUpdated.ToString(),
                     DateLastPersonalInfoUpdated = user.DateLastPersonalInfoUpdated.ToString(),
                     LockedEnd = user.LockoutEnd.ToString(),
-                    Roles = user.UserRoles.Select(perm => new UserRoleItemDTO { RoleName = perm.Role.Name }).ToList()
+                    Roles = user.UserRoles.Select(perm => new UserRoleItemDTO { RoleName = perm.Role.Name }).ToList(),
+                    Balances = user.Balances
+                        .Select(bal => new BalanceItemDTO
+                        {
+                            Id = bal.Id,
+                            Money = bal.Money,
+                            Reviewed = bal.Reviewed,
+                            DateCreated = bal.DateCreated.ToString(),
+                            Transactions = bal.TransactionHistory
+                            .Select(tr => new TransactionItemDTO { Id = tr.Id, BalanceId = tr.BalanceId, TransactionType = tr.TransactionType.ToString(), Value = tr.Value, DateCreated = tr.DateCreated.ToString() }).ToList()
+                        }).ToList()
                     }).ToListAsync();
 
                 if (result != null)

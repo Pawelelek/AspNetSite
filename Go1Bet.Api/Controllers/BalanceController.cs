@@ -14,6 +14,27 @@ namespace Go1Bet.Api.Controllers
         {
             _balanceService = balanceService;
         }
+        [HttpGet]
+        [Route("getAll")]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            var result = await _balanceService.GetAllAsync();
+            return Ok(result);
+        }
+        [HttpGet]
+        [Route("getById")]
+        public async Task<IActionResult> GetByIdAsync(string id)
+        {
+            var result = await _balanceService.GetByIdAsync(id);
+            return Ok(result);
+        }
+        [HttpGet]
+        [Route("getByUserId")]
+        public async Task<IActionResult> GetByUserIdAsync(string userId)
+        {
+            var result = await _balanceService.GetByUserIdAsync(userId);
+            return Ok(result);
+        }
         [HttpPost]
         [Route("create")]
         public async Task<IActionResult> CreateAsync([FromBody] BalanceCreateDTO model)
