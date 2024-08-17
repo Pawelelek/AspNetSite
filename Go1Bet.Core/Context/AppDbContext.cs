@@ -42,9 +42,10 @@ namespace Go1Bet.Core.Context
 
         //Bonuses
         public DbSet<ExerciseEntity> Exercises { get; set; }
+        public DbSet<ExerciseUserEntity> UserExercises { get; set; }
         public DbSet<PromocodeEntity> Promocodes { get; set; }      
         public DbSet<PromocodeUserEntity> UserPromocodes { get; set; }
-        public DbSet<BonusUserEntity> UserBonuses { get; set; }
+        //public DbSet<BonusUserEntity> UserBonuses { get; set; }
         public DbSet<BonusesEntity> Bonuses { get; set; }
     }
 }
