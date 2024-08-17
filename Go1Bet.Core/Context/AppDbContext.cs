@@ -5,6 +5,7 @@ using Go1Bet.Core.Entities.User;
 using System.Reflection.Emit;
 using Microsoft.AspNetCore.Identity;
 using Go1Bet.Core.Entities.Category;
+using Go1Bet.Core.Entities.Bonuses;
 
 namespace Go1Bet.Core.Context
 {
@@ -38,5 +39,12 @@ namespace Go1Bet.Core.Context
         public DbSet<TransactionEntity> Transactions { get; set; }
         public DbSet<BalanceEntity> Balances { get; set; }
         public DbSet<CategoryEntity> Categories { get; set; }
+
+        //Bonuses
+        public DbSet<ExerciseEntity> Exercises { get; set; }
+        public DbSet<PromocodeEntity> Promocodes { get; set; }      
+        public DbSet<PromocodeUserEntity> UserPromocodes { get; set; }
+        public DbSet<BonusUserEntity> UserBonuses { get; set; }
+        public DbSet<BonusesEntity> Bonuses { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using Go1Bet.Core.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Go1Bet.Core.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240817164710_Bonuses")]
+    partial class Bonuses
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,44 +24,6 @@ namespace Go1Bet.Core.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Go1Bet.Core.Entities.Bonuses.BonusUserEntity", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserBonuses");
-                });
-
-            modelBuilder.Entity("Go1Bet.Core.Entities.Bonuses.BonusesEntity", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ExerciseId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("PromocodeId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExerciseId");
-
-                    b.HasIndex("PromocodeId");
-
-                    b.ToTable("Bonuses");
-                });
 
             modelBuilder.Entity("Go1Bet.Core.Entities.Bonuses.ExerciseEntity", b =>
                 {
@@ -117,24 +82,6 @@ namespace Go1Bet.Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Promocodes");
-                });
-
-            modelBuilder.Entity("Go1Bet.Core.Entities.Bonuses.PromocodeUserEntity", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserPromocodes");
                 });
 
             modelBuilder.Entity("Go1Bet.Core.Entities.Category.CategoryEntity", b =>
@@ -209,9 +156,6 @@ namespace Go1Bet.Core.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
-
-                    b.Property<string>("BonusesId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -291,8 +235,6 @@ namespace Go1Bet.Core.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BonusesId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -489,39 +431,6 @@ namespace Go1Bet.Core.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Go1Bet.Core.Entities.Bonuses.BonusUserEntity", b =>
-                {
-                    b.HasOne("Go1Bet.Core.Entities.User.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Go1Bet.Core.Entities.Bonuses.BonusesEntity", b =>
-                {
-                    b.HasOne("Go1Bet.Core.Entities.Bonuses.BonusUserEntity", "Exercise")
-                        .WithMany()
-                        .HasForeignKey("ExerciseId");
-
-                    b.HasOne("Go1Bet.Core.Entities.Bonuses.PromocodeUserEntity", "Promocode")
-                        .WithMany()
-                        .HasForeignKey("PromocodeId");
-
-                    b.Navigation("Exercise");
-
-                    b.Navigation("Promocode");
-                });
-
-            modelBuilder.Entity("Go1Bet.Core.Entities.Bonuses.PromocodeUserEntity", b =>
-                {
-                    b.HasOne("Go1Bet.Core.Entities.User.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Go1Bet.Core.Entities.Category.CategoryEntity", b =>
                 {
                     b.HasOne("Go1Bet.Core.Entities.Category.CategoryEntity", "Parent")
@@ -538,15 +447,6 @@ namespace Go1Bet.Core.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Go1Bet.Core.Entities.User.AppUser", b =>
-                {
-                    b.HasOne("Go1Bet.Core.Entities.Bonuses.BonusesEntity", "Bonuses")
-                        .WithMany()
-                        .HasForeignKey("BonusesId");
-
-                    b.Navigation("Bonuses");
                 });
 
             modelBuilder.Entity("Go1Bet.Core.Entities.User.BalanceEntity", b =>

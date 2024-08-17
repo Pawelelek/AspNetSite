@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Go1Bet.Core.Entities.Bonuses;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace Go1Bet.Core.Entities.User
         public virtual ICollection<UserRoleEntity> UserRoles { get; set; }
         //Notification (Reviewd = false), Balance, Bonuces
 
-        //Bonuses > Money (Gift) , Bet insurance , Promocode, bool Reviewed = false
+        public BonusesEntity Bonuses { get; set; }
 
         //BettingHistory > id , userId , The Name of the sport(Event) , period
 

@@ -120,7 +120,6 @@ namespace Go1Bet.Core.Services
         public async Task<ServiceResponse> Create(CategoryCreateDTO model)
         {
             var category = _mapper.Map<CategoryEntity>(model);
-            category.Id = Guid.NewGuid().ToString();
             category.ParentId = model.ParentId == "string" ? null : model.ParentId;
             await _context.Categories.AddAsync(category);
             await _context.SaveChangesAsync();
