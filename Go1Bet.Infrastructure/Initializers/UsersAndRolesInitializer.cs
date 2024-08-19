@@ -11,6 +11,7 @@ using Go1Bet.Core.Entities.User;
 using Go1Bet.Core.Context;
 using System.Globalization;
 using System.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Go1Bet.Infrastructure.Initializers
 {
@@ -26,7 +27,7 @@ namespace Go1Bet.Infrastructure.Initializers
 
                 if (userManager.FindByEmailAsync("admin@email.com").Result == null)
                 {
-                    AppUser admin = new AppUser()
+                    AppUser admin1 = new AppUser()
                     {
                         Id = Guid.NewGuid().ToString(),
                         UserName = "admin@email.com",
@@ -38,7 +39,7 @@ namespace Go1Bet.Infrastructure.Initializers
                         PhoneNumberConfirmed = true
                     };
 
-                    AppUser user = new AppUser()
+                    AppUser admin2 = new AppUser()
                     {
                         Id = Guid.NewGuid().ToString(),
                         UserName = "user@email.com",
@@ -61,16 +62,23 @@ namespace Go1Bet.Infrastructure.Initializers
                         }
                     }
 
-                    IdentityResult adminResult = userManager.CreateAsync(admin, "Qwerty-1").Result;
+                    IdentityResult adminResult = userManager.CreateAsync(admin1, "Qwerty-1").Result;
                     if (adminResult.Succeeded)
                     {
-                        userManager.AddToRoleAsync(admin, Roles.Admin).Wait();
+                        userManager.AddToRoleAsync(admin1, Roles.Admin).Wait();
                     }
-                    IdentityResult userResult = userManager.CreateAsync(user, "Qwerty-1").Result;
+                    IdentityResult userResult = userManager.CreateAsync(admin2, "Qwerty-1").Result;
                     if (userResult.Succeeded)
                     {
-                        userManager.AddToRoleAsync(user, Roles.User).Wait();
+                        userManager.AddToRoleAsync(admin2, Roles.Admin).Wait();
                     }
+                    var balance1 = new BalanceEntity() { Money = "10000", UserId = admin1.Id };
+                    await context.Balances.AddAsync(balance1);
+                    await context.SaveChangesAsync();
+
+                    var balance2 = new BalanceEntity() { Money = "10000", UserId = admin2.Id };
+                    await context.Balances.AddAsync(balance2);
+                    await context.SaveChangesAsync();
                 }
             }
         }

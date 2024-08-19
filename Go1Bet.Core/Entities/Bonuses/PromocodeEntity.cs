@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Go1Bet.Core.Entities.User;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,5 +17,6 @@ namespace Go1Bet.Core.Entities.Bonuses
         public double PriceMoney { get; set; }
         public int CountAvailable { get; set; }
         public int CountEntries { get; set; }
+        public ICollection<PromocodeUserEntity> PromocodeUsers { get; set; }
     }
 }

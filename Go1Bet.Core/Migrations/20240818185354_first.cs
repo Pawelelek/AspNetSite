@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Go1Bet.Core.Migrations
 {
     /// <inheritdoc />
-    public partial class DbInit : Migration
+    public partial class first : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,39 +26,38 @@ namespace Go1Bet.Core.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUsers",
+                name: "Exercises",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    IsGoogle = table.Column<bool>(type: "bit", nullable: false),
-                    IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Active = table.Column<bool>(type: "bit", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DateLastPasswordUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DateLastEmailUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DateLastPersonalInfoUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PriceMoney = table.Column<double>(type: "float", nullable: false),
+                    CountEntries = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.PrimaryKey("PK_Exercises", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Promocodes",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Key = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PriceMoney = table.Column<double>(type: "float", nullable: false),
+                    CountAvailable = table.Column<int>(type: "int", nullable: false),
+                    CountEntries = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Promocodes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -69,6 +68,7 @@ namespace Go1Bet.Core.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
                     Image = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ParentId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
@@ -115,12 +115,6 @@ namespace Go1Bet.Core.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -135,12 +129,6 @@ namespace Go1Bet.Core.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -159,12 +147,43 @@ namespace Go1Bet.Core.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    IsGoogle = table.Column<bool>(type: "bit", nullable: false),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateLastPasswordUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateLastEmailUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateLastPersonalInfoUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BonusesId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -233,6 +252,54 @@ namespace Go1Bet.Core.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserExercises",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExerciseId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserExercises", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserExercises_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UserExercises_Exercises_ExerciseId",
+                        column: x => x.ExerciseId,
+                        principalTable: "Exercises",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserPromocodes",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PromocodeId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserPromocodes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserPromocodes_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UserPromocodes_Promocodes_PromocodeId",
+                        column: x => x.PromocodeId,
+                        principalTable: "Promocodes",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "tbl_Transactions",
                 columns: table => new
                 {
@@ -249,6 +316,29 @@ namespace Go1Bet.Core.Migrations
                         name: "FK_tbl_Transactions_tbl_Balance_BalanceId",
                         column: x => x.BalanceId,
                         principalTable: "tbl_Balance",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Bonuses",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ExerciseId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    PromocodeId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bonuses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Bonuses_UserExercises_ExerciseId",
+                        column: x => x.ExerciseId,
+                        principalTable: "UserExercises",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Bonuses_UserPromocodes_PromocodeId",
+                        column: x => x.PromocodeId,
+                        principalTable: "UserPromocodes",
                         principalColumn: "Id");
                 });
 
@@ -285,11 +375,26 @@ namespace Go1Bet.Core.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_BonusesId",
+                table: "AspNetUsers",
+                column: "BonusesId");
+
+            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bonuses_ExerciseId",
+                table: "Bonuses",
+                column: "ExerciseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bonuses_PromocodeId",
+                table: "Bonuses",
+                column: "PromocodeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RefreshToken_UserId",
@@ -310,11 +415,70 @@ namespace Go1Bet.Core.Migrations
                 name: "IX_tbl_Transactions_BalanceId",
                 table: "tbl_Transactions",
                 column: "BalanceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserExercises_ExerciseId",
+                table: "UserExercises",
+                column: "ExerciseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserExercises_UserId",
+                table: "UserExercises",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserPromocodes_PromocodeId",
+                table: "UserPromocodes",
+                column: "PromocodeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserPromocodes_UserId",
+                table: "UserPromocodes",
+                column: "UserId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AspNetUserClaims_AspNetUsers_UserId",
+                table: "AspNetUserClaims",
+                column: "UserId",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AspNetUserLogins_AspNetUsers_UserId",
+                table: "AspNetUserLogins",
+                column: "UserId",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                table: "AspNetUserRoles",
+                column: "UserId",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AspNetUsers_Bonuses_BonusesId",
+                table: "AspNetUsers",
+                column: "BonusesId",
+                principalTable: "Bonuses",
+                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_UserExercises_AspNetUsers_UserId",
+                table: "UserExercises");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_UserPromocodes_AspNetUsers_UserId",
+                table: "UserPromocodes");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -347,6 +511,21 @@ namespace Go1Bet.Core.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Bonuses");
+
+            migrationBuilder.DropTable(
+                name: "UserExercises");
+
+            migrationBuilder.DropTable(
+                name: "UserPromocodes");
+
+            migrationBuilder.DropTable(
+                name: "Exercises");
+
+            migrationBuilder.DropTable(
+                name: "Promocodes");
         }
     }
 }
