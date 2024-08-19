@@ -19,6 +19,7 @@ namespace Go1Bet.Core
             services.AddTransient<JwtService>();
             services.AddTransient<EmailService>();
             services.AddTransient<BalanceService>();
+            services.AddTransient<BonusService>();
             services.AddTransient<CategoryService>();
         }
 

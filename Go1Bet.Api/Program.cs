@@ -146,5 +146,6 @@ app.MapControllers();
 
 
 await UsersAndRolesInitializer.SeedUsersAndRoles(app);
+await CateogoriesInitializer.SeedCategories(app);
 
 app.Run();

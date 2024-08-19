@@ -1,17 +1,17 @@
-﻿using Go1Bet.Core.Constants;
-using Go1Bet.Core.Context;
-using Go1Bet.Core.Entities.User;
-using Google;
+﻿using Go1Bet.Core.Context;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using static System.Formats.Asn1.AsnWriter;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Go1Bet.Infrastructure.Initializers
 {
-    public static class CateogryInitializer
+    public static class BonusesInitializer
     {
-        public static async Task SeedCategories(IApplicationBuilder applicationBuilder)
+        public static async Task SeedBonuses(IApplicationBuilder applicationBuilder)
         {
             using (var serviceScope = applicationBuilder.ApplicationServices.CreateAsyncScope())
             {

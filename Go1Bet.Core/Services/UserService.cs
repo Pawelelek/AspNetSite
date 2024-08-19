@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using MailKit.Security;
 using MimeKit;
 using Go1Bet.Core.Context;
+using Go1Bet.Core.DTO_s.Bonus;
 
 namespace Go1Bet.Core.Services
 {
@@ -373,6 +374,16 @@ namespace Go1Bet.Core.Services
                     DateLastPersonalInfoUpdated = user.DateLastPersonalInfoUpdated.ToString(),
                     LockedEnd = user.LockoutEnd.ToString(),
                     Roles = user.UserRoles.Select(perm => new UserRoleItemDTO { RoleName = perm.Role.Name }).ToList(),
+                    Promocodes = user.PromocodeUsers
+                       .Select(pu => new PromocodeItemDTO 
+                       { 
+                           Id = pu.Promocode.Id, 
+                           DateCreated = pu.Promocode.DateCreated.ToString(), 
+                           ExpirationDate = pu.Promocode.ExpirationDate.ToString(),  
+                           PriceMoney = pu.Promocode.PriceMoney,
+                           Key = pu.Promocode.Key,
+                           Name = pu.Promocode.Name,
+                       }).ToList(),
                     Balances = user.Balances
                         .Select(bal => new BalanceItemDTO
                         {
@@ -383,6 +394,7 @@ namespace Go1Bet.Core.Services
                             Transactions = bal.TransactionHistory
                             .Select(tr => new TransactionItemDTO { Id = tr.Id, BalanceId = tr.BalanceId, TransactionType = tr.TransactionType.ToString(), Value = tr.Value, DateCreated = tr.DateCreated.ToString() }).ToList()
                         }).ToList()
+                    
                     }).ToListAsync();
 
                 if (result != null)

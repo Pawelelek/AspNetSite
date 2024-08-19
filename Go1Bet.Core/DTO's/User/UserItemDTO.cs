@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Go1Bet.Core.DTO_s.Bonus;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,7 @@ namespace Go1Bet.Core.DTO_s.User
         public string DateLastPersonalInfoUpdated { get; set; }
         public List<UserRoleItemDTO> Roles { get; set; }
         public List<BalanceItemDTO> Balances { get; set; }
+        public List<PromocodeItemDTO> Promocodes { get; set; }
 
     }
 }

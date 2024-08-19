@@ -22,24 +22,6 @@ namespace Go1Bet.Core.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Go1Bet.Core.Entities.Bonuses.BonusUserEntity", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("BonusUserEntity");
-                });
-
             modelBuilder.Entity("Go1Bet.Core.Entities.Bonuses.BonusesEntity", b =>
                 {
                     b.Property<string>("Id")
@@ -517,18 +499,9 @@ namespace Go1Bet.Core.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Go1Bet.Core.Entities.Bonuses.BonusUserEntity", b =>
-                {
-                    b.HasOne("Go1Bet.Core.Entities.User.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Go1Bet.Core.Entities.Bonuses.BonusesEntity", b =>
                 {
-                    b.HasOne("Go1Bet.Core.Entities.Bonuses.BonusUserEntity", "Exercise")
+                    b.HasOne("Go1Bet.Core.Entities.Bonuses.ExerciseUserEntity", "Exercise")
                         .WithMany()
                         .HasForeignKey("ExerciseId");
 
@@ -559,11 +532,11 @@ namespace Go1Bet.Core.Migrations
             modelBuilder.Entity("Go1Bet.Core.Entities.Bonuses.PromocodeUserEntity", b =>
                 {
                     b.HasOne("Go1Bet.Core.Entities.Bonuses.PromocodeEntity", "Promocode")
-                        .WithMany()
+                        .WithMany("PromocodeUsers")
                         .HasForeignKey("PromocodeId");
 
                     b.HasOne("Go1Bet.Core.Entities.User.AppUser", "User")
-                        .WithMany()
+                        .WithMany("PromocodeUsers")
                         .HasForeignKey("UserId");
 
                     b.Navigation("Promocode");
@@ -671,6 +644,11 @@ namespace Go1Bet.Core.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Go1Bet.Core.Entities.Bonuses.PromocodeEntity", b =>
+                {
+                    b.Navigation("PromocodeUsers");
+                });
+
             modelBuilder.Entity("Go1Bet.Core.Entities.Category.CategoryEntity", b =>
                 {
                     b.Navigation("Subcategories");
@@ -679,6 +657,8 @@ namespace Go1Bet.Core.Migrations
             modelBuilder.Entity("Go1Bet.Core.Entities.User.AppUser", b =>
                 {
                     b.Navigation("Balances");
+
+                    b.Navigation("PromocodeUsers");
 
                     b.Navigation("UserRoles");
                 });

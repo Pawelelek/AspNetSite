@@ -27,6 +27,7 @@ namespace Go1Bet.Core.Entities.User
         //Notification (Reviewd = false), Balance, Bonuces
 
         public BonusesEntity Bonuses { get; set; }
+        public virtual ICollection<PromocodeUserEntity> PromocodeUsers { get; set; }
 
         //BettingHistory > id , userId , The Name of the sport(Event) , period
 
