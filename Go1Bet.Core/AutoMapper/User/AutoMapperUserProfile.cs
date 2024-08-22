@@ -10,7 +10,8 @@ using Go1Bet.Core.DTO_s.Balance;
 using Go1Bet.Core.Entities.Category;
 using Go1Bet.Core.DTO_s.Category;
 using Go1Bet.Core.Entities.Bonuses;
-using Go1Bet.Core.DTO_s.Bonus;
+using Go1Bet.Core.DTO_s.Bonus.Exercise;
+using Go1Bet.Core.DTO_s.Bonus.Promocode;
 
 namespace Go1Bet.Core.AutoMapper.User
 {
@@ -36,9 +37,13 @@ namespace Go1Bet.Core.AutoMapper.User
 
             CreateMap<ExerciseEntity, ExerciseItemDTO>().ReverseMap();
             CreateMap<ExerciseEntity, ExerciseCreateDTO>().ReverseMap();
+            CreateMap<ExerciseEntity, ExerciseEditDTO>().ReverseMap();
+            CreateMap<ExerciseEntity, ExerciseActiveDTO>().ReverseMap();
 
             CreateMap<PromocodeEntity, PromocodeItemDTO>().ReverseMap();
             CreateMap<PromocodeEntity, PromocodeCreateDTO>().ReverseMap();
+            CreateMap<PromocodeEntity, PromocodeEditDTO>().ReverseMap();
+            CreateMap<PromocodeEntity, PromocodeActiveDTO>().ReverseMap();
         }
     }
 }

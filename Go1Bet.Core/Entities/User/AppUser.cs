@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,8 +27,11 @@ namespace Go1Bet.Core.Entities.User
         public virtual ICollection<BalanceEntity> Balances { get; set; }
         public virtual ICollection<UserRoleEntity> UserRoles { get; set; }
         //Notification (Reviewd = false), Balance, Bonuces
-
-        public BonusesEntity Bonuses { get; set; }
+        [DisplayName("User")]
+        public AppUser RefUser { get; set; }
+        [ForeignKey(nameof(User))]
+        public string? RefUserId { get; set; }
+        public virtual ICollection<AppUser> RefUsers { get; set; }
         public virtual ICollection<PromocodeUserEntity> PromocodeUsers { get; set; }
 
         //BettingHistory > id , userId , The Name of the sport(Event) , period

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Go1Bet.Core.DTO_s.Bonus
+namespace Go1Bet.Core.DTO_s.Bonus.Exercise
 {
-    internal class PromocodeEditDTO
+    internal class ExerciseEditDTO
     {
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Go1Bet.Core.DTO_s.Balance;
 using Go1Bet.Core.DTO_s.Bonus;
+using Go1Bet.Core.DTO_s.Bonus.Promocode;
 using Go1Bet.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -37,9 +38,23 @@ namespace Go1Bet.Api.Controllers
         }
         [HttpPost]
         [Route("ActivePromocodeByUser")]
-        public async Task<IActionResult> ActivePromocodeAsyncByUser(string userId, string key)
+        public async Task<IActionResult> ActivePromocodeAsyncByUserAsync([FromBody] PromocodeActiveDTO model)
         {
-            var result = await _bonuseService.ActivePromocodeAsync(userId, key);
+            var result = await _bonuseService.ActivePromocodeAsync(model);
+            return Ok(result);
+        }
+        [HttpPut]
+        [Route("EditPromocodeById")]
+        public async Task<IActionResult> EditPromocodeById([FromBody] PromocodeEditDTO model)
+        {
+            var result = await _bonuseService.EditPromocodeAsync(model);
+            return Ok(result);
+        }
+        [HttpDelete]
+        [Route("DeletePromoById")]
+        public async Task<IActionResult> DeletePromoByIdAsync(string id)
+        {
+            var result = await _bonuseService.DeletePromoByIdAsync(id);
             return Ok(result);
         }
     }
