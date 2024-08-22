@@ -13,10 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Go1Bet.Core.DTO_s.Token;
 using Go1Bet.Core.DTO_s.User;
-using Go1Bet.Core.Entities.Specifications;
-using Go1Bet.Core.Entities.Tokens;
 using Go1Bet.Core.Entities.User;
-using Go1Bet.Core.Interfaces;
 using Go1Bet.Core.Constants;
 using Google.Apis.Auth;
 using Org.BouncyCastle.Bcpg;
@@ -24,7 +21,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using MailKit.Security;
 using MimeKit;
 using Go1Bet.Core.Context;
-using Go1Bet.Core.DTO_s.Bonus;
+using Go1Bet.Core.DTO_s.Bonus.Promocode;
 
 namespace Go1Bet.Core.Services
 {

@@ -1,4 +1,4 @@
-﻿using Go1Bet.Core.DTO_s.Bonus;
+﻿using Go1Bet.Core.DTO_s.Bonus.Promocode;
 using System;
 using System.Collections.Generic;
 using System.Linq;

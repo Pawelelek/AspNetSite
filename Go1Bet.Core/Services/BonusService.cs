@@ -1,16 +1,24 @@
-﻿using Go1Bet.Core.Context;
+﻿using AutoMapper;
+using Go1Bet.Core.Context;
 using Go1Bet.Core.DTO_s.Bonus;
+using Go1Bet.Core.DTO_s.Bonus.Promocode;
 using Go1Bet.Core.DTO_s.User;
 using Go1Bet.Core.Entities.Bonuses;
+using Go1Bet.Core.Entities.User;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace Go1Bet.Core.Services
 {
     public class BonusService
     {
         private readonly AppDbContext _context;
-        public BonusService(AppDbContext context) 
-        { 
+        private readonly IMapper _mapper;
+        //private readonly UserManager<AppUser> _userManager;
+        public BonusService(AppDbContext context, IMapper mapper) 
+        {
+            _mapper = mapper;
            _context = context;
         }
         public async Task<ServiceResponse> GetAllPromocodesAsync()
@@ -44,35 +52,6 @@ namespace Go1Bet.Core.Services
                     Message = ex.Message
                 };
             }
-        }
-        public async Task<ServiceResponse> ActivePromocodeAsync(string userId, string key)
-        {
-            var promocodes = _context.Promocodes.ToList();
-            foreach(var promo in promocodes)
-            {
-                if(promo.Key == key)
-                {
-                    if(promo.CountAvailable <= promo.CountEntries)
-                    {
-                        return new ServiceResponse
-                        {
-                            Message = "Error! The number of activations is limited!",
-                            Success = false,
-                        };
-                    }
-                    var entity = new PromocodeUserEntity() { DateCreated = DateTime.Now, UserId = userId, PromocodeId = promo.Id };
-                    promo.CountEntries++;
-                    _context.Promocodes.Update(promo);
-                    await _context.SaveChangesAsync();
-                    await _context.UserPromocodes.AddAsync(entity);
-                    await _context.SaveChangesAsync();
-                }
-            }
-            return new ServiceResponse
-            {
-                Message = "Promocode has been created.",
-                Success = true,
-            };
         }
         public async Task<ServiceResponse> GetPromocodeByIdAsync(string id)
         {
@@ -108,6 +87,38 @@ namespace Go1Bet.Core.Services
                 };
             }
         }
+        public async Task<ServiceResponse> ActivePromocodeAsync(PromocodeActiveDTO model)
+        {
+            var promo = await _context.Promocodes.Where(p => p.Key == model.Key).FirstOrDefaultAsync();
+            var userPromoValid = _context.UserPromocodes.Where(up => up.UserId == model.UserId && up.PromocodeId == promo.Id).Any();
+            if(userPromoValid)
+            {
+                return new ServiceResponse
+                {
+                    Message = "The promo code has already been activated!",
+                    Success = false,
+                };
+            }
+            if (promo.CountAvailable <= promo.CountEntries)
+            {
+                return new ServiceResponse
+                {
+                    Message = "Error! The number of activations is limited!",
+                    Success = false,
+                };
+            }
+            var entity = new PromocodeUserEntity() { DateCreated = DateTime.Now, UserId = model.UserId, PromocodeId = promo.Id };
+            promo.CountEntries++;
+            _context.Promocodes.Update(promo);
+            await _context.SaveChangesAsync();
+            await _context.UserPromocodes.AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return new ServiceResponse
+            {
+                Message = "Promocode has been created.",
+                Success = true,
+            };
+        }
         public async Task<ServiceResponse> CreatePromocodeAsync(PromocodeCreateDTO model)
         {
             var promocode = new PromocodeEntity() 
@@ -119,6 +130,43 @@ namespace Go1Bet.Core.Services
             {
                 Message = "Promocode has been created.",
                 Success = true,
+            };
+        }
+        public async Task<ServiceResponse> EditPromocodeAsync(PromocodeEditDTO model)
+        {
+            //var promocode = new PromocodeEntity()
+            //{ PriceMoney = model.PriceMoney, CountAvailable = model.CountAvailable, ExpirationDate = model.ExpirationDate, Key = model.Key, Name = model.Name };
+            var oldPromo = _context.Promocodes.Where(p => p.Id == model.Id).FirstOrDefault();
+            var newPromo = _mapper.Map(model, oldPromo);
+            _context.Promocodes.Update(newPromo);
+            await _context.SaveChangesAsync();
+            return new ServiceResponse
+            {
+                Message = "Promocode has been updated.",
+                Success = true,
+            };
+        }
+        public async Task<ServiceResponse> DeletePromoByIdAsync(string id)
+        {
+            var promo = await _context.Promocodes.Where(p => p.Id == id).FirstOrDefaultAsync();
+            if (promo == default)
+            {
+                return new ServiceResponse
+                {
+                    Success = false,
+                    Message = "Promo was not found."
+                };
+            }
+            foreach (var item in await _context.UserPromocodes.Where(up => up.PromocodeId == id ).ToListAsync())
+            {
+                _context.UserPromocodes.Remove(item);
+            }
+            var result = _context.Promocodes.Remove(promo);
+            await _context.SaveChangesAsync();
+            return new ServiceResponse
+            {
+                Success = true,
+                Message = "Promo successfull deleted."
             };
         }
     }
