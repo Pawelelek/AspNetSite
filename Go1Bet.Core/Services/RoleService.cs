@@ -27,12 +27,12 @@ namespace Go1Bet.Core.Services
         }
         public async Task<ServiceResponse> GetAllRolesAsync()
         {
-            var result = _roleManager.Roles.ToListAsync().Result.Select(role => new RoleItemDTO
+            var result = await _roleManager.Roles.Select(role => new RoleItemDTO
             {
                 Id = role.Id,
                 RoleName = role.Name,
                 ConcurrencyStamp = role.ConcurrencyStamp
-            }).ToList();
+            }).ToListAsync();
             return new ServiceResponse()
             {
                 Success = true,
@@ -43,12 +43,12 @@ namespace Go1Bet.Core.Services
         }
         public async Task<ServiceResponse> GetRoleByIdAsync(string id)
         {
-            var result = _roleManager.Roles.ToListAsync().Result.Where(role => role.Id == id).Select(role => new RoleItemDTO
+            var result = await _roleManager.Roles.Where(role => role.Id == id).Select(role => new RoleItemDTO
             {
                 Id = role.Id,
                 RoleName = role.Name,
                 ConcurrencyStamp = role.ConcurrencyStamp
-            }).ToList();
+            }).ToListAsync();
             if (result != null)
             {
                 return new ServiceResponse

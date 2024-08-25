@@ -24,6 +24,7 @@ namespace Go1Bet.Core.Entities.User
         public DateTime DateLastPasswordUpdated { get; set; } = DateTime.UtcNow;
         public DateTime DateLastEmailUpdated { get; set; } = DateTime.UtcNow;
         public DateTime DateLastPersonalInfoUpdated { get; set; } = DateTime.UtcNow;
+        public string SwitchedBalanceId { get; set; }
         public virtual ICollection<BalanceEntity> Balances { get; set; }
         public virtual ICollection<UserRoleEntity> UserRoles { get; set; }
         //Notification (Reviewd = false), Balance, Bonuces

@@ -273,6 +273,9 @@ namespace Go1Bet.Core.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("SwitchedBalanceId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -300,14 +303,11 @@ namespace Go1Bet.Core.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Money")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<double>("Money")
+                        .HasColumnType("float");
 
                     b.Property<bool>("Reviewed")
                         .HasColumnType("bit");
@@ -363,8 +363,8 @@ namespace Go1Bet.Core.Migrations
                     b.Property<int>("TransactionType")
                         .HasColumnType("int");
 
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<double>("Value")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 

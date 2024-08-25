@@ -9,6 +9,6 @@ namespace Go1Bet.Core.DTO_s.Balance
     public class BalanceWithdrawalDTO
     {
         public string BalanceId { get; set; }
-        public string Money { get; set; }
+        public double Money { get; set; }
     }
 }

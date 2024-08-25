@@ -65,9 +65,10 @@ namespace Go1Bet.Core.Services
             IdentityResult result = await _userManager.CreateAsync(mappedUser, model.Password);
             if (result.Succeeded)
             {
-                var balance = new BalanceEntity() { Money = "0", UserId = mappedUser.Id };
+                var balance = new BalanceEntity() { Money = 0, UserId = mappedUser.Id };
                 await _context.Balances.AddAsync(balance);
                 await _context.SaveChangesAsync();
+                mappedUser.SwitchedBalanceId = balance.Id;
 
                 var role = model.Role != null ? model.Role : Roles.User;
                 var existRole = await _roleManager.FindByNameAsync(role) != null ? role : Roles.User;
@@ -330,9 +331,10 @@ namespace Go1Bet.Core.Services
                         DateLastPasswordUpdated = user.DateLastPasswordUpdated.ToString(),
                         DateLastPersonalInfoUpdated = user.DateLastPersonalInfoUpdated.ToString(),
                         LockedEnd = user.LockoutEnd.ToString(),
+                        SwitchedBalanceId = user.SwitchedBalanceId,
                         Roles = user.UserRoles.Select(perm => new UserRoleItemDTO { RoleName = perm.Role.Name }).ToList(),
                         Balances = user.Balances
-                        .Select(bal => new BalanceItemDTO { Id = bal.Id, Money = bal.Money, Reviewed = bal.Reviewed,
+                        .Select(bal => new BalanceItemDTO { Id = bal.Id, Money = bal.Money.ToString(), Reviewed = bal.Reviewed,
                             DateCreated = bal.DateCreated.ToString(),
                             //Transactions = bal.TransactionHistory
                             //.Select(tr => new TransactionItemDTO { Id = tr.Id, BalanceId = tr.BalanceId, TransactionType = tr.TransactionType.ToString(), Value = tr.Value, DateCreated = tr.DateCreated.ToString() }).ToList() 
@@ -370,6 +372,7 @@ namespace Go1Bet.Core.Services
                     DateLastPasswordUpdated = user.DateLastPasswordUpdated.ToString(),
                     DateLastPersonalInfoUpdated = user.DateLastPersonalInfoUpdated.ToString(),
                     LockedEnd = user.LockoutEnd.ToString(),
+                    SwitchedBalanceId = user.SwitchedBalanceId,
                     Roles = user.UserRoles.Select(perm => new UserRoleItemDTO { RoleName = perm.Role.Name }).ToList(),
                     Promocodes = user.PromocodeUsers
                        .Select(pu => new PromocodeItemDTO 
@@ -385,11 +388,11 @@ namespace Go1Bet.Core.Services
                         .Select(bal => new BalanceItemDTO
                         {
                             Id = bal.Id,
-                            Money = bal.Money,
+                            Money = bal.Money.ToString(),
                             Reviewed = bal.Reviewed,
                             DateCreated = bal.DateCreated.ToString(),
                             Transactions = bal.TransactionHistory
-                            .Select(tr => new TransactionItemDTO { Id = tr.Id, BalanceId = tr.BalanceId, TransactionType = tr.TransactionType.ToString(), Value = tr.Value, DateCreated = tr.DateCreated.ToString() }).ToList()
+                            .Select(tr => new TransactionItemDTO { Id = tr.Id, BalanceId = tr.BalanceId, TransactionType = tr.TransactionType.ToString(), Value = tr.Value.ToString(), DateCreated = tr.DateCreated.ToString() }).ToList()
                         }).ToList()
                     
                     }).ToListAsync();
@@ -603,6 +606,25 @@ namespace Go1Bet.Core.Services
                 Message = "Something went wrong"
             };
 
+        }
+        public async Task<ServiceResponse> SwitchedBalanceId(string userId, string balanceId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (true) //user.Balances.Where(b => b.Id == balanceId).Count() == 1
+            {
+                user.SwitchedBalanceId = balanceId;
+                await _userManager.UpdateAsync(user);
+                return new ServiceResponse
+                {
+                    Success = false,
+                    Message = "You have successfully selected your balance"
+                };
+            }
+            return new ServiceResponse
+            {
+                Success = false,
+                Message = "Something went wrong"
+            };
         }
 
     }

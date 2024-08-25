@@ -13,9 +13,8 @@ namespace Go1Bet.Core.Entities.User
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
-        public string Money { get; set; }
+        public double Money { get; set; }
         public bool Reviewed { get; set; } = false;
-        public bool Active { get; set; } = false;
         [DisplayName("User")]
         public AppUser User { get; set; }
         [ForeignKey(nameof(User))]

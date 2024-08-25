@@ -22,9 +22,9 @@ namespace Go1Bet.Core.DTO_s.User
         public string DateLastPasswordUpdated { get; set; }
         public string DateLastEmailUpdated { get; set; }
         public string DateLastPersonalInfoUpdated { get; set; }
+        public string SwitchedBalanceId { get; set; }
         public List<UserRoleItemDTO> Roles { get; set; }
         public List<BalanceItemDTO> Balances { get; set; }
         public List<PromocodeItemDTO> Promocodes { get; set; }
-
     }
 }

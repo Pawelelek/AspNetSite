@@ -3,6 +3,7 @@ using Go1Bet.Core.DTO_s.Balance;
 using Go1Bet.Core.DTO_s.Category;
 using Go1Bet.Core.DTO_s.User;
 using Go1Bet.Core.Entities.User;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -15,26 +16,28 @@ namespace Go1Bet.Core.Services
     public class BalanceService
     {
         private readonly AppDbContext _context;
-        public BalanceService(AppDbContext context) 
+        private readonly UserManager<AppUser> _userManager;
+        public BalanceService(AppDbContext context, UserManager<AppUser> userManager) 
         { 
             _context = context;
+            _userManager = userManager;
         }
         public async Task<ServiceResponse> GetAllAsync()
         {
             try
             {
-                var balances = _context.Balances
+                var balances = await _context.Balances
 
                     .Select(b => new BalanceItemDTO
                     {
                         Id = b.Id,
                         UserId = b.UserId,
                         DateCreated = b.DateCreated.ToString(),
-                        Money = b.Money,
+                        Money = b.Money.ToString(),
                         Reviewed = b.Reviewed,
 
                         countTransactions = b.TransactionHistory.Where(t => t.BalanceId == b.Id).Count()
-                    }).ToList();
+                    }).ToListAsync();
 
                 return new ServiceResponse
                 {
@@ -53,14 +56,14 @@ namespace Go1Bet.Core.Services
         }
         public async Task<ServiceResponse> GetByUserIdAsync(string id)
         {
-            var balances = _context.Balances
+            var balances = await _context.Balances
                     .Where(u => u.UserId == id)
                     .Select(b => new BalanceItemDTO
                     { 
                         Id = b.Id,
                         UserId = b.UserId,
                         DateCreated = b.DateCreated.ToString(),
-                        Money = b.Money,
+                        Money = b.Money.ToString(),
                         Reviewed = b.Reviewed,
                         countTransactions = b.TransactionHistory.Where(t => t.BalanceId == b.Id).Count(),
                         Transactions = b.TransactionHistory
@@ -69,11 +72,11 @@ namespace Go1Bet.Core.Services
                                        {
                                            Id = t.Id,
                                            DateCreated = t.DateCreated.ToString(),
-                                           Value = t.Value,
+                                           Value = t.Value.ToString(),
                                            TransactionType = t.TransactionType.ToString(),
                                            BalanceId = t.BalanceId
                                        }).ToList()
-                    }).ToList();
+                    }).ToListAsync();
             return new ServiceResponse
             {
                 Success = true,
@@ -82,14 +85,14 @@ namespace Go1Bet.Core.Services
         }
         public async Task<ServiceResponse> GetByIdAsync(string id)
         {
-            var balances = _context.Balances
+            var balances = await _context.Balances
                     .Where(b => b.Id == id)
                     .Select(b => new BalanceItemDTO
                     {
                         Id = b.Id,
                         UserId = b.UserId,
                         DateCreated = b.DateCreated.ToString(),
-                        Money = b.Money,
+                        Money = b.Money.ToString(),
                         Reviewed = b.Reviewed,
                         countTransactions = b.TransactionHistory.Where(t => t.BalanceId == b.Id).Count(),
                         Transactions = b.TransactionHistory
@@ -98,11 +101,11 @@ namespace Go1Bet.Core.Services
                                        {
                                            Id = t.Id,
                                            DateCreated = t.DateCreated.ToString(),
-                                           Value = t.Value,
+                                           Value = t.Value.ToString(),
                                            TransactionType = t.TransactionType.ToString(),
                                            BalanceId = t.BalanceId
                                        }).ToList()
-                    }).ToList();
+                    }).ToListAsync();
 
             if (balances != null)
             {
@@ -121,22 +124,20 @@ namespace Go1Bet.Core.Services
         }
         public async Task<ServiceResponse> CreateAsync(BalanceCreateDTO model)
         {
-            if(model.Money == null) { model.Money = "0"; }
+            if(model.Money == default) { model.Money = 0; }
             var balance = new BalanceEntity() { Money = model.Money, UserId = model.UserId };
             await _context.Balances.AddAsync(balance);
             await _context.SaveChangesAsync();
             return new ServiceResponse
             {
-                Message = "User has been created.",
+                Message = "Balance has been created.",
                 Success = true,
             };
         }
         public async Task<ServiceResponse> DepositAsync(BalanceDepositDTO model)
         {
             var balance = await _context.Balances.Where(b => b.Id == model.BalanceId).FirstOrDefaultAsync();
-
-            int tmp = (int.Parse(balance.Money) + int.Parse(model.Money));
-            balance.Money = tmp.ToString();
+            balance.Money += model.Money;
             var transaction = new TransactionEntity() { BalanceId = balance.Id, DateCreated = DateTime.UtcNow, TransactionType = Constants.TransactionType.Deposit, Value = model.Money };
             await _context.Transactions.AddAsync(transaction);
 
@@ -151,7 +152,7 @@ namespace Go1Bet.Core.Services
         public async Task<ServiceResponse> WithdrawalAsync(BalanceWithdrawalDTO model)
         {
             var balance = await _context.Balances.Where(b => b.Id == model.BalanceId).FirstOrDefaultAsync();
-            if (Double.Parse(model.Money) > Double.Parse(balance.Money)) 
+            if (model.Money > balance.Money) 
             {
                 return new ServiceResponse
                 {
@@ -159,8 +160,7 @@ namespace Go1Bet.Core.Services
                     Success = true,
                 };
             }
-            double tmp = Double.Parse(balance.Money) - Double.Parse(model.Money);
-            balance.Money = tmp.ToString();
+            balance.Money -= model.Money;
 
             var transaction = new TransactionEntity() { BalanceId = balance.Id, DateCreated = DateTime.UtcNow, TransactionType = Constants.TransactionType.Withdrawal, Value = model.Money };
             await _context.Transactions.AddAsync(transaction);
