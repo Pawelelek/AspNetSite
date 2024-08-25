@@ -26,7 +26,7 @@ namespace Go1Bet.Core.Services
         {
             try
             {
-                var categories = _context.Categories
+                var categories = await _context.Categories
 
                     .Select(c => new CategoryItemDTO
                     {
@@ -36,7 +36,7 @@ namespace Go1Bet.Core.Services
                         ParentId = c.ParentId,
                         ParentName = c.Parent.Name,
                         countSubategories = c.Subcategories.Where(s => s.ParentId == c.Id).Count(),
-                    }).ToList();
+                    }).ToListAsync();
 
                 return new ServiceResponse
                 {
@@ -55,7 +55,7 @@ namespace Go1Bet.Core.Services
         }
         public async Task<ServiceResponse> GetMainCategoriesAsync()
         {
-            var categories = _context.Categories
+            var categories = await _context.Categories
             .Where(c => c.ParentId == null)
             .Select(c => new CategoryItemDTO
             {
@@ -65,7 +65,7 @@ namespace Go1Bet.Core.Services
                 ParentId = c.ParentId,
                 ParentName = c.Parent.Name,
                 countSubategories = c.Subcategories.Where(s => s.ParentId == c.Id).Count(),
-            }).ToList();
+            }).ToListAsync();
             return new ServiceResponse
             {
                 Success = true,
@@ -74,7 +74,7 @@ namespace Go1Bet.Core.Services
         }
         public async Task<ServiceResponse> GetByIdAsync(string id)
         {
-            var category = _context.Categories
+            var category = await _context.Categories
                 .Where(c => c.Id == id)
                 .Select(c => new CategoryItemDTO
                 {
@@ -98,7 +98,7 @@ namespace Go1Bet.Core.Services
                               ParentName = s.Parent.Name,
                               Description = s.Description,
                           }).ToList(),
-                }).ToList();
+                }).ToListAsync();
 
             if (category != null)
             {

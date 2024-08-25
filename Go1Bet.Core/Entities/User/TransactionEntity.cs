@@ -14,7 +14,7 @@ namespace Go1Bet.Core.Entities.User
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
-        public string Value {  get; set; }
+        public double Value {  get; set; }
         [DisplayName("Balance")]
         public BalanceEntity Balance { get; set; }
 

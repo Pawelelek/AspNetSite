@@ -8,7 +8,7 @@ namespace Go1Bet.Core.DTO_s.Balance
 {
     public class BalanceCreateDTO
     {
-        public string Money { get; set; }
+        public double Money { get; set; }
         public string UserId { get; set; }
     }
 }

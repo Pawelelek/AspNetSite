@@ -99,6 +99,12 @@ namespace Go1Bet.Api.Controllers
             var result = await _userService.UpdateUserRoleAsync(model);
             return Ok(result);
         }
+        [HttpPut("SwitchedBalanceId")]
+        public async Task<IActionResult> SwitchedBalanceId([FromBody] string userId, string balanceId)
+        {
+            var result = await _userService.SwitchedBalanceId(userId, balanceId);
+            return Ok(result);
+        }
 
         [HttpDelete("DeleteById")]
         public async Task<IActionResult> DeleteByIdAsync(string id)

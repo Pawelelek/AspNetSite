@@ -15,11 +15,13 @@ namespace Go1Bet.Core.Services
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
-        //private readonly UserManager<AppUser> _userManager;
-        public BonusService(AppDbContext context, IMapper mapper) 
+        private readonly UserManager<AppUser> _userManager;
+        
+        public BonusService(AppDbContext context, IMapper mapper, UserManager<AppUser> userManager) 
         {
             _mapper = mapper;
            _context = context;
+            _userManager = userManager;
         }
         public async Task<ServiceResponse> GetAllPromocodesAsync()
         {
@@ -110,12 +112,17 @@ namespace Go1Bet.Core.Services
             var entity = new PromocodeUserEntity() { DateCreated = DateTime.Now, UserId = model.UserId, PromocodeId = promo.Id };
             promo.CountEntries++;
             _context.Promocodes.Update(promo);
-            await _context.SaveChangesAsync();
+            
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            var balance = await _context.Balances.Where(b => b.Id == user.SwitchedBalanceId).FirstOrDefaultAsync();
+            balance.Money += promo.PriceMoney;
+            _context.Balances.Update(balance);
+
             await _context.UserPromocodes.AddAsync(entity);
             await _context.SaveChangesAsync();
             return new ServiceResponse
             {
-                Message = "Promocode has been created.",
+                Message = "Promocode has been activated.",
                 Success = true,
             };
         }
