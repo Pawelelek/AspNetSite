@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Go1Bet.Core.DTO_s.Balance
 {
-    public class BalanceDepositDTO
+    public class BalanceInteractionDTO
     {
         public string BalanceId { get; set; }
         public double Money { get; set; }

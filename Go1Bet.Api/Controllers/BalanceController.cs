@@ -44,14 +44,14 @@ namespace Go1Bet.Api.Controllers
         }
         [HttpPut]
         [Route("Withdrawal")]
-        public async Task<IActionResult> WithdrawalAsync([FromBody] BalanceWithdrawalDTO model)
+        public async Task<IActionResult> WithdrawalAsync([FromBody] BalanceInteractionDTO model)
         {
             var result = await _balanceService.WithdrawalAsync(model);
             return Ok(result);
         }
         [HttpPut]
         [Route("Deposit")]
-        public async Task<IActionResult> DepositAsync([FromBody] BalanceDepositDTO model)
+        public async Task<IActionResult> DepositAsync([FromBody] BalanceInteractionDTO model)
         {
             var result = await _balanceService.DepositAsync(model);
             return Ok(result);

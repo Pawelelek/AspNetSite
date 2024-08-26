@@ -59,7 +59,18 @@ namespace Go1Bet.Core.Services
                     Success = false,
                 };
             }
-
+            if(model.RefUserId != null)
+            {
+                var refUser = await _userManager.FindByEmailAsync(model.RefUserId);
+                if (refUser != null) 
+                {
+                    return new ServiceResponse
+                    {
+                        Message = "Ref User is not exists.",
+                        Success = false,
+                    };
+                }
+            }
             var mappedUser = _mapper.Map<CreateUserDto, AppUser>(model);
             mappedUser.Id = Guid.NewGuid().ToString();
             IdentityResult result = await _userManager.CreateAsync(mappedUser, model.Password);
@@ -148,6 +159,26 @@ namespace Go1Bet.Core.Services
             return new ServiceResponse
             {
                 Message = "User not found",
+                Success = false,
+            };
+        }
+        public async Task<ServiceResponse> SetRefUserByIdAsync(string userId, string refUserId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            var refUser = await _userManager.FindByIdAsync(refUserId);
+            if (refUser != null && user.RefUserId == null && refUser.RefUserId != user.Id)
+            {
+                user.RefUserId = refUser.Id;
+                await _userManager.UpdateAsync(user);
+                return new ServiceResponse
+                {
+                    Message = "The ref id is set!",
+                    Success = true
+                };
+            }
+            return new ServiceResponse
+            {
+                Message = "User not found or user already has a ref id",
                 Success = false,
             };
         }
@@ -333,11 +364,11 @@ namespace Go1Bet.Core.Services
                         LockedEnd = user.LockoutEnd.ToString(),
                         SwitchedBalanceId = user.SwitchedBalanceId,
                         Roles = user.UserRoles.Select(perm => new UserRoleItemDTO { RoleName = perm.Role.Name }).ToList(),
+                        RefUserId = user.RefUserId,
+                        CountRefUsers = user.RefUsers.Count,
                         Balances = user.Balances
                         .Select(bal => new BalanceItemDTO { Id = bal.Id, Money = bal.Money.ToString(), Reviewed = bal.Reviewed,
                             DateCreated = bal.DateCreated.ToString(),
-                            //Transactions = bal.TransactionHistory
-                            //.Select(tr => new TransactionItemDTO { Id = tr.Id, BalanceId = tr.BalanceId, TransactionType = tr.TransactionType.ToString(), Value = tr.Value, DateCreated = tr.DateCreated.ToString() }).ToList() 
                         }).ToList()
                     }).ToListAsync();
             return new ServiceResponse
@@ -374,6 +405,9 @@ namespace Go1Bet.Core.Services
                     LockedEnd = user.LockoutEnd.ToString(),
                     SwitchedBalanceId = user.SwitchedBalanceId,
                     Roles = user.UserRoles.Select(perm => new UserRoleItemDTO { RoleName = perm.Role.Name }).ToList(),
+                    RefUserId = user.RefUserId,
+                    CountRefUsers = user.RefUsers.Count,
+                    UsersFromRef = user.RefUsers.Select(uRef => new UserItemDTO { Id = uRef.Id, FirstName = uRef.FirstName, LastName = uRef.LastName, Email = uRef.Email, DateCreated = uRef.DateCreated.ToString() }).ToList(),
                     Promocodes = user.PromocodeUsers
                        .Select(pu => new PromocodeItemDTO 
                        { 

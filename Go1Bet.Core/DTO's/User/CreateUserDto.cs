@@ -15,5 +15,6 @@ namespace Go1Bet.Core.DTO_s.User
         public string Password { get; set; } = string.Empty;
         public string ConfirmPassword { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
+        public string? RefUserId { get; set; }
     }
 }

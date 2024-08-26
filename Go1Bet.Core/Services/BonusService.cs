@@ -16,12 +16,14 @@ namespace Go1Bet.Core.Services
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
+        private readonly BalanceService _balanceService;
         
-        public BonusService(AppDbContext context, IMapper mapper, UserManager<AppUser> userManager) 
+        public BonusService(AppDbContext context, IMapper mapper, UserManager<AppUser> userManager, BalanceService balanceService) 
         {
             _mapper = mapper;
            _context = context;
             _userManager = userManager;
+            _balanceService = balanceService;
         }
         public async Task<ServiceResponse> GetAllPromocodesAsync()
         {
@@ -114,12 +116,13 @@ namespace Go1Bet.Core.Services
             _context.Promocodes.Update(promo);
             
             var user = await _userManager.FindByIdAsync(model.UserId);
-            var balance = await _context.Balances.Where(b => b.Id == user.SwitchedBalanceId).FirstOrDefaultAsync();
-            balance.Money += promo.PriceMoney;
-            _context.Balances.Update(balance);
+            _balanceService.BalanceInteraction(user.SwitchedBalanceId, promo.PriceMoney, $"Promo - {promo.Name}");
+            //var balance = await _context.Balances.Where(b => b.Id == user.SwitchedBalanceId).FirstOrDefaultAsync();
+            //balance.Money += promo.PriceMoney;
+            //_context.Balances.Update(balance);
 
-            await _context.UserPromocodes.AddAsync(entity);
-            await _context.SaveChangesAsync();
+            //await _context.UserPromocodes.AddAsync(entity);
+            //await _context.SaveChangesAsync();
             return new ServiceResponse
             {
                 Message = "Promocode has been activated.",
