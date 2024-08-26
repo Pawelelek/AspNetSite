@@ -14,7 +14,7 @@ namespace Go1Bet.Core.DTO_s.User
         public string LastName { get; set; } = string.Empty;
         public bool EmailConfirmed { get; set; }
         public bool IsGoogle { get; set; }
-        public bool IsDelete { get; set; }
+        public bool IsDelete { get; set; }     
         public string Email { get; set; } = string.Empty;
         public string LockedEnd { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
@@ -23,6 +23,9 @@ namespace Go1Bet.Core.DTO_s.User
         public string DateLastEmailUpdated { get; set; }
         public string DateLastPersonalInfoUpdated { get; set; }
         public string SwitchedBalanceId { get; set; }
+        public string RefUserId { get; set; }
+        public int CountRefUsers { get; set; }
+        public List<UserItemDTO> UsersFromRef { get; set; }
         public List<UserRoleItemDTO> Roles { get; set; }
         public List<BalanceItemDTO> Balances { get; set; }
         public List<PromocodeItemDTO> Promocodes { get; set; }

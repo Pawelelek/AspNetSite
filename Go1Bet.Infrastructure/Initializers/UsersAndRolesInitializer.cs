@@ -63,11 +63,9 @@ namespace Go1Bet.Infrastructure.Initializers
                     }
                     var balance1 = new BalanceEntity() { Money = 10000, UserId = admin1.Id };
                     admin1.SwitchedBalanceId = balance1.Id;
-                    //await context.Balances.AddAsync(balance1);
 
                     var balance2 = new BalanceEntity() { Money = 10000, UserId = admin2.Id };
                     admin2.SwitchedBalanceId = balance2.Id;
-                    //await context.Balances.AddAsync(balance2);
 
                     IdentityResult adminResult = userManager.CreateAsync(admin1, "Qwerty-1").Result;
                     if (adminResult.Succeeded)
@@ -79,11 +77,8 @@ namespace Go1Bet.Infrastructure.Initializers
                     {
                         userManager.AddToRoleAsync(admin2, Roles.Admin).Wait();
                     }
-                    //var balance1 = new BalanceEntity() { Money = "10000", UserId = admin1.Id };
+                    
                     await context.Balances.AddAsync(balance1);
-                    //await context.SaveChangesAsync();
-
-                    //var balance2 = new BalanceEntity() { Money = "10000", UserId = admin2.Id };
                     await context.Balances.AddAsync(balance2);
                     await context.SaveChangesAsync();
                 }

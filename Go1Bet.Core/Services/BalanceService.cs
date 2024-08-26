@@ -1,4 +1,5 @@
-﻿using Go1Bet.Core.Context;
+﻿using Go1Bet.Core.Constants;
+using Go1Bet.Core.Context;
 using Go1Bet.Core.DTO_s.Balance;
 using Go1Bet.Core.DTO_s.Category;
 using Go1Bet.Core.DTO_s.User;
@@ -74,7 +75,8 @@ namespace Go1Bet.Core.Services
                                            DateCreated = t.DateCreated.ToString(),
                                            Value = t.Value.ToString(),
                                            TransactionType = t.TransactionType.ToString(),
-                                           BalanceId = t.BalanceId
+                                           BalanceId = t.BalanceId,
+                                           Description = t.Description
                                        }).ToList()
                     }).ToListAsync();
             return new ServiceResponse
@@ -103,7 +105,8 @@ namespace Go1Bet.Core.Services
                                            DateCreated = t.DateCreated.ToString(),
                                            Value = t.Value.ToString(),
                                            TransactionType = t.TransactionType.ToString(),
-                                           BalanceId = t.BalanceId
+                                           BalanceId = t.BalanceId,
+                                           Description = t.Description
                                        }).ToList()
                     }).ToListAsync();
 
@@ -134,39 +137,60 @@ namespace Go1Bet.Core.Services
                 Success = true,
             };
         }
-        public async Task<ServiceResponse> DepositAsync(BalanceDepositDTO model)
+        public async Task<ServiceResponse> DepositAsync(BalanceInteractionDTO model)
         {
-            var balance = await _context.Balances.Where(b => b.Id == model.BalanceId).FirstOrDefaultAsync();
-            balance.Money += model.Money;
-            var transaction = new TransactionEntity() { BalanceId = balance.Id, DateCreated = DateTime.UtcNow, TransactionType = Constants.TransactionType.Deposit, Value = model.Money };
-            await _context.Transactions.AddAsync(transaction);
+            //var balance = await _context.Balances.Where(b => b.Id == model.BalanceId).FirstOrDefaultAsync();
+            //balance.Money += model.Money;
+            //var transaction = new TransactionEntity() { BalanceId = balance.Id, DateCreated = DateTime.UtcNow, TransactionType = Constants.TransactionType.Deposit, Value = model.Money };
+            //await _context.Transactions.AddAsync(transaction);
 
-            _context.Balances.Update(balance);
-            await _context.SaveChangesAsync();
+            //_context.Balances.Update(balance);
+            //await _context.SaveChangesAsync();
+            BalanceInteraction(model.BalanceId, model.Money);
             return new ServiceResponse
             {
                 Message = "The money was credited.",
                 Success = true,
             };
         }
-        public async Task<ServiceResponse> WithdrawalAsync(BalanceWithdrawalDTO model)
+        public void BalanceInteraction(string balanceId, double money, string description = "System")
         {
-            var balance = await _context.Balances.Where(b => b.Id == model.BalanceId).FirstOrDefaultAsync();
-            if (model.Money > balance.Money) 
+            //With async - not working!
+            var balance =  _context.Balances.Where(b => b.Id == balanceId).FirstOrDefault();
+            if(money < 0 && money > balance.Money)
             {
-                return new ServiceResponse
-                {
-                    Message = "Don't have enough money.",
-                    Success = true,
-                };
+                return;
             }
-            balance.Money -= model.Money;
+            else
+            {
+                var transactionType = money < 0 ? TransactionType.Withdrawal : TransactionType.Deposit;
+                balance.Money += money;
+                var transaction = new TransactionEntity() { BalanceId = balance.Id, DateCreated = DateTime.UtcNow, TransactionType = transactionType, Value = money, Description = description };
+                _context.Transactions.Add(transaction);
 
-            var transaction = new TransactionEntity() { BalanceId = balance.Id, DateCreated = DateTime.UtcNow, TransactionType = Constants.TransactionType.Withdrawal, Value = model.Money };
-            await _context.Transactions.AddAsync(transaction);
+                _context.Balances.Update(balance);
+                _context.SaveChanges();
+            }
+        }
+        public async Task<ServiceResponse> WithdrawalAsync(BalanceInteractionDTO model)
+        {
+            //var balance = await _context.Balances.Where(b => b.Id == model.BalanceId).FirstOrDefaultAsync();
+            //if (model.Money > balance.Money) 
+            //{
+            //    return new ServiceResponse
+            //    {
+            //        Message = "Don't have enough money.",
+            //        Success = true,
+            //    };
+            //}
+            //balance.Money -= model.Money;
 
-            _context.Balances.Update(balance);
-            await _context.SaveChangesAsync();
+            //var transaction = new TransactionEntity() { BalanceId = balance.Id, DateCreated = DateTime.UtcNow, TransactionType = Constants.TransactionType.Withdrawal, Value = model.Money };
+            //await _context.Transactions.AddAsync(transaction);
+
+            //_context.Balances.Update(balance);
+            //await _context.SaveChangesAsync();
+            BalanceInteraction(model.BalanceId, -model.Money);
             return new ServiceResponse
             {
                 Message = "The money was withdrawn.",
