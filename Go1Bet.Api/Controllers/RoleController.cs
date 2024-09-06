@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Go1Bet.Core.DTO_s.Role;
-using Go1Bet.Core.Services;
+using Go1Bet.Infrastructure.DTO_s.Role;
+using Go1Bet.Infrastructure.Services;
 
 namespace Go1Bet.Api.Controllers
 {

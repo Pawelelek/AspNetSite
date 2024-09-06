@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Go1Bet.Core.Entities.Tokens;
 using Go1Bet.Core.Entities.User;
-using System.Reflection.Emit;
 using Microsoft.AspNetCore.Identity;
 using Go1Bet.Core.Entities.Category;
 using Go1Bet.Core.Entities.Bonuses;
+using Go1Bet.Core.Entities.Sport;
+using Go1Bet.Core.Entities.Tokens;
 
 namespace Go1Bet.Core.Context
 {
@@ -41,9 +41,12 @@ namespace Go1Bet.Core.Context
         public DbSet<CategoryEntity> Categories { get; set; }
 
         //Bonuses
-        public DbSet<ExerciseEntity> Exercises { get; set; }
-        public DbSet<ExerciseUserEntity> UserExercises { get; set; }
         public DbSet<PromocodeEntity> Promocodes { get; set; }      
         public DbSet<PromocodeUserEntity> UserPromocodes { get; set; }
+        //Sport
+        public DbSet<PersonEntity> Persons { get; set; }
+        public DbSet<OpponentEntity> Opponents { get; set; }
+        public DbSet<SportEventEntity> SportEvents { get; set; }
+        public DbSet<SportMatchEntity> SportMatches { get; set; }
     }
 }

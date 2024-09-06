@@ -22,57 +22,6 @@ namespace Go1Bet.Core.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Go1Bet.Core.Entities.Bonuses.ExerciseEntity", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("CountEntries")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ExpirationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("PriceMoney")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Exercises");
-                });
-
-            modelBuilder.Entity("Go1Bet.Core.Entities.Bonuses.ExerciseUserEntity", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ExerciseId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExerciseId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserExercises");
-                });
-
             modelBuilder.Entity("Go1Bet.Core.Entities.Bonuses.PromocodeEntity", b =>
                 {
                     b.Property<string>("Id")
@@ -133,15 +82,12 @@ namespace Go1Bet.Core.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("DateCreated")
+                        .HasMaxLength(255)
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
-
-                    b.Property<string>("Image")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -154,6 +100,113 @@ namespace Go1Bet.Core.Migrations
                     b.HasIndex("ParentId");
 
                     b.ToTable("tbl_Categories");
+                });
+
+            modelBuilder.Entity("Go1Bet.Core.Entities.Sport.OpponentEntity", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Opponents");
+                });
+
+            modelBuilder.Entity("Go1Bet.Core.Entities.Sport.PersonEntity", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OpponentId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Position")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OpponentId");
+
+                    b.ToTable("Persons");
+                });
+
+            modelBuilder.Entity("Go1Bet.Core.Entities.Sport.SportEventEntity", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SportEvents");
+                });
+
+            modelBuilder.Entity("Go1Bet.Core.Entities.Sport.SportMatchEntity", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<double>("BettingFund")
+                        .HasColumnType("float");
+
+                    b.Property<int>("CountBets")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("DrawWinRating")
+                        .HasColumnType("float");
+
+                    b.Property<double>("FirstOponentWinRate")
+                        .HasColumnType("float");
+
+                    b.Property<string>("FirstTeamId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("SecondOponentWinRate")
+                        .HasColumnType("float");
+
+                    b.Property<string>("SecondTeamId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SportEventId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FirstTeamId");
+
+                    b.HasIndex("SecondTeamId");
+
+                    b.HasIndex("SportEventId");
+
+                    b.ToTable("SportMatches");
                 });
 
             modelBuilder.Entity("Go1Bet.Core.Entities.Tokens.RefreshToken", b =>
@@ -273,6 +326,9 @@ namespace Go1Bet.Core.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("SportMatchEntityId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("SwitchedBalanceId")
                         .HasColumnType("nvarchar(max)");
 
@@ -295,6 +351,8 @@ namespace Go1Bet.Core.Migrations
 
                     b.HasIndex("RefUserId");
 
+                    b.HasIndex("SportMatchEntityId");
+
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
@@ -312,10 +370,15 @@ namespace Go1Bet.Core.Migrations
                     b.Property<bool>("Reviewed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("SportMatchEntityId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SportMatchEntityId");
 
                     b.HasIndex("UserId");
 
@@ -482,21 +545,6 @@ namespace Go1Bet.Core.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Go1Bet.Core.Entities.Bonuses.ExerciseUserEntity", b =>
-                {
-                    b.HasOne("Go1Bet.Core.Entities.Bonuses.ExerciseEntity", "Exercise")
-                        .WithMany()
-                        .HasForeignKey("ExerciseId");
-
-                    b.HasOne("Go1Bet.Core.Entities.User.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Exercise");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Go1Bet.Core.Entities.Bonuses.PromocodeUserEntity", b =>
                 {
                     b.HasOne("Go1Bet.Core.Entities.Bonuses.PromocodeEntity", "Promocode")
@@ -521,6 +569,36 @@ namespace Go1Bet.Core.Migrations
                     b.Navigation("Parent");
                 });
 
+            modelBuilder.Entity("Go1Bet.Core.Entities.Sport.PersonEntity", b =>
+                {
+                    b.HasOne("Go1Bet.Core.Entities.Sport.OpponentEntity", "Opponent")
+                        .WithMany("Teammates")
+                        .HasForeignKey("OpponentId");
+
+                    b.Navigation("Opponent");
+                });
+
+            modelBuilder.Entity("Go1Bet.Core.Entities.Sport.SportMatchEntity", b =>
+                {
+                    b.HasOne("Go1Bet.Core.Entities.Sport.OpponentEntity", "FirstOpponent")
+                        .WithMany()
+                        .HasForeignKey("FirstTeamId");
+
+                    b.HasOne("Go1Bet.Core.Entities.Sport.OpponentEntity", "SecondOpponent")
+                        .WithMany()
+                        .HasForeignKey("SecondTeamId");
+
+                    b.HasOne("Go1Bet.Core.Entities.Sport.SportEventEntity", "SportEvent")
+                        .WithMany("SportMatches")
+                        .HasForeignKey("SportEventId");
+
+                    b.Navigation("FirstOpponent");
+
+                    b.Navigation("SecondOpponent");
+
+                    b.Navigation("SportEvent");
+                });
+
             modelBuilder.Entity("Go1Bet.Core.Entities.Tokens.RefreshToken", b =>
                 {
                     b.HasOne("Go1Bet.Core.Entities.User.AppUser", "User")
@@ -536,11 +614,19 @@ namespace Go1Bet.Core.Migrations
                         .WithMany("RefUsers")
                         .HasForeignKey("RefUserId");
 
+                    b.HasOne("Go1Bet.Core.Entities.Sport.SportMatchEntity", null)
+                        .WithMany("UsersParticipation")
+                        .HasForeignKey("SportMatchEntityId");
+
                     b.Navigation("RefUser");
                 });
 
             modelBuilder.Entity("Go1Bet.Core.Entities.User.BalanceEntity", b =>
                 {
+                    b.HasOne("Go1Bet.Core.Entities.Sport.SportMatchEntity", null)
+                        .WithMany("BalancesParticipation")
+                        .HasForeignKey("SportMatchEntityId");
+
                     b.HasOne("Go1Bet.Core.Entities.User.AppUser", "User")
                         .WithMany("Balances")
                         .HasForeignKey("UserId");
@@ -620,6 +706,23 @@ namespace Go1Bet.Core.Migrations
             modelBuilder.Entity("Go1Bet.Core.Entities.Category.CategoryEntity", b =>
                 {
                     b.Navigation("Subcategories");
+                });
+
+            modelBuilder.Entity("Go1Bet.Core.Entities.Sport.OpponentEntity", b =>
+                {
+                    b.Navigation("Teammates");
+                });
+
+            modelBuilder.Entity("Go1Bet.Core.Entities.Sport.SportEventEntity", b =>
+                {
+                    b.Navigation("SportMatches");
+                });
+
+            modelBuilder.Entity("Go1Bet.Core.Entities.Sport.SportMatchEntity", b =>
+                {
+                    b.Navigation("BalancesParticipation");
+
+                    b.Navigation("UsersParticipation");
                 });
 
             modelBuilder.Entity("Go1Bet.Core.Entities.User.AppUser", b =>

@@ -17,7 +17,6 @@ namespace Go1Bet.Core.Entities.Category
         [StringLength(4000)]
         public string Description { get; set; }
         [StringLength(255)]
-        public string Image { get; set; }
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 
         [DisplayName("Category")]

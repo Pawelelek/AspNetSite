@@ -27,7 +27,6 @@ namespace Go1Bet.Core.Entities.User
         public string SwitchedBalanceId { get; set; }
         public virtual ICollection<BalanceEntity> Balances { get; set; }
         public virtual ICollection<UserRoleEntity> UserRoles { get; set; }
-        //Notification (Reviewd = false), Balance, Bonuces
         [DisplayName("User")]
         public AppUser RefUser { get; set; }
         [ForeignKey(nameof(User))]

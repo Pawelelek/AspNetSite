@@ -3,8 +3,9 @@ using Go1Bet.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Go1Bet.Infrastructure.Initializers;
 using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
+using Go1Bet.Core.Initializers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,63 +56,43 @@ builder.Services.AddRepositories();
 builder.Services.AddMapping();
 
 // Add services to the container.
-
 builder.Services.AddControllers();
+
+//For google auth    https://gavilan.blog/2021/05/19/fixing-the-error-a-possible-object-cycle-was-detected-in-different-versions-of-asp-net-core/
+builder.Services.AddControllers().AddJsonOptions(x =>
+   x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
-
 {
-
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Go1Bet API", Version = "v1" });
-
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-
     {
-
         In = ParameterLocation.Header,
-
         Description = "Please enter a valid token",
-
         Name = "Authorization",
-
         Type = SecuritySchemeType.Http,
-
         BearerFormat = "JWT",
-
         Scheme = "Bearer"
 
     });
 
     option.AddSecurityRequirement(new OpenApiSecurityRequirement
-
- {
-
+    {
         {
-
             new OpenApiSecurityScheme
-
             {
-
                 Reference = new OpenApiReference
-
                 {
-
                     Type=ReferenceType.SecurityScheme,
-
                     Id="Bearer"
-
                 }
-
             },
-
             new string[]{}
-
         }
-
- });
-
-}); ;
+    });
+});
 
 var app = builder.Build();
 
@@ -125,27 +106,20 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors(options => options
-
- ////.WithOrigins(new[]�{�"http://localhost:3000"�})
-
-                .SetIsOriginAllowed(origin => true)
-
+ //.WithOrigins(new[]�{�"http://localhost:3000"�})
+  .SetIsOriginAllowed(origin => true)
   .AllowAnyHeader()
-
   .AllowCredentials()
-
   .AllowAnyMethod()
-
   );
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-
 app.MapControllers();
 
-
-await UsersAndRolesInitializer.SeedUsersAndRoles(app);
+await IdentitiesInitializer.SeedIdentities(app);
 await CateogoriesInitializer.SeedCategories(app);
+await BonusesInitializer.SeedBonuses(app);
 
 app.Run();

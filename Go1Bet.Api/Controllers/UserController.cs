@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Go1Bet.Core.DTO_s.User;
-using Go1Bet.Core.Services;
-using Go1Bet.Core.Validations.User;
-using Go1Bet.Core.DTO_s.Token;
-using Go1Bet.Core.Interfaces;
+using Go1Bet.Infrastructure.DTO_s.User;
+using Go1Bet.Infrastructure.Services;
+using Go1Bet.Infrastructure.Validations.User;
+using Go1Bet.Infrastructure.DTO_s.Token;
+
 
 namespace Go1Bet.Api.Controllers
 {

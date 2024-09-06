@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Go1Bet.Core.Entities.Tokens;
 
 namespace Go1Bet.Core.Entities.Specifications
