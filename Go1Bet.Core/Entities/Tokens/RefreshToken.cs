@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Go1Bet.Core.Entities.User;
-using Go1Bet.Core.Interfaces;
+using Go1Bet.Core.Repository;
 
 namespace Go1Bet.Core.Entities.Tokens
 {
