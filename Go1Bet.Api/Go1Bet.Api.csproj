@@ -1,20 +1,24 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
-	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
-		<Nullable>enable</Nullable>
-		<ImplicitUsings>enable</ImplicitUsings>
-	</PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>8c4bdad2-63e6-434a-b8f3-942bda0f440c</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.11" />
-		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.3" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.11" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.20.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.11" />
+	  <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.3" />
+  </ItemGroup>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\Go1Bet.Infrastructure\Go1Bet.Infrastructure.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Go1Bet.Infrastructure\Go1Bet.Infrastructure.csproj" />
+  </ItemGroup>
 
 </Project>

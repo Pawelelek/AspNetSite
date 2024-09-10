@@ -28,10 +28,11 @@ namespace Go1Bet.Core.Entities.Sport
         public string? SecondTeamId { get; set; }
 
         //Коеф на перемогу
-        public double FirstOponentWinRate { get; set; }
-        public double SecondOponentWinRate { get; set; }
-        public double DrawWinRating { get; set; }
 
+        //public double FirstOponentWinRate { get; set; }
+        //public double SecondOponentWinRate { get; set; }
+        //public double DrawWinRating { get; set; }
+        public ICollection<VariantSportsEvents> BetsVariantsSportsEvents { get; set; }
         //Ставки
         public double BettingFund { get; set; }
         public int CountBets { get; set; }
