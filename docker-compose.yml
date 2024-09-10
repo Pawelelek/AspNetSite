@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  go1bet.api:
+    image: ${DOCKER_REGISTRY-}go1betapi
+    build:
+      context: .
+      dockerfile: Go1Bet.Api/Dockerfile
