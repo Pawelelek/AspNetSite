@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Go1Bet.Infrastructure.AutoMapper;
 using Go1Bet.Core.Repository;
+using Go1Bet.Infrastructure.Services.SportService;
 
 namespace Go1Bet.Infrastructure
 {
@@ -25,6 +26,8 @@ namespace Go1Bet.Infrastructure
             services.AddTransient<BalanceService>();
             services.AddTransient<BonusService>();
             services.AddTransient<CategoryService>();
+            services.AddTransient<PersonService>();
+            services.AddTransient<OpponentService>();
         }
 
         public static void AddMapping(this IServiceCollection services)

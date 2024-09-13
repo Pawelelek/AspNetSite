@@ -141,9 +141,6 @@ namespace Go1Bet.Core.Migrations
                     SportEventId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     FirstTeamId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     SecondTeamId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    FirstOponentWinRate = table.Column<double>(type: "float", nullable: false),
-                    SecondOponentWinRate = table.Column<double>(type: "float", nullable: false),
-                    DrawWinRating = table.Column<double>(type: "float", nullable: false),
                     BettingFund = table.Column<double>(type: "float", nullable: false),
                     CountBets = table.Column<int>(type: "int", nullable: false)
                 },
@@ -212,6 +209,26 @@ namespace Go1Bet.Core.Migrations
                     table.ForeignKey(
                         name: "FK_AspNetUsers_SportMatches_SportMatchEntityId",
                         column: x => x.SportMatchEntityId,
+                        principalTable: "SportMatches",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VariantSportsEvents",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    WinRate = table.Column<double>(type: "float", nullable: false),
+                    SportMatchId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VariantSportsEvents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_VariantSportsEvents_SportMatches_SportMatchId",
+                        column: x => x.SportMatchId,
                         principalTable: "SportMatches",
                         principalColumn: "Id");
                 });
@@ -499,6 +516,11 @@ namespace Go1Bet.Core.Migrations
                 name: "IX_UserPromocodes_UserId",
                 table: "UserPromocodes",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VariantSportsEvents_SportMatchId",
+                table: "VariantSportsEvents",
+                column: "SportMatchId");
         }
 
         /// <inheritdoc />
@@ -533,6 +555,9 @@ namespace Go1Bet.Core.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserPromocodes");
+
+            migrationBuilder.DropTable(
+                name: "VariantSportsEvents");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
