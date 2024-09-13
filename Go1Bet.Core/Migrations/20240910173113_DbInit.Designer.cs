@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Go1Bet.Core.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240906193841_DbInit")]
+    [Migration("20240910173113_DbInit")]
     partial class DbInit
     {
         /// <inheritdoc />
@@ -180,20 +180,11 @@ namespace Go1Bet.Core.Migrations
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
-                    b.Property<double>("DrawWinRating")
-                        .HasColumnType("float");
-
-                    b.Property<double>("FirstOponentWinRate")
-                        .HasColumnType("float");
-
                     b.Property<string>("FirstTeamId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("SecondOponentWinRate")
-                        .HasColumnType("float");
 
                     b.Property<string>("SecondTeamId")
                         .HasColumnType("nvarchar(450)");
@@ -210,6 +201,30 @@ namespace Go1Bet.Core.Migrations
                     b.HasIndex("SportEventId");
 
                     b.ToTable("SportMatches");
+                });
+
+            modelBuilder.Entity("Go1Bet.Core.Entities.Sport.VariantSportsEvents", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SportMatchId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<double>("WinRate")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SportMatchId");
+
+                    b.ToTable("VariantSportsEvents");
                 });
 
             modelBuilder.Entity("Go1Bet.Core.Entities.Tokens.RefreshToken", b =>
@@ -602,6 +617,15 @@ namespace Go1Bet.Core.Migrations
                     b.Navigation("SportEvent");
                 });
 
+            modelBuilder.Entity("Go1Bet.Core.Entities.Sport.VariantSportsEvents", b =>
+                {
+                    b.HasOne("Go1Bet.Core.Entities.Sport.SportMatchEntity", "SportMatch")
+                        .WithMany("VariantsSportsEvents")
+                        .HasForeignKey("SportMatchId");
+
+                    b.Navigation("SportMatch");
+                });
+
             modelBuilder.Entity("Go1Bet.Core.Entities.Tokens.RefreshToken", b =>
                 {
                     b.HasOne("Go1Bet.Core.Entities.User.AppUser", "User")
@@ -726,6 +750,8 @@ namespace Go1Bet.Core.Migrations
                     b.Navigation("BalancesParticipation");
 
                     b.Navigation("UsersParticipation");
+
+                    b.Navigation("VariantsSportsEvents");
                 });
 
             modelBuilder.Entity("Go1Bet.Core.Entities.User.AppUser", b =>

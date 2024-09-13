@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Go1Bet.Api.Controllers
 {
-    [Route("api/category")]
+    [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
@@ -17,25 +17,25 @@ namespace Go1Bet.Api.Controllers
             }
 
         [HttpGet("get")]
-        public async Task<ActionResult<IEnumerable<CategoryItemDTO>>> Get()
+        public async Task<IActionResult> Get()
         {
             var result = await _categoryService.GetAllAsync();
             return Ok(result);
         }
         [HttpGet("getMainCategories")]
-        public async Task<ActionResult<IEnumerable<CategoryItemDTO>>> GetMainCategoriesAsync()
+        public async Task<IActionResult> GetMainCategoriesAsync()
         {
             var result = await _categoryService.GetMainCategoriesAsync();
             return Ok(result);
         }
         [HttpGet("get/{id}")]
-        public async Task<ActionResult<IEnumerable<CategoryItemDTO>>> GetById(string id)
+        public async Task<IActionResult> GetById(string id)
         {
             var result = await _categoryService.GetByIdAsync(id);
             return Ok(result);
         }
         [HttpPost("create")]
-        public async Task<ActionResult<IEnumerable<CategoryCreateDTO>>> Create([FromBody] CategoryCreateDTO model)
+        public async Task<IActionResult> Create([FromBody] CategoryCreateDTO model)
         {
             var result = await _categoryService.Create(model);
             return Ok(result);
@@ -43,7 +43,7 @@ namespace Go1Bet.Api.Controllers
         }
 
         [HttpPut("edit")]
-        public async Task<ActionResult<IEnumerable<CategoryEditDTO>>> Edit([FromBody] CategoryEditDTO model)
+        public async Task<IActionResult> Edit([FromBody] CategoryEditDTO model)
         {
             var result = await _categoryService.EditCategoryAsync(model);
             return Ok(result);
