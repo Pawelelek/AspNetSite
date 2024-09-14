@@ -14,6 +14,8 @@ namespace Go1Bet.Core.Entities.Sport
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public string Name { get; set; }
+        public DateTime DateStart { get; set; }
+        public DateTime DateEnd { get; set; }
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
         public SportEventEntity SportEvent { get; set; }
         [ForeignKey(nameof(SportEvent))]
@@ -22,10 +24,10 @@ namespace Go1Bet.Core.Entities.Sport
         //Опоненти
         public OpponentEntity FirstOpponent { get; set; }
         [ForeignKey(nameof(FirstOpponent))]
-        public string? FirstTeamId { get; set; }
+        public string? FirstOpponentId { get; set; }
         public OpponentEntity SecondOpponent { get; set; }
         [ForeignKey(nameof(SecondOpponent))]
-        public string? SecondTeamId { get; set; }
+        public string? SecondOpponentId { get; set; }
 
         //Коеф на перемогу
 
