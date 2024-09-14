@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Go1Bet.Core.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240910173113_DbInit")]
+    [Migration("20240914230909_DbInit")]
     partial class DbInit
     {
         /// <inheritdoc />
@@ -154,6 +154,12 @@ namespace Go1Bet.Core.Migrations
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("DateEnd")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateStart")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
@@ -180,13 +186,19 @@ namespace Go1Bet.Core.Migrations
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("FirstTeamId")
+                    b.Property<DateTime>("DateEnd")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateStart")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FirstOpponentId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SecondTeamId")
+                    b.Property<string>("SecondOpponentId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("SportEventId")
@@ -194,9 +206,9 @@ namespace Go1Bet.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FirstTeamId");
+                    b.HasIndex("FirstOpponentId");
 
-                    b.HasIndex("SecondTeamId");
+                    b.HasIndex("SecondOpponentId");
 
                     b.HasIndex("SportEventId");
 
@@ -600,11 +612,11 @@ namespace Go1Bet.Core.Migrations
                 {
                     b.HasOne("Go1Bet.Core.Entities.Sport.OpponentEntity", "FirstOpponent")
                         .WithMany()
-                        .HasForeignKey("FirstTeamId");
+                        .HasForeignKey("FirstOpponentId");
 
                     b.HasOne("Go1Bet.Core.Entities.Sport.OpponentEntity", "SecondOpponent")
                         .WithMany()
-                        .HasForeignKey("SecondTeamId");
+                        .HasForeignKey("SecondOpponentId");
 
                     b.HasOne("Go1Bet.Core.Entities.Sport.SportEventEntity", "SportEvent")
                         .WithMany("SportMatches")

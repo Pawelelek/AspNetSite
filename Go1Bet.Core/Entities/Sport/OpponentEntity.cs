@@ -13,10 +13,10 @@ namespace Go1Bet.Core.Entities.Sport
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public string Name { get; set; }
-        //public ICollection<PersoneEntity> Trainers { get; set; }
         public ICollection<PersonEntity> Teammates { get; set; }
         [StringLength(4000)]
         public string Description { get; set; }
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+        //public ICollection<SportMatchEntity> SportMatches { get; set; } Error!
     }
 }

@@ -16,6 +16,8 @@ namespace Go1Bet.Core.Entities.Sport
         public string Name { get; set; }
         [StringLength(4000)]
         public string Description { get; set; }
+        public DateTime DateStart { get; set; }
+        public DateTime DateEnd { get; set; }
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
         //Foreign keys:
         public ICollection<SportMatchEntity> SportMatches { get; set; } = new List<SportMatchEntity>();

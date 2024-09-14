@@ -64,6 +64,8 @@ namespace Go1Bet.Core.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
+                    DateStart = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateEnd = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -137,10 +139,12 @@ namespace Go1Bet.Core.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateStart = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateEnd = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SportEventId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    FirstTeamId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    SecondTeamId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    FirstOpponentId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    SecondOpponentId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     BettingFund = table.Column<double>(type: "float", nullable: false),
                     CountBets = table.Column<int>(type: "int", nullable: false)
                 },
@@ -148,13 +152,13 @@ namespace Go1Bet.Core.Migrations
                 {
                     table.PrimaryKey("PK_SportMatches", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SportMatches_Opponents_FirstTeamId",
-                        column: x => x.FirstTeamId,
+                        name: "FK_SportMatches_Opponents_FirstOpponentId",
+                        column: x => x.FirstOpponentId,
                         principalTable: "Opponents",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_SportMatches_Opponents_SecondTeamId",
-                        column: x => x.SecondTeamId,
+                        name: "FK_SportMatches_Opponents_SecondOpponentId",
+                        column: x => x.SecondOpponentId,
                         principalTable: "Opponents",
                         principalColumn: "Id");
                     table.ForeignKey(
@@ -473,14 +477,14 @@ namespace Go1Bet.Core.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SportMatches_FirstTeamId",
+                name: "IX_SportMatches_FirstOpponentId",
                 table: "SportMatches",
-                column: "FirstTeamId");
+                column: "FirstOpponentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SportMatches_SecondTeamId",
+                name: "IX_SportMatches_SecondOpponentId",
                 table: "SportMatches",
-                column: "SecondTeamId");
+                column: "SecondOpponentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SportMatches_SportEventId",
