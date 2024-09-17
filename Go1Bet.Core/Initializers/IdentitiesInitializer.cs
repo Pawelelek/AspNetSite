@@ -22,7 +22,7 @@ namespace Go1Bet.Core.Initializers
                 UserManager<AppUser> userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
                 RoleManager<RoleEntity> roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<RoleEntity>>();
 
-                if (false)
+                if (!userManager.Users.Any())
                 {
                     AppUser admin1 = new AppUser()
                     {

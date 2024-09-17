@@ -59,8 +59,14 @@ namespace Go1Bet.Api.Controllers
             }
             return NotFound("validation problem");
         }
+        [HttpPut("Edit")]
+        public async Task<IActionResult> UpdateUserAsync([FromBody] UserEditDTO model)
+        {
+            var result = await _userService.UpdateUserAsync(model);
+            return Ok(result);
+        }
         [HttpPut("UpdatePersonalInfo")]
-        public async Task<IActionResult> UpdatePersonalInfoAsync([FromBody] UserEditDTO model)
+        public async Task<IActionResult> UpdatePersonalInfoAsync([FromBody] UserEditPersonalInfoDTO model)
         {
             var validator = new UpdateUserValidation();
             var validationResult = await validator.ValidateAsync(model);

@@ -281,7 +281,49 @@ namespace Go1Bet.Infrastructure.Services
                 Success = false,
             };
         }
-        public async Task<ServiceResponse> UpdateUserPersonalInfoAsync(UserEditDTO model)
+        public async Task<ServiceResponse> UpdateUserAsync(UserEditDTO model)
+        {
+            var existUser = await _userManager.FindByIdAsync(model.Id.ToString());
+            if (existUser != null)
+            {
+                if (model.RoleName != null)
+                {
+
+                    var oldRoles = await _userManager.GetRolesAsync(existUser);
+                    await _userManager.RemoveFromRolesAsync(existUser, oldRoles);
+
+                    var role = model.RoleName != null ? model.RoleName : Roles.User;
+                    await _userManager.AddToRoleAsync(existUser, role);
+                }
+                var user = _mapper.Map(model, existUser);
+                user.DateLastPersonalInfoUpdated = DateTime.UtcNow;
+
+                var result = await _userManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    return new ServiceResponse
+                    {
+                        Message = "User updated",
+                        Success = true,
+                        Payload = result,
+                        Errors = result.Errors
+                    };
+                }
+                return new ServiceResponse
+                {
+                    Message = "Error occured",
+                    Success = false,
+                    Payload = result,
+                    Errors = result.Errors
+                };
+            }
+            return new ServiceResponse
+            {
+                Message = "User not found",
+                Success = false,
+            };
+        }
+        public async Task<ServiceResponse> UpdateUserPersonalInfoAsync(UserEditPersonalInfoDTO model)
         {
             var oldUser = await _userManager.FindByIdAsync(model.Id.ToString());
             if (oldUser != null)
