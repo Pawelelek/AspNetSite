@@ -77,7 +77,12 @@ namespace Go1Bet.Infrastructure.Services
         }
         public async Task<ServiceResponse> EditRoleAsync(RoleEditDTO model)
         {
-            var role = new RoleEntity { Id = model.Id, Name = model.RoleName, ConcurrencyStamp = model.ConcurrencyStamp };
+            var oldRole = _roleManager.FindByIdAsync(model.Id);
+            var role = new RoleEntity { Id = model.Id, Name = model.RoleName };
+            if(oldRole.Result.ConcurrencyStamp != null)
+            {
+                role.ConcurrencyStamp = model.ConcurrencyStamp;
+            }
             var result = await _roleManager.UpdateAsync(role);
             return new ServiceResponse()
             {

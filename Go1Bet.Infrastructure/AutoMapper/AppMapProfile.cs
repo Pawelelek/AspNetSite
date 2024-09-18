@@ -26,6 +26,7 @@ namespace Go1Bet.Infrastructure.AutoMapper
             CreateMap<CreateUserDto, AppUser>().ForMember(dst => dst.UserName, act => act.MapFrom(src => src.Email));
             CreateMap<AppUser, CreateUserDto>();
             CreateMap<AppUser, UserItemDTO>().ReverseMap();
+            CreateMap<AppUser, UserEditPersonalInfoDTO>().ReverseMap();
             CreateMap<AppUser, UserEditDTO>().ReverseMap();
             CreateMap<AppUser, UserEditEmailDTO>().ReverseMap();
             CreateMap<AppUser, UserEditPasswordDTO>().ReverseMap();
