@@ -35,7 +35,7 @@ namespace Go1Bet.Infrastructure.Services
                         Description = c.Description,
                         ParentId = c.ParentId,
                         ParentName = c.Parent.Name,
-                        countSubategories = c.Subcategories.Where(s => s.ParentId == c.Id).Count(),
+                        countSubcategories = c.Subcategories.Where(s => s.ParentId == c.Id).Count(),
                     }).ToListAsync();
 
                 return new ServiceResponse
@@ -64,7 +64,7 @@ namespace Go1Bet.Infrastructure.Services
                 Description = c.Description,
                 ParentId = c.ParentId,
                 ParentName = c.Parent.Name,
-                countSubategories = c.Subcategories.Where(s => s.ParentId == c.Id).Count(),
+                countSubcategories = c.Subcategories.Where(s => s.ParentId == c.Id).Count(),
             }).ToListAsync();
             return new ServiceResponse
             {
@@ -84,7 +84,7 @@ namespace Go1Bet.Infrastructure.Services
                     ParentId = c.ParentId,
                     ParentName = c.Parent.Name,
                     //countSubcategories
-                    countSubategories = c.Subcategories.Where(s => s.ParentId == c.Id).Count(),
+                    countSubcategories = c.Subcategories.Where(s => s.ParentId == c.Id).Count(),
                     //Subcategories
                     Subcategories =
                       c.Subcategories

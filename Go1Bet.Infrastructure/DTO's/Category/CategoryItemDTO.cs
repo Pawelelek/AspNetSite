@@ -14,7 +14,7 @@ namespace Go1Bet.Infrastructure.DTO_s.Category
         public string Description { get; set; }
         public string? ParentId { get; set; }
         public string ParentName { get; set; }
-        public int countSubategories { get; set; }
+        public int countSubcategories { get; set; }
         public List<CategoryItemDTO> Subcategories { get; set; }
     }
 }
