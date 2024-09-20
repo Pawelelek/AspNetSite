@@ -120,7 +120,7 @@ namespace Go1Bet.Infrastructure.Services
         public async Task<ServiceResponse> Create(CategoryCreateDTO model)
         {
             var category = _mapper.Map<CategoryEntity>(model);
-            category.ParentId = model.ParentId == "string" ? null : model.ParentId;
+            category.ParentId = model.ParentId == "string" || model.ParentId == null ? null : model.ParentId;
             await _context.Categories.AddAsync(category);
             await _context.SaveChangesAsync();
             return new ServiceResponse
@@ -144,7 +144,7 @@ namespace Go1Bet.Infrastructure.Services
             }
 
             category.Name = model.Name;
-            category.ParentId = model.ParentId == "string" ? null : model.ParentId;
+            category.ParentId = model.ParentId == "string" || model.ParentId == null ? null : model.ParentId;
             category.Description = model.Description;
 
             _context.Categories.Update(category);
@@ -155,7 +155,6 @@ namespace Go1Bet.Infrastructure.Services
                 Message = "Category update was successful",
                 Success = true,
             };
-
         }
         public async Task<ServiceResponse> DeleteCategoryAsync(string id)
         {
@@ -168,9 +167,6 @@ namespace Go1Bet.Infrastructure.Services
                     Success = false,
                 };
             }
-
-
-
              _context.Categories.Remove(category);
             await _context.SaveChangesAsync();
             return new ServiceResponse()
