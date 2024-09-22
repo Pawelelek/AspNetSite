@@ -595,9 +595,15 @@ namespace Go1Bet.Infrastructure.Services
             var refreshTokensByUserId = _context.RefreshToken.Where(r => r.UserId == id);
             _context.RefreshToken.RemoveRange(refreshTokensByUserId);
             var balances = await _context.Balances.Where(x=> x.UserId == id).ToListAsync();
+            foreach(var balance in balances)
+            {
+                var tr = _context.Transactions.Where(x => x.BalanceId == balance.Id);
+                _context.Transactions.RemoveRange(tr);
+            }
             _context.Balances.RemoveRange(balances);
+            await _context.SaveChangesAsync();
             var result = await _userManager.UpdateAsync(user);
-            
+
             await _userManager.DeleteAsync(user); //Видалити цю строку коду на стадії релізу!!!!
             
             if (result.Succeeded)
