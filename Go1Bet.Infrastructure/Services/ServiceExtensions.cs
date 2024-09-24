@@ -40,7 +40,8 @@ namespace Go1Bet.Infrastructure
         {
             services.AddDbContext<AppDbContext>(opt =>
             {
-                opt.UseSqlServer(connectionString);
+                //opt.UseSqlServer(connectionString); //MsSQL
+                opt.UseNpgsql(connectionString);//PostgresSql
                 opt.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
         }
