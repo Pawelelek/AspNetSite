@@ -1,8 +1,45 @@
-version: '3.4'
+version: '3.5'
+networks:
+  myAppNetwork:
+    driver: bridge
 
 services:
-  go1bet.api:
-    image: ${DOCKER_REGISTRY-}go1betapi
+  backend:
+    container_name: my-app-conainer
+    image: slobodeniuk47/backend
     build:
       context: .
       dockerfile: Go1Bet.Api/Dockerfile
+    #
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5001:8080"
+    depends_on:
+      - postgres_db #Until postgres starts, our service will not start
+    networks:
+      - myAppNetwork
+    #
+  client:
+    image: slobodeniuk47/frontend
+    build:
+      context: ../ReactSite
+      dockerfile: Dockerfile
+    ports:
+      - "5002:3000"
+
+  postgres_db:
+    container_name: postgres_container
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "Qwerty-1"
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - myAppNetwork
+volumes:
+  postgres-data:
