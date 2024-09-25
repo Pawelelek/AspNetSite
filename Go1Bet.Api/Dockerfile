@@ -10,7 +10,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Go1Bet.Api/Go1Bet.Api.csproj", "Go1Bet.Api/"]
-COPY ["Go1Bet.Infrastructure/Go1Bet.Core.csproj", "Go1Bet.Infrastructure/"]
+COPY ["Go1Bet.Infrastructure/Go1Bet.Infrastructure.csproj", "Go1Bet.Infrastructure/"]
 COPY ["Go1Bet.Core/Go1Bet.Core.csproj", "Go1Bet.Core/"]
 RUN dotnet restore "./Go1Bet.Api/Go1Bet.Api.csproj"
 COPY . .
