@@ -94,8 +94,16 @@ namespace Go1Bet.Infrastructure.Services
         public async Task<ServiceResponse> ActivePromocodeAsync(PromocodeActiveDTO model)
         {
             var promo = await _context.Promocodes.Where(p => p.Key == model.Key).FirstOrDefaultAsync();
+            if (promo == null)
+            {
+                return new ServiceResponse
+                {
+                    Message = "The promo code does not exist!",
+                    Success = false,
+                };
+            }
             var userPromoValid = _context.UserPromocodes.Where(up => up.UserId == model.UserId && up.PromocodeId == promo.Id).Any();
-            if(userPromoValid)
+            if (userPromoValid)
             {
                 return new ServiceResponse
                 {
@@ -112,17 +120,18 @@ namespace Go1Bet.Infrastructure.Services
                 };
             }
             var entity = new PromocodeUserEntity() { DateCreated = DateTime.Now, UserId = model.UserId, PromocodeId = promo.Id };
+
+            // Add user-promocode association and save changes
+            await _context.UserPromocodes.AddAsync(entity);
+            await _context.SaveChangesAsync();
+
+            // Increase promo usage count and update balance
             promo.CountEntries++;
             _context.Promocodes.Update(promo);
-            
+
             var user = await _userManager.FindByIdAsync(model.UserId);
             _balanceService.BalanceInteraction(user.SwitchedBalanceId, promo.PriceMoney, $"Promo - {promo.Name}");
-            //var balance = await _context.Balances.Where(b => b.Id == user.SwitchedBalanceId).FirstOrDefaultAsync();
-            //balance.Money += promo.PriceMoney;
-            //_context.Balances.Update(balance);
 
-            //await _context.UserPromocodes.AddAsync(entity);
-            //await _context.SaveChangesAsync();
             return new ServiceResponse
             {
                 Message = "Promocode has been activated.",

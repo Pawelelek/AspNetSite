@@ -50,8 +50,8 @@ namespace Go1Bet.Infrastructure.Services
 
         public async Task<ServiceResponse> CreateAsync(CreateUserDto model)
         {
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user != null)
+            var user = await _userManager.Users.Where(x => x.Email == model.Email).AnyAsync();
+            if (user)
             {
                 return new ServiceResponse
                 {
@@ -59,10 +59,10 @@ namespace Go1Bet.Infrastructure.Services
                     Success = false,
                 };
             }
-            if(model.RefUserId != null)
+            if (model.RefUserId != null)
             {
                 var refUser = await _userManager.FindByEmailAsync(model.RefUserId);
-                if (refUser != null) 
+                if (refUser != null)
                 {
                     return new ServiceResponse
                     {
@@ -133,7 +133,47 @@ namespace Go1Bet.Infrastructure.Services
                 Message = "Success"
             };
         }
-        public async Task<ServiceResponse> UpdateUserPasswordAsync(UserEditPasswordDTO model)
+        public async Task<ServiceResponse> ChangeUserPasswordAsync(ChangeUserPasswordDTO model)
+        {
+
+            var oldUser = await _userManager.FindByIdAsync(model.Id);
+            if (oldUser != null)
+            {
+                var oldPassValid = await _userManager.CheckPasswordAsync(oldUser, model.OldPassword);
+                if (!oldPassValid)
+                {
+                    return new ServiceResponse
+                    {
+                        Message = "Old password is not valid",
+                        Success = false,
+                    };
+                }
+                if (model.NewPassword != model.ConfirmNewPassword)
+                {
+                    return new ServiceResponse
+                    {
+                        Message = "Passwords do not match",
+                        Success = false,
+                    };
+                }
+                await _userManager.ChangePasswordAsync(oldUser, model.OldPassword, model.NewPassword);
+                oldUser.DateLastPasswordUpdated = DateTime.UtcNow;
+                var result = await _userManager.UpdateAsync(oldUser);
+                return new ServiceResponse
+                {
+                    Message = "Password has been updated",
+                    Success = false,
+                    Payload = result,
+                };
+            }
+
+            return new ServiceResponse
+            {
+                Message = "User not found",
+                Success = false,
+            };
+        }
+        public async Task<ServiceResponse> ForgotUserPasswordAsync(ForgotUserPasswordDTO model)
         {
             if (model.Password != model.ConfirmPassword)
             {
@@ -143,6 +183,7 @@ namespace Go1Bet.Infrastructure.Services
                     Success = false,
                 };
             }
+
             var oldUser = await _userManager.FindByIdAsync(model.Id);
             if (oldUser != null)
             {
