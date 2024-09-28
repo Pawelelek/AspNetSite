@@ -18,6 +18,7 @@ namespace Go1Bet.Core.Entities.User
         public double Value {  get; set; }
         [DisplayName("Balance")]
         public BalanceEntity Balance { get; set; }
+        public int Discount { get; set; }
 
         [ForeignKey(nameof(Balance))]
         public string? BalanceId { get; set; }

@@ -8,6 +8,7 @@ using Go1Bet.Core.Entities.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
+using Go1Bet.Core.Constants;
 
 namespace Go1Bet.Infrastructure.Services
 {
@@ -130,7 +131,7 @@ namespace Go1Bet.Infrastructure.Services
             _context.Promocodes.Update(promo);
 
             var user = await _userManager.FindByIdAsync(model.UserId);
-            _balanceService.BalanceInteraction(user.SwitchedBalanceId, promo.PriceMoney, $"Promo - {promo.Name}");
+            _balanceService.BalanceInteraction(user.SwitchedBalanceId, promo.PriceMoney, 0, 0, TransactionType.Promo,  $"Promo - {promo.Name}");
 
             return new ServiceResponse
             {

@@ -10,5 +10,7 @@ namespace Go1Bet.Infrastructure.DTO_s.Balance
     {
         public string BalanceId { get; set; }
         public double Money { get; set; }
+        public int Discount { get; set; } = 0;
+        public double BonusMoney { get; set; } = 0; //Money + BoneyMoney
     }
 }
