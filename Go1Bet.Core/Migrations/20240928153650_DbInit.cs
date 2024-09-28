@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Go1Bet.Core.Migrations
 {
     /// <inheritdoc />
-    public partial class dbInit : Migration
+    public partial class DbInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
