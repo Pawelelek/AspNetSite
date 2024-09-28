@@ -405,6 +405,7 @@ namespace Go1Bet.Core.Migrations
                     Description = table.Column<string>(type: "text", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Value = table.Column<double>(type: "double precision", nullable: false),
+                    Discount = table.Column<int>(type: "integer", nullable: false),
                     BalanceId = table.Column<string>(type: "text", nullable: true),
                     TransactionType = table.Column<int>(type: "integer", nullable: false)
                 },

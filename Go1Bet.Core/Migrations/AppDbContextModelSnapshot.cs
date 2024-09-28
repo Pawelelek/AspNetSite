@@ -451,6 +451,9 @@ namespace Go1Bet.Core.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
+                    b.Property<int>("Discount")
+                        .HasColumnType("integer");
+
                     b.Property<int>("TransactionType")
                         .HasColumnType("integer");
 
