@@ -29,7 +29,9 @@ namespace Go1Bet.Infrastructure.AutoMapper
             CreateMap<AppUser, UserEditPersonalInfoDTO>().ReverseMap();
             CreateMap<AppUser, UserEditDTO>().ReverseMap();
             CreateMap<AppUser, UserEditEmailDTO>().ReverseMap();
-            CreateMap<AppUser, UserEditPasswordDTO>().ReverseMap();
+            CreateMap<AppUser, ForgotUserPasswordDTO>().ReverseMap();
+
+            CreateMap<AppUser, ChangeUserPasswordDTO>().ReverseMap();
 
             CreateMap<BalanceEntity, BalanceItemDTO>().ReverseMap();
             CreateMap<BalanceEntity, BalanceCreateDTO>().ReverseMap();

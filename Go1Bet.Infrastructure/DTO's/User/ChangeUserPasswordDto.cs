@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Go1Bet.Infrastructure.DTO_s.User
 {
-    public class UserEditPasswordDTO
+    public class ChangeUserPasswordDTO
     {
         public string Id { get; set; }
-        public string Token { get; set; }
-        public string Password { get; set; }
-        public string ConfirmPassword { get; set; }
+        public string OldPassword { get; set; }
+        public string NewPassword { get; set; }
+        public string ConfirmNewPassword { get; set; }
     }
 }

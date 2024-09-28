@@ -46,18 +46,8 @@ namespace Go1Bet.Api.Controllers
         [HttpPost("Create")]
         public async Task<IActionResult> CreateAsync([FromBody] CreateUserDto model)
         {
-            var validator = new CreateUserValidation();
-            var validationResult = await validator.ValidateAsync(model);
-            if (validationResult.IsValid)
-            {
-                var result = await _userService.CreateAsync(model);
-                if (result.Success)
-                {
-                    return Ok(result);
-                }
-                return NotFound("Error while creating user");
-            }
-            return NotFound("validation problem");
+            var result = await _userService.CreateAsync(model);
+            return Ok(result);
         }
         [HttpPut("Edit")]
         public async Task<IActionResult> UpdateUserAsync([FromBody] UserEditDTO model)
@@ -93,10 +83,16 @@ namespace Go1Bet.Api.Controllers
             var result = await _userService.GetPasswordResetTokenAsync(userId);
             return Ok(result);
         }
-        [HttpPut("UpdatePassword")]
-        public async Task<IActionResult> UpdatePasswordAsync([FromBody] UserEditPasswordDTO model)
+        [HttpPut("ForgotPassword")]
+        public async Task<IActionResult> ForgotPasswordAsync([FromBody] ForgotUserPasswordDTO model)
         {
-            var result = await _userService.UpdateUserPasswordAsync(model);
+            var result = await _userService.ForgotUserPasswordAsync(model);
+            return Ok(result);
+        }
+        [HttpPut("ChangePassword")]
+        public async Task<IActionResult> ChanePasswordAsync([FromBody] ChangeUserPasswordDTO model)
+        {
+            var result = await _userService.ChangeUserPasswordAsync(model);
             return Ok(result);
         }
         [HttpPut("UpdateUserRole")]
