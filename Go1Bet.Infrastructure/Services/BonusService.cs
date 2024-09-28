@@ -119,7 +119,7 @@ namespace Go1Bet.Infrastructure.Services
                     Success = false,
                 };
             }
-            var entity = new PromocodeUserEntity() { DateCreated = DateTime.Now, UserId = model.UserId, PromocodeId = promo.Id };
+            var entity = new PromocodeUserEntity() { DateCreated = DateTime.UtcNow, UserId = model.UserId, PromocodeId = promo.Id };
 
             // Add user-promocode association and save changes
             await _context.UserPromocodes.AddAsync(entity);

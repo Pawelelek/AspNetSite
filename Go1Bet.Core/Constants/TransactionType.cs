@@ -9,6 +9,7 @@ namespace Go1Bet.Core.Constants
     public enum TransactionType
     {
         Deposit,
-        Withdrawal
+        Withdrawal,
+        Promo
     };
 }
