@@ -69,10 +69,11 @@ namespace Go1Bet.Infrastructure.Services.SportService
                         DateEnd = se.DateEnd,
                         Description = se.Description,
                         countSportMatches = se.SportMatches.Count(),
+                        Status = se.Status,
                         SportMatches = se.SportMatches.Where(sm => sm.SportEventId == id)
                         .Select(x => new SportMatchItemDTO { 
                             Id = x.Id, Name = x.Name, DateCreated = x.DateCreated, DateEnd = x.DateEnd, DateStart = x.DateStart, 
-                            BettingFund = x.BettingFund, CountBets = x.CountBets, FirstOpponentId = x.FirstOpponentId, SecondOpponentId=x.SecondOpponentId, SportEventId = x.SportEventId
+                            CountBets = x.Odds.Sum(x => x.Bets.Count()), BettingFund = x.Odds.Sum(x=> x.Bets.Sum(b => b.Amount)), SportEventId = x.SportEventId
                         }).ToList(),
                     }).ToListAsync();
 

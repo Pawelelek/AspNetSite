@@ -10,6 +10,6 @@ namespace Go1Bet.Infrastructure.DTO_s.Sport.Opponent
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string SportMatchId { get; set; }
     }
 }

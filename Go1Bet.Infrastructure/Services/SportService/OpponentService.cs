@@ -31,8 +31,8 @@ namespace Go1Bet.Infrastructure.Services.SportService
                     {
                         Id = o.Id,
                         Name = o.Name,
-                        Description = o.Description,
-                        //Teammates = o.Teammates.Where(t=> t.OpponentId == o.Id).Select(x=> new PersonItemDTO { Id = x.Id, Name = x.Name, OpponentId = x.OpponentId, OpponentName = x.Opponent.Name, Position = x.Position }).ToList(),
+                        DateCreated = o.DateCreated,
+                        SportMatchId = o.SportMatchId,
                         countTeammates = o.Teammates.Where(t => t.OpponentId == o.Id).Count()
                     }).ToListAsync();
 
@@ -61,7 +61,8 @@ namespace Go1Bet.Infrastructure.Services.SportService
                     {
                         Id = o.Id,
                         Name = o.Name,
-                        Description = o.Description,
+                        DateCreated = o.DateCreated,
+                        SportMatchId = o.SportMatchId,
                         Teammates = o.Teammates.Where(t => t.OpponentId == o.Id).Select(x => new PersonItemDTO { Id = x.Id, Name = x.Name, OpponentId = x.OpponentId, OpponentName = x.Opponent.Name, Position = x.Position }).ToList(),
                         countTeammates = o.Teammates.Where(t => t.OpponentId == o.Id).Count()
                     }).ToListAsync();
