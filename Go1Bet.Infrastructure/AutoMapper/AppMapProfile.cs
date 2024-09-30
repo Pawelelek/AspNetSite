@@ -16,6 +16,8 @@ using Go1Bet.Infrastructure.DTO_s.Sport.Person;
 using Go1Bet.Infrastructure.DTO_s.Sport.Opponent;
 using Go1Bet.Infrastructure.DTO_s.Sport.SportMatch;
 using Go1Bet.Infrastructure.DTO_s.Sport.SportEvent;
+using Go1Bet.Infrastructure.DTO_s.Sport.Bet;
+using Go1Bet.Infrastructure.DTO_s.Sport.Odd;
 
 namespace Go1Bet.Infrastructure.AutoMapper
 {
@@ -47,6 +49,8 @@ namespace Go1Bet.Infrastructure.AutoMapper
             CreateMap<PromocodeEntity, PromocodeEditDTO>().ReverseMap();
             CreateMap<PromocodeEntity, PromocodeActiveDTO>().ReverseMap();
 
+            // ============== SPORT API
+
             CreateMap<PersonEntity, PersonItemDTO>().ReverseMap();
             CreateMap<PersonEntity, PersonCreateDTO>().ReverseMap();
             CreateMap<PersonEntity, PersonEditDTO>().ReverseMap();
@@ -54,6 +58,14 @@ namespace Go1Bet.Infrastructure.AutoMapper
             CreateMap<OpponentEntity, OpponentItemDTO>().ReverseMap();
             CreateMap<OpponentEntity, OpponentCreateDTO>().ReverseMap();
             CreateMap<OpponentEntity, OpponentEditDTO>().ReverseMap();
+
+            CreateMap<BetEntity, BetItemDTO>().ReverseMap();
+            CreateMap<BetEntity, BetCreateDTO>().ReverseMap();
+            CreateMap<BetEntity, BetEditDTO>().ReverseMap();
+
+            CreateMap<OddEntity, OddItemDTO>().ReverseMap();
+            CreateMap<OddEntity, OddCreateDTO>().ReverseMap();
+            CreateMap<OddEntity, OddEditDTO>().ReverseMap();
 
             CreateMap<SportMatchEntity, SportMatchItemDTO>().ReverseMap();
             CreateMap<SportMatchEntity, SportMatchEditDTO>().ReverseMap();

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Go1Bet.Core.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240928173400_DbInit")]
+    [Migration("20240930194513_DbInit")]
     partial class DbInit
     {
         /// <inheritdoc />
@@ -105,6 +105,61 @@ namespace Go1Bet.Core.Migrations
                     b.ToTable("tbl_Categories");
                 });
 
+            modelBuilder.Entity("Go1Bet.Core.Entities.Sport.BetEntity", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTime>("BetTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OddId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OddId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Bets");
+                });
+
+            modelBuilder.Entity("Go1Bet.Core.Entities.Sport.OddEntity", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OpponentId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SportMatchId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("Value")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OpponentId");
+
+                    b.HasIndex("SportMatchId");
+
+                    b.ToTable("Odds");
+                });
+
             modelBuilder.Entity("Go1Bet.Core.Entities.Sport.OpponentEntity", b =>
                 {
                     b.Property<string>("Id")
@@ -113,14 +168,15 @@ namespace Go1Bet.Core.Migrations
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(4000)
-                        .HasColumnType("character varying(4000)");
-
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
+                    b.Property<string>("SportMatchId")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("SportMatchId");
 
                     b.ToTable("Opponents");
                 });
@@ -167,6 +223,9 @@ namespace Go1Bet.Core.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
+                    b.Property<string>("Status")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.ToTable("SportEvents");
@@ -177,12 +236,6 @@ namespace Go1Bet.Core.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("text");
 
-                    b.Property<double>("BettingFund")
-                        .HasColumnType("double precision");
-
-                    b.Property<int>("CountBets")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("timestamp with time zone");
 
@@ -192,13 +245,7 @@ namespace Go1Bet.Core.Migrations
                     b.Property<DateTime>("DateStart")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("FirstOpponentId")
-                        .HasColumnType("text");
-
                     b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SecondOpponentId")
                         .HasColumnType("text");
 
                     b.Property<string>("SportEventId")
@@ -206,37 +253,9 @@ namespace Go1Bet.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FirstOpponentId");
-
-                    b.HasIndex("SecondOpponentId");
-
                     b.HasIndex("SportEventId");
 
                     b.ToTable("SportMatches");
-                });
-
-            modelBuilder.Entity("Go1Bet.Core.Entities.Sport.VariantSportsEvents", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SportMatchId")
-                        .HasColumnType("text");
-
-                    b.Property<double>("WinRate")
-                        .HasColumnType("double precision");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SportMatchId");
-
-                    b.ToTable("VariantSportsEvents");
                 });
 
             modelBuilder.Entity("Go1Bet.Core.Entities.Tokens.RefreshToken", b =>
@@ -600,6 +619,45 @@ namespace Go1Bet.Core.Migrations
                     b.Navigation("Parent");
                 });
 
+            modelBuilder.Entity("Go1Bet.Core.Entities.Sport.BetEntity", b =>
+                {
+                    b.HasOne("Go1Bet.Core.Entities.Sport.OddEntity", "Odd")
+                        .WithMany("Bets")
+                        .HasForeignKey("OddId");
+
+                    b.HasOne("Go1Bet.Core.Entities.User.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Odd");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Go1Bet.Core.Entities.Sport.OddEntity", b =>
+                {
+                    b.HasOne("Go1Bet.Core.Entities.Sport.OpponentEntity", "Opponent")
+                        .WithMany()
+                        .HasForeignKey("OpponentId");
+
+                    b.HasOne("Go1Bet.Core.Entities.Sport.SportMatchEntity", "SportMatch")
+                        .WithMany("Odds")
+                        .HasForeignKey("SportMatchId");
+
+                    b.Navigation("Opponent");
+
+                    b.Navigation("SportMatch");
+                });
+
+            modelBuilder.Entity("Go1Bet.Core.Entities.Sport.OpponentEntity", b =>
+                {
+                    b.HasOne("Go1Bet.Core.Entities.Sport.SportMatchEntity", "SportMatch")
+                        .WithMany("Opponents")
+                        .HasForeignKey("SportMatchId");
+
+                    b.Navigation("SportMatch");
+                });
+
             modelBuilder.Entity("Go1Bet.Core.Entities.Sport.PersonEntity", b =>
                 {
                     b.HasOne("Go1Bet.Core.Entities.Sport.OpponentEntity", "Opponent")
@@ -611,32 +669,11 @@ namespace Go1Bet.Core.Migrations
 
             modelBuilder.Entity("Go1Bet.Core.Entities.Sport.SportMatchEntity", b =>
                 {
-                    b.HasOne("Go1Bet.Core.Entities.Sport.OpponentEntity", "FirstOpponent")
-                        .WithMany()
-                        .HasForeignKey("FirstOpponentId");
-
-                    b.HasOne("Go1Bet.Core.Entities.Sport.OpponentEntity", "SecondOpponent")
-                        .WithMany()
-                        .HasForeignKey("SecondOpponentId");
-
                     b.HasOne("Go1Bet.Core.Entities.Sport.SportEventEntity", "SportEvent")
                         .WithMany("SportMatches")
                         .HasForeignKey("SportEventId");
 
-                    b.Navigation("FirstOpponent");
-
-                    b.Navigation("SecondOpponent");
-
                     b.Navigation("SportEvent");
-                });
-
-            modelBuilder.Entity("Go1Bet.Core.Entities.Sport.VariantSportsEvents", b =>
-                {
-                    b.HasOne("Go1Bet.Core.Entities.Sport.SportMatchEntity", "SportMatch")
-                        .WithMany("VariantsSportsEvents")
-                        .HasForeignKey("SportMatchId");
-
-                    b.Navigation("SportMatch");
                 });
 
             modelBuilder.Entity("Go1Bet.Core.Entities.Tokens.RefreshToken", b =>
@@ -748,6 +785,11 @@ namespace Go1Bet.Core.Migrations
                     b.Navigation("Subcategories");
                 });
 
+            modelBuilder.Entity("Go1Bet.Core.Entities.Sport.OddEntity", b =>
+                {
+                    b.Navigation("Bets");
+                });
+
             modelBuilder.Entity("Go1Bet.Core.Entities.Sport.OpponentEntity", b =>
                 {
                     b.Navigation("Teammates");
@@ -762,9 +804,11 @@ namespace Go1Bet.Core.Migrations
                 {
                     b.Navigation("BalancesParticipation");
 
-                    b.Navigation("UsersParticipation");
+                    b.Navigation("Odds");
 
-                    b.Navigation("VariantsSportsEvents");
+                    b.Navigation("Opponents");
+
+                    b.Navigation("UsersParticipation");
                 });
 
             modelBuilder.Entity("Go1Bet.Core.Entities.User.AppUser", b =>

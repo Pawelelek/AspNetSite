@@ -11,6 +11,7 @@ namespace Go1Bet.Infrastructure.DTO_s.Sport.SportEvent
     {
         public string Name { get; set; }
         public string Description { get; set; }
+        public string Status { get; set; }
         public DateTime DateStart { get; set; }
         public DateTime DateEnd { get; set; }
     }

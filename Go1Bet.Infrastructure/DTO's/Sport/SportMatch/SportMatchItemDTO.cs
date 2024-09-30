@@ -1,4 +1,5 @@
 ﻿using Go1Bet.Core.Entities.Sport;
+using Go1Bet.Infrastructure.DTO_s.Sport.Odd;
 using Go1Bet.Infrastructure.DTO_s.Sport.Opponent;
 using Go1Bet.Infrastructure.DTO_s.Sport.SportEvent;
 using System;
@@ -19,10 +20,8 @@ namespace Go1Bet.Infrastructure.DTO_s.Sport.SportMatch
         public DateTime DateCreated { get; set; }
         public SportEventItemDTO SportEvent { get; set; }
         public string? SportEventId { get; set; }
-        public OpponentItemDTO FirstOpponent { get; set; }
-        public string? FirstOpponentId { get; set; }
-        public OpponentItemDTO SecondOpponent { get; set; }
-        public string? SecondOpponentId { get; set; }
+        public List<OpponentItemDTO> Opponents { get; set; }
+        public List<OddItemDTO> Odds { get; set; }
         public double BettingFund { get; set; }
         public int CountBets { get; set; }
     }

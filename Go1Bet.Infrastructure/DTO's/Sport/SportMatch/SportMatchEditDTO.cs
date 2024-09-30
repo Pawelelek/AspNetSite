@@ -15,7 +15,5 @@ namespace Go1Bet.Infrastructure.DTO_s.Sport.SportMatch
         public DateTime DateStart { get; set; }
         public DateTime DateEnd { get; set; }
         public string? SportEventId { get; set; }
-        public string? FirstOpponentId { get; set; }
-        public string? SecondOpponentId { get; set; }
     }
 }
