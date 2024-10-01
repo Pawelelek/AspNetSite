@@ -30,6 +30,8 @@ namespace Go1Bet.Infrastructure
             services.AddTransient<OpponentService>();
             services.AddTransient<SportMatchService>();
             services.AddTransient<SportEventService>();
+            services.AddTransient<OddService>();
+            services.AddTransient<BetService>();
         }
 
         public static void AddMapping(this IServiceCollection services)
