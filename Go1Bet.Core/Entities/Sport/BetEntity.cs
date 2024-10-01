@@ -16,7 +16,7 @@ namespace Go1Bet.Core.Entities.Sport
         [ForeignKey(nameof(Odd))]
         public string OddId { get; set; }
         public double Amount { get; set; } // Сума ставки
-        public DateTime BetTime { get; set; } // Час здійснення ставки
+        public DateTime BetTime { get; set; } = DateTime.UtcNow;// Час здійснення ставки
         public AppUser User { get; set; }
 
         [ForeignKey(nameof(User))]

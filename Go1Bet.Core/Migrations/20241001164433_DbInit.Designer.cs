@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Go1Bet.Core.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240930194513_DbInit")]
+    [Migration("20241001164433_DbInit")]
     partial class DbInit
     {
         /// <inheritdoc />
