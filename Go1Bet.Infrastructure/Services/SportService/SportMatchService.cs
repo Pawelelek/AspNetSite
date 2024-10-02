@@ -39,9 +39,10 @@ namespace Go1Bet.Infrastructure.Services.SportService
                         DateCreated = sm.DateCreated,
                         DateEnd = sm.DateEnd,
                         DateStart = sm.DateStart,
-                        //BettingFund = sm.BettingFund,
-                        //CountBets = sm.CountBets,
-                        SportEventId = sm.SportEventId
+                        BettingFund = sm.Odds.Sum(x => x.Bets.Sum(b => b.Amount)),
+                        CountBets = sm.Odds.Sum(x => x.Bets.Count()),
+                        SportEventId = sm.SportEventId,
+                        SportEventName = sm.SportEvent.Name,
                     }).ToListAsync();
 
                 return new ServiceResponse
@@ -72,8 +73,8 @@ namespace Go1Bet.Infrastructure.Services.SportService
                         DateCreated = sm.DateCreated,
                         DateEnd = sm.DateEnd,
                         DateStart = sm.DateStart,
-                        //BettingFund = sm.BettingFund,
-                        //CountBets = sm.CountBets,
+                        BettingFund = sm.Odds.Sum(x=> x.Bets.Sum(b=>b.Amount)),
+                        CountBets = sm.Odds.Sum(x=>x.Bets.Count()),
                         Opponents = sm.Opponents.Where(o=> o.SportMatchId == sm.Id)
                         .Select(o => new OpponentItemDTO 
                         { 
@@ -90,6 +91,7 @@ namespace Go1Bet.Infrastructure.Services.SportService
                         }).ToList(),
                         
                         SportEventId = sm.SportEventId,
+                        SportEventName = sm.SportEvent.Name,
                         SportEvent = new SportEventItemDTO
                         {
                             Id = sm.SportEvent.Id,

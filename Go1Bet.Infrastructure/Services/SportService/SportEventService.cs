@@ -36,6 +36,7 @@ namespace Go1Bet.Infrastructure.Services.SportService
                         DateStart = se.DateStart,
                         DateEnd = se.DateEnd,
                         Description = se.Description,
+                        Status = se.Status,
                         countSportMatches = se.SportMatches.Count()
                     }).ToListAsync();
 
