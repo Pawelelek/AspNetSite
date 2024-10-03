@@ -34,7 +34,9 @@ namespace Go1Bet.Infrastructure.Services.SportService
                         Id = odds.Id,
                         Name = odds.Name,
                         OpponentId = odds.OpponentId,
+                        OpponentName = odds.Opponent.Name,
                         SportMatchId = odds.SportMatchId,
+                        SportMatchName = odds.SportMatch.Name,
                         Type = odds.Type,
                         Value = odds.Value,
                         CountBets = odds.Bets.Count(),
@@ -66,7 +68,9 @@ namespace Go1Bet.Infrastructure.Services.SportService
                         Id = odds.Id,
                         Name = odds.Name,
                         OpponentId = odds.OpponentId,
+                        OpponentName = odds.Opponent.Name,
                         SportMatchId = odds.SportMatchId,
+                        SportMatchName = odds.SportMatch.Name,
                         Type = odds.Type,
                         Value = odds.Value,
                         Bets = odds.Bets.Where(b => b.OddId == odds.Id).Select(b => new BetItemDTO { Id = b.Id, Amount = b.Amount, BetTime = b.BetTime, OddId = b.OddId, UserId = b.UserId }).ToList(),
@@ -115,7 +119,7 @@ namespace Go1Bet.Infrastructure.Services.SportService
             }
             var newOdds = _mapper.Map<OddEntity>(model);
 
-
+            newOdds.OpponentId = model.OpponentId == "" ? null : model.OpponentId;
             _context.Odds.Update(newOdds);
             await _context.SaveChangesAsync();
 

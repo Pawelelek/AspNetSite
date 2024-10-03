@@ -15,9 +15,9 @@ namespace Go1Bet.Infrastructure.DTO_s.Sport.Odd
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public SportMatchItemDTO SportMatch { get; set; }
+        public string SportMatchName { get; set; }
         public string SportMatchId { get; set; }
-        public OpponentItemDTO Opponent { get; set; } // Опонент, якщо це ставка на перемогу конкретної команди
+        public string OpponentName { get; set; } // Опонент, якщо це ставка на перемогу конкретної команди
         public string? OpponentId { get; set; } // ID опонента (якщо ставка на перемогу)
 
         public decimal Value { get; set; } // коефіцієнт
