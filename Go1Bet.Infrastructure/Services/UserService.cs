@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Go1Bet.Infrastructure.DTO_s.Token;
 using Go1Bet.Infrastructure.DTO_s.User;
+using Microsoft.AspNetCore.Http;
 using Go1Bet.Core.Entities.User;
 using Go1Bet.Core.Constants;
 using Google.Apis.Auth;
@@ -22,6 +23,8 @@ using MailKit.Security;
 using MimeKit;
 using Go1Bet.Core.Context;
 using Go1Bet.Infrastructure.DTO_s.Bonus.Promocode;
+using Microsoft.AspNetCore.Mvc;
+using Go1Bet.Infrastructure.DTO_s.User.ForgetPassword;
 
 namespace Go1Bet.Infrastructure.Services
 {
@@ -88,6 +91,7 @@ namespace Go1Bet.Infrastructure.Services
                 //Send to email confirmation token
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(mappedUser);
                 string url = $"{_config["BackEndURL"]}/api/User/ConfirmationEmail?userId={mappedUser.Id}&token={token}";
+                //IUrlHelper.Action("ResetPassword", "Account", new { token, email = mappedUser.Email }, Request.Scheme);
 
                 string emailBody = $"<h1>Confirm your email</h1> <a href='{url}'>Confirm now</a>";
                 await _emailService.SendEmailAsync(mappedUser.Email, "Email confirmation.", emailBody);
@@ -173,7 +177,85 @@ namespace Go1Bet.Infrastructure.Services
                 Success = false,
             };
         }
-        public async Task<ServiceResponse> ForgotUserPasswordAsync(ForgotUserPasswordDTO model)
+        //=========            ForgotPassword Step 1-3       ========
+        public async Task<ServiceResponse> ForgotPasswordStep1Async(ForgetPasswordStep1 model)
+        {
+            var userExist = await _userManager.FindByEmailAsync(model.Email);
+            if (userExist != null)
+            {
+                var rndCode = new Random().Next(100000, 999999);
+                string emailBody = $"<h1>Forgot Password - Code {rndCode}</h1>";
+                await _emailService.SendEmailAsync(userExist.Email, "Email confirmation.", emailBody);
+
+                userExist.PasswordResetCode = rndCode.ToString();
+                await _userManager.UpdateAsync(userExist);
+                return new ServiceResponse
+                {
+                    Message = "The code has been sent to the email",
+                    Success = true,
+                };
+            }
+            return new ServiceResponse
+            {
+                Message = "User was not exist",
+                Success = false,
+            };
+        }
+        public async Task<ServiceResponse> ForgotPasswordStep2Async(ForgetPasswordStep2 model)
+        {
+            var userExist = await _userManager.FindByEmailAsync(model.Email);
+            if (userExist != null)
+            {
+                if(model.ReceivedCodeFromEmail == userExist.PasswordResetCode)
+                {
+                    return new ServiceResponse
+                    {
+                        Message = "Code is valid",
+                        Success = true
+                    };
+                }
+                return new ServiceResponse
+                {
+                    Message = "Code is not valid",
+                    Success = false
+                };
+            }
+            return new ServiceResponse
+            {
+                Message = "User was not exist",
+                Success = false,
+            };
+        }
+        public async Task<ServiceResponse> ForgotPasswordStep3Async(ForgetPasswordStep3 model)
+        {
+            var userExist = await _userManager.FindByEmailAsync(model.Email);
+            if (model.Password != model.ConfirmPassword)
+            {
+                return new ServiceResponse
+                {
+                    Message = "Passwords do not match",
+                    Success = false,
+                };
+            }
+            if (userExist != null)
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(userExist);
+                await _userManager.ResetPasswordAsync(userExist, token, model.ConfirmPassword);
+                userExist.DateLastPasswordUpdated = DateTime.UtcNow;
+                var result = await _userManager.UpdateAsync(userExist);
+                return new ServiceResponse
+                {
+                    Message = "Password changed successfully",
+                    Success = true
+                };
+            }
+            return new ServiceResponse
+            {
+                Message = "User was not exist",
+                Success = false,
+            };
+        }
+        public async Task<ServiceResponse> ForgotUserPasswordAsync(ForgetPasswordStep3 model)
         {
             if (model.Password != model.ConfirmPassword)
             {
@@ -184,10 +266,12 @@ namespace Go1Bet.Infrastructure.Services
                 };
             }
 
-            var oldUser = await _userManager.FindByIdAsync(model.Id);
+            var oldUser = await _userManager.FindByIdAsync(model.Email);
             if (oldUser != null)
             {
-                await _userManager.ResetPasswordAsync(oldUser, model.Token, model.ConfirmPassword);
+                var token = await _userManager.GeneratePasswordResetTokenAsync(oldUser);
+                await _userManager.ResetPasswordAsync(oldUser, token, model.ConfirmPassword);
+                //    /\ ====== Token ===== /\
                 oldUser.DateLastPasswordUpdated = DateTime.UtcNow;
                 var result = await _userManager.UpdateAsync(oldUser);
                 return new ServiceResponse

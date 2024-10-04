@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Go1Bet.Infrastructure.DTO_s.User
+namespace Go1Bet.Infrastructure.DTO_s.User.ForgetPassword
 {
-    public class ForgotUserPasswordDTO
+    public class ForgetPasswordStep3
     {
-        public string Id { get; set; }
-        public string Token { get; set; }
+        public string Email { get; set; }
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
     }

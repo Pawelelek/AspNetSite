@@ -6,6 +6,7 @@ using Go1Bet.Infrastructure.DTO_s.User;
 using Go1Bet.Infrastructure.Services;
 using Go1Bet.Infrastructure.Validations.User;
 using Go1Bet.Infrastructure.DTO_s.Token;
+using Go1Bet.Infrastructure.DTO_s.User.ForgetPassword;
 
 
 namespace Go1Bet.Api.Controllers
@@ -83,10 +84,22 @@ namespace Go1Bet.Api.Controllers
             var result = await _userService.GetPasswordResetTokenAsync(userId);
             return Ok(result);
         }
-        [HttpPut("ForgotPassword")]
-        public async Task<IActionResult> ForgotPasswordAsync([FromBody] ForgotUserPasswordDTO model)
+        [HttpPost("ForgotPasswordStep1")]
+        public async Task<IActionResult> ForgotPasswordStep1(ForgetPasswordStep1 model)
         {
-            var result = await _userService.ForgotUserPasswordAsync(model);
+            var result = await _userService.ForgotPasswordStep1Async(model);
+            return Ok(result);
+        }
+        [HttpPost("ForgotPasswordStep2")]
+        public async Task<IActionResult> ForgotPasswordStep2(ForgetPasswordStep2 model)
+        {
+            var result = await _userService.ForgotPasswordStep2Async(model);
+            return Ok(result);
+        }
+        [HttpPost("ForgotPasswordStep3")]
+        public async Task<IActionResult> ForgotPasswordStep3(ForgetPasswordStep3 model)
+        {
+            var result = await _userService.ForgotPasswordStep3Async(model);
             return Ok(result);
         }
         [HttpPut("ChangePassword")]
@@ -160,7 +173,7 @@ namespace Go1Bet.Api.Controllers
             return Ok(result);
         }
         [HttpPost("ConfirmationEmail")]
-        public async Task<IActionResult> ConfirmationEmailTokenAsync([FromBody] ConfirmationEmailDTO model)
+        public async Task<IActionResult> ConfirmationEmailTokenAsync([FromQuery] ConfirmationEmailDTO model)
         {
             var result = await _userService.ConfirmationEmailAsync(model);
             return Ok(result);

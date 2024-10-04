@@ -140,6 +140,7 @@ namespace Go1Bet.Core.Migrations
                     DateLastEmailUpdated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DateLastPersonalInfoUpdated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     SwitchedBalanceId = table.Column<string>(type: "text", nullable: true),
+                    PasswordResetCode = table.Column<string>(type: "text", nullable: true),
                     RefUserId = table.Column<string>(type: "text", nullable: true),
                     SportMatchEntityId = table.Column<string>(type: "text", nullable: true),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
