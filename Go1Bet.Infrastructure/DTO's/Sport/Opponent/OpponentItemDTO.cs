@@ -16,7 +16,7 @@ namespace Go1Bet.Infrastructure.DTO_s.Sport.Opponent
         public string Name { get; set; }
         public DateTime DateCreated { get; set; }
         public string SportMatchId { get; set; }
-        public SportMatchItemDTO SportMatch { get; set; }
+        public string SportMatchName { get; set; }
         public List<PersonItemDTO> Teammates { get; set; }
         public int countTeammates { get; set; }
     }

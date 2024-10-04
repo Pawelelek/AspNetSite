@@ -18,6 +18,7 @@ using Go1Bet.Infrastructure.DTO_s.Sport.SportMatch;
 using Go1Bet.Infrastructure.DTO_s.Sport.SportEvent;
 using Go1Bet.Infrastructure.DTO_s.Sport.Bet;
 using Go1Bet.Infrastructure.DTO_s.Sport.Odd;
+using Go1Bet.Infrastructure.DTO_s.User.ForgetPassword;
 
 namespace Go1Bet.Infrastructure.AutoMapper
 {
@@ -31,7 +32,11 @@ namespace Go1Bet.Infrastructure.AutoMapper
             CreateMap<AppUser, UserEditPersonalInfoDTO>().ReverseMap();
             CreateMap<AppUser, UserEditDTO>().ReverseMap();
             CreateMap<AppUser, UserEditEmailDTO>().ReverseMap();
-            CreateMap<AppUser, ForgotUserPasswordDTO>().ReverseMap();
+
+            //ForgetPassword Step 1-3
+            CreateMap<AppUser, ForgetPasswordStep1>().ReverseMap();
+            CreateMap<AppUser, ForgetPasswordStep2>().ReverseMap();
+            CreateMap<AppUser, ForgetPasswordStep3>().ReverseMap();
 
             CreateMap<AppUser, ChangeUserPasswordDTO>().ReverseMap();
 

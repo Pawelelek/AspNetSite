@@ -14,11 +14,12 @@ namespace Go1Bet.Infrastructure.DTO_s.Sport.Bet
     public class BetItemDTO
     {
         public string Id { get; set; }
-        public OddItemDTO Odd { get; set; }
+        public string OddName { get; set; }
         public string OddId { get; set; }
         public double Amount { get; set; } // Сума ставки
+        public decimal Value { get; set; }
         public DateTime BetTime { get; set; } // Час здійснення ставки
-        public UserItemDTO User { get; set; }
+        public string UserName { get; set; }
         public string UserId { get; set; } // ID користувача
     }
 }

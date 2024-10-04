@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Go1Bet.Core.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241001164433_DbInit")]
+    [Migration("20241003213751_DbInit")]
     partial class DbInit
     {
         /// <inheritdoc />
@@ -361,6 +361,9 @@ namespace Go1Bet.Core.Migrations
                         .HasColumnType("character varying(256)");
 
                     b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PasswordResetCode")
                         .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")

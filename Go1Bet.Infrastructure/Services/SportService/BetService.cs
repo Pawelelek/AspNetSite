@@ -31,9 +31,12 @@ namespace Go1Bet.Infrastructure.Services.SportService
                     {
                         Id = bet.Id,
                         Amount = bet.Amount,
+                        Value = bet.Odd.Value,
                         BetTime = bet.BetTime,
                         OddId = bet.OddId,
-                        UserId = bet.UserId
+                        OddName = bet.Odd.Name,
+                        UserId = bet.UserId,
+                        UserName = bet.User.FirstName
                     }).ToListAsync();
                 return new ServiceResponse
                 {
@@ -60,9 +63,12 @@ namespace Go1Bet.Infrastructure.Services.SportService
                     {
                         Id = bet.Id,
                         Amount = bet.Amount,
+                        Value = bet.Odd.Value,
                         BetTime = bet.BetTime,
                         OddId = bet.OddId,
-                        UserId = bet.UserId
+                        OddName = bet.Odd.Name,
+                        UserId = bet.UserId,
+                        UserName = bet.User.FirstName
                     }).ToListAsync();
 
                 return new ServiceResponse
