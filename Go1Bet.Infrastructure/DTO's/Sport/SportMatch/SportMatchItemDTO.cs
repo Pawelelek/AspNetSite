@@ -1,4 +1,5 @@
 ﻿using Go1Bet.Core.Entities.Sport;
+using Go1Bet.Infrastructure.DTO_s.Sport.FavouriteSportMatch;
 using Go1Bet.Infrastructure.DTO_s.Sport.Odd;
 using Go1Bet.Infrastructure.DTO_s.Sport.Opponent;
 using Go1Bet.Infrastructure.DTO_s.Sport.SportEvent;
@@ -25,5 +26,7 @@ namespace Go1Bet.Infrastructure.DTO_s.Sport.SportMatch
         public List<OddItemDTO> Odds { get; set; }
         public double BettingFund { get; set; }
         public int CountBets { get; set; }
+        public int CountFavouriteSportMatches { get; set; }
+        public List<FavouriteSportMatchItemDTO> FavouriteSportMatches { get; set; }
     }
 }

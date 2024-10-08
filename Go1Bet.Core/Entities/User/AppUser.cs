@@ -8,6 +8,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Go1Bet.Core.Entities.Sport;
+using Microsoft.Identity.Client;
 
 namespace Go1Bet.Core.Entities.User
 {
@@ -28,18 +30,15 @@ namespace Go1Bet.Core.Entities.User
         public string PasswordResetCode { get; set; }
         public virtual ICollection<BalanceEntity> Balances { get; set; }
         public virtual ICollection<UserRoleEntity> UserRoles { get; set; }
-        [DisplayName("User")]
+        //Referal
         public AppUser RefUser { get; set; }
         [ForeignKey(nameof(User))]
         public string? RefUserId { get; set; }
         public virtual ICollection<AppUser> RefUsers { get; set; }
         public virtual ICollection<PromocodeUserEntity> PromocodeUsers { get; set; }
-
-        //BettingHistory > id , userId , The Name of the sport(Event) , period
-
-        //List of messages > all, output, incoming > Received from , Send to, Message, bool Reviewed = false
-
-        //Favorite SportEvents > Competition , SportEvent
+        //Bets
+        public ICollection<BetEntity> Bets { get; set; }
+        public ICollection<FavouriteSportMatch> FavouriteSportMatches { get; set; } = new List<FavouriteSportMatch>();
 
         // ================== Sport Event =====================
 

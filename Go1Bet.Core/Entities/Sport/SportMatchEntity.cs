@@ -28,5 +28,6 @@ namespace Go1Bet.Core.Entities.Sport
 
         public ICollection<AppUser> UsersParticipation { get; set; }
         public ICollection<BalanceEntity> BalancesParticipation { get; set; }
+        public ICollection<FavouriteSportMatch> FavouriteSportMatches { get; set; } = new List<FavouriteSportMatch>();
     }
 }

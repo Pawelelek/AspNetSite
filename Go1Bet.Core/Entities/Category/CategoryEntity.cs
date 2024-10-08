@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Go1Bet.Core.Entities.Sport;
 
 namespace Go1Bet.Core.Entities.Category
 {
@@ -27,5 +28,6 @@ namespace Go1Bet.Core.Entities.Category
         public string? ParentId { get; set; }
         //Foreign keys:
         public ICollection<CategoryEntity> Subcategories { get; set; } = new List<CategoryEntity>();
+        public ICollection<SportEventEntity> SportEvents { get; set; } = new List<SportEventEntity>();
     }
 }

@@ -1,4 +1,6 @@
 ﻿using Go1Bet.Infrastructure.DTO_s.Bonus.Promocode;
+using Go1Bet.Infrastructure.DTO_s.Sport.Bet;
+using Go1Bet.Infrastructure.DTO_s.Sport.FavouriteSportMatch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,9 +27,11 @@ namespace Go1Bet.Infrastructure.DTO_s.User
         public string SwitchedBalanceId { get; set; }
         public string RefUserId { get; set; }
         public int CountRefUsers { get; set; }
+        public int CountFavouriteSportMatches { get; set; }
         public List<UserItemDTO> UsersFromRef { get; set; }
         public List<UserRoleItemDTO> Roles { get; set; }
         public List<BalanceItemDTO> Balances { get; set; }
         public List<PromocodeItemDTO> Promocodes { get; set; }
+        public List<FavouriteSportMatchItemDTO> FavouriteSportMatches { get; set; }
     }
 }

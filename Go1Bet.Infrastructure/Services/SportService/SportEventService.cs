@@ -37,6 +37,8 @@ namespace Go1Bet.Infrastructure.Services.SportService
                         DateEnd = se.DateEnd,
                         Description = se.Description,
                         Status = se.Status,
+                        ParentId = se.ParentId,
+                        ParentName = se.Parent.Name,
                         countSportMatches = se.SportMatches.Count()
                     }).ToListAsync();
 
@@ -71,6 +73,8 @@ namespace Go1Bet.Infrastructure.Services.SportService
                         Description = se.Description,
                         countSportMatches = se.SportMatches.Count(),
                         Status = se.Status,
+                        ParentId = se.ParentId,
+                        ParentName = se.Parent.Name,
                         SportMatches = se.SportMatches.Where(sm => sm.SportEventId == id)
                         .Select(x => new SportMatchItemDTO { 
                             Id = x.Id, Name = x.Name, DateCreated = x.DateCreated, DateEnd = x.DateEnd, DateStart = x.DateStart, 
@@ -96,6 +100,7 @@ namespace Go1Bet.Infrastructure.Services.SportService
         public async Task<ServiceResponse> CreateAsync(SportEventCreateDTO model)
         {
             var sportEvent = _mapper.Map<SportEventEntity>(model);
+            sportEvent.ParentId = model.ParentId == "string" || model.ParentId == null ? null : model.ParentId;
             await _context.SportEvents.AddAsync(sportEvent);
             await _context.SaveChangesAsync();
             return new ServiceResponse
@@ -117,7 +122,7 @@ namespace Go1Bet.Infrastructure.Services.SportService
                 };
             }
             var newSportEvent = _mapper.Map<SportEventEntity>(model);
-
+            newSportEvent.ParentId = model.ParentId == "string" || model.ParentId == null ? null : model.ParentId;
             _context.SportEvents.Update(newSportEvent);
             await _context.SaveChangesAsync();
 

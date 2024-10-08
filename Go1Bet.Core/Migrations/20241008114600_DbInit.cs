@@ -45,23 +45,6 @@ namespace Go1Bet.Core.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SportEvents",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: true),
-                    Description = table.Column<string>(type: "character varying(4000)", maxLength: 4000, nullable: true),
-                    DateStart = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DateEnd = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Status = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SportEvents", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "tbl_Categories",
                 columns: table => new
                 {
@@ -100,6 +83,29 @@ namespace Go1Bet.Core.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SportEvents",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "character varying(4000)", maxLength: 4000, nullable: true),
+                    DateStart = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DateEnd = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Status = table.Column<string>(type: "text", nullable: true),
+                    ParentId = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SportEvents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SportEvents_tbl_Categories_ParentId",
+                        column: x => x.ParentId,
+                        principalTable: "tbl_Categories",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -275,6 +281,29 @@ namespace Go1Bet.Core.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FavouriteSportMatches",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: true),
+                    SportMatchId = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FavouriteSportMatches", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FavouriteSportMatches_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_FavouriteSportMatches_SportMatches_SportMatchId",
+                        column: x => x.SportMatchId,
+                        principalTable: "SportMatches",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -501,6 +530,16 @@ namespace Go1Bet.Core.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_FavouriteSportMatches_SportMatchId",
+                table: "FavouriteSportMatches",
+                column: "SportMatchId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FavouriteSportMatches_UserId",
+                table: "FavouriteSportMatches",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Odds_OpponentId",
                 table: "Odds",
                 column: "OpponentId");
@@ -524,6 +563,11 @@ namespace Go1Bet.Core.Migrations
                 name: "IX_RefreshToken_UserId",
                 table: "RefreshToken",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SportEvents_ParentId",
+                table: "SportEvents",
+                column: "ParentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SportMatches_SportEventId",
@@ -583,13 +627,13 @@ namespace Go1Bet.Core.Migrations
                 name: "Bets");
 
             migrationBuilder.DropTable(
+                name: "FavouriteSportMatches");
+
+            migrationBuilder.DropTable(
                 name: "Persons");
 
             migrationBuilder.DropTable(
                 name: "RefreshToken");
-
-            migrationBuilder.DropTable(
-                name: "tbl_Categories");
 
             migrationBuilder.DropTable(
                 name: "tbl_Transactions");
@@ -620,6 +664,9 @@ namespace Go1Bet.Core.Migrations
 
             migrationBuilder.DropTable(
                 name: "SportEvents");
+
+            migrationBuilder.DropTable(
+                name: "tbl_Categories");
         }
     }
 }

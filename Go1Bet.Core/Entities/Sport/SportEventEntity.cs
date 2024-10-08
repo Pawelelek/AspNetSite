@@ -20,6 +20,10 @@ namespace Go1Bet.Core.Entities.Sport
         public DateTime DateEnd { get; set; }
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
         public string Status { get; set; }
+        public CategoryEntity Parent { get; set; }
+
+        [ForeignKey(nameof(Parent))]
+        public string? ParentId { get; set; }
         //Foreign keys:
         public ICollection<SportMatchEntity> SportMatches { get; set; } = new List<SportMatchEntity>();
     }
