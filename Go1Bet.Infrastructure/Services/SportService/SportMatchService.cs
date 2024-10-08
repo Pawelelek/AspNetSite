@@ -14,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Go1Bet.Infrastructure.DTO_s.Sport.Bet;
+using Go1Bet.Infrastructure.DTO_s.Sport.FavouriteSportMatch;
 
 namespace Go1Bet.Infrastructure.Services.SportService
 {
@@ -101,7 +102,16 @@ namespace Go1Bet.Infrastructure.Services.SportService
                             DateStart = sm.SportEvent.DateStart,
                             DateEnd = sm.SportEvent.DateEnd,
                             
-                        }
+                        },
+                        FavouriteSportMatches= sm.FavouriteSportMatches.Where(fsm => fsm.SportMatchId == sm.Id)
+                        .Select(fsm => new FavouriteSportMatchItemDTO
+                        {
+                            SportMatchId = fsm.SportMatchId,
+                            UserId = fsm.User.Id,
+                            SportMatchName = fsm.SportMatch.Name,
+                            UserName = fsm.User.UserName,
+                        }).ToList(),
+                        CountFavouriteSportMatches = sm.FavouriteSportMatches.Count()
                     }).ToListAsync();
 
                 return new ServiceResponse
@@ -153,6 +163,27 @@ namespace Go1Bet.Infrastructure.Services.SportService
                 Success = true,
             };
 
+        }
+        public async Task<ServiceResponse> SetOrOffSetFavouriteSportMatch (FavouriteSportMatchUpdateDTO model)
+        {
+            bool validFavSportMatches = await _context.FavouriteSportMatches.AnyAsync(fsm => fsm.UserId == model.UserId && fsm.SportMatchId == model.SportMatchId);
+            if(!validFavSportMatches)
+            {
+                var favSportMatch = _mapper.Map<FavouriteSportMatch>(model);
+                await _context.FavouriteSportMatches.AddAsync(favSportMatch);
+            }
+            else
+            {
+                var favSportMatch = _context.FavouriteSportMatches.Where(fsm => fsm.UserId == model.UserId && fsm.SportMatchId == model.SportMatchId).First();
+                _context.FavouriteSportMatches.Remove(favSportMatch);
+            }
+
+            await _context.SaveChangesAsync();
+            return new ServiceResponse
+            {
+                Message = "Favourite Sport Matches List was updated!",
+                Success = true,
+            };
         }
         public async Task<ServiceResponse> DeleteAsync(string id)
         {

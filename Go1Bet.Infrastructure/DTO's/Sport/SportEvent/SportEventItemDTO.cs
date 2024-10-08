@@ -19,6 +19,8 @@ namespace Go1Bet.Infrastructure.DTO_s.Sport.SportEvent
         public DateTime DateCreated { get; set; }
         public string Status { get; set; }
         public int countSportMatches { get; set; }
+        public string? ParentId { get; set; }
+        public string ParentName { get; set; }
         public List<SportMatchItemDTO> SportMatches { get; set; }
     }
 }

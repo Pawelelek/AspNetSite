@@ -25,6 +25,7 @@ using Go1Bet.Core.Context;
 using Go1Bet.Infrastructure.DTO_s.Bonus.Promocode;
 using Microsoft.AspNetCore.Mvc;
 using Go1Bet.Infrastructure.DTO_s.User.ForgetPassword;
+using Go1Bet.Infrastructure.DTO_s.Sport.FavouriteSportMatch;
 
 namespace Go1Bet.Infrastructure.Services
 {
@@ -536,7 +537,8 @@ namespace Go1Bet.Infrastructure.Services
                         Balances = user.Balances
                         .Select(bal => new BalanceItemDTO { Id = bal.Id, Money = bal.Money.ToString(), Reviewed = bal.Reviewed,
                             DateCreated = bal.DateCreated.ToString(),
-                        }).ToList()
+                        }).ToList(),                       
+                        CountFavouriteSportMatches = user.FavouriteSportMatches.Count()
                     }).ToListAsync();
             return new ServiceResponse
             {
@@ -594,8 +596,16 @@ namespace Go1Bet.Infrastructure.Services
                             DateCreated = bal.DateCreated.ToString(),
                             Transactions = bal.TransactionHistory
                             .Select(tr => new TransactionItemDTO { Id = tr.Id, BalanceId = tr.BalanceId, Description = tr.Description, TransactionType = tr.TransactionType.ToString(), Value = tr.Value.ToString(), DateCreated = tr.DateCreated.ToString() }).ToList()
-                        }).ToList()
-                    
+                        }).ToList(),
+                    FavouriteSportMatches = user.FavouriteSportMatches.Where(fsm => fsm.UserId == user.Id)
+                        .Select(fsm => new FavouriteSportMatchItemDTO
+                        {
+                            SportMatchId = fsm.SportMatchId,
+                            UserId = fsm.User.Id,
+                            SportMatchName = fsm.SportMatch.Name,
+                            UserName = fsm.User.UserName,
+                        }).ToList(),
+                        CountFavouriteSportMatches = user.FavouriteSportMatches.Count()
                     }).ToListAsync();
 
                 if (result != null)

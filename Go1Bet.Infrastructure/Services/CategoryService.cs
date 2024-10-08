@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Go1Bet.Infrastructure.DTO_s.Sport.SportEvent;
 
 namespace Go1Bet.Infrastructure.Services
 {
@@ -36,6 +37,7 @@ namespace Go1Bet.Infrastructure.Services
                         ParentId = c.ParentId,
                         ParentName = c.Parent.Name,
                         countSubcategories = c.Subcategories.Where(s => s.ParentId == c.Id).Count(),
+                        countSportEvents = c.SportEvents.Where(se => se.ParentId == c.Id).Count(),
                     }).ToListAsync();
 
                 return new ServiceResponse
@@ -65,6 +67,7 @@ namespace Go1Bet.Infrastructure.Services
                 ParentId = c.ParentId,
                 ParentName = c.Parent.Name,
                 countSubcategories = c.Subcategories.Where(s => s.ParentId == c.Id).Count(),
+                countSportEvents = c.SportEvents.Where(se => se.ParentId == c.Id).Count(),
             }).ToListAsync();
             return new ServiceResponse
             {
@@ -97,6 +100,18 @@ namespace Go1Bet.Infrastructure.Services
                               ParentId = s.ParentId,
                               ParentName = s.Parent.Name,
                               Description = s.Description,
+                          }).ToList(),
+                    SportEvents =
+                      c.SportEvents
+                      .Where(se => se.ParentId == id)
+                      .Select(se =>
+                          new SportEventItemDTO
+                          {
+                              Id = se.Id,
+                              Name = se.Name,
+                              ParentId = se.ParentId,
+                              ParentName = se.Parent.Name,
+                              Description = se.Description,
                           }).ToList(),
                 }).ToListAsync();
 

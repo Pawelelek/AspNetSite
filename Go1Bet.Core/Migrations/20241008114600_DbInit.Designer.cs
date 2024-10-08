@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Go1Bet.Core.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241003213751_DbInit")]
+    [Migration("20241008114600_DbInit")]
     partial class DbInit
     {
         /// <inheritdoc />
@@ -131,6 +131,26 @@ namespace Go1Bet.Core.Migrations
                     b.ToTable("Bets");
                 });
 
+            modelBuilder.Entity("Go1Bet.Core.Entities.Sport.FavouriteSportMatch", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SportMatchId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SportMatchId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("FavouriteSportMatches");
+                });
+
             modelBuilder.Entity("Go1Bet.Core.Entities.Sport.OddEntity", b =>
                 {
                     b.Property<string>("Id")
@@ -223,10 +243,15 @@ namespace Go1Bet.Core.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
+                    b.Property<string>("ParentId")
+                        .HasColumnType("text");
+
                     b.Property<string>("Status")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
 
                     b.ToTable("SportEvents");
                 });
@@ -629,10 +654,25 @@ namespace Go1Bet.Core.Migrations
                         .HasForeignKey("OddId");
 
                     b.HasOne("Go1Bet.Core.Entities.User.AppUser", "User")
-                        .WithMany()
+                        .WithMany("Bets")
                         .HasForeignKey("UserId");
 
                     b.Navigation("Odd");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Go1Bet.Core.Entities.Sport.FavouriteSportMatch", b =>
+                {
+                    b.HasOne("Go1Bet.Core.Entities.Sport.SportMatchEntity", "SportMatch")
+                        .WithMany("FavouriteSportMatches")
+                        .HasForeignKey("SportMatchId");
+
+                    b.HasOne("Go1Bet.Core.Entities.User.AppUser", "User")
+                        .WithMany("FavouriteSportMatches")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("SportMatch");
 
                     b.Navigation("User");
                 });
@@ -668,6 +708,15 @@ namespace Go1Bet.Core.Migrations
                         .HasForeignKey("OpponentId");
 
                     b.Navigation("Opponent");
+                });
+
+            modelBuilder.Entity("Go1Bet.Core.Entities.Sport.SportEventEntity", b =>
+                {
+                    b.HasOne("Go1Bet.Core.Entities.Category.CategoryEntity", "Parent")
+                        .WithMany("SportEvents")
+                        .HasForeignKey("ParentId");
+
+                    b.Navigation("Parent");
                 });
 
             modelBuilder.Entity("Go1Bet.Core.Entities.Sport.SportMatchEntity", b =>
@@ -785,6 +834,8 @@ namespace Go1Bet.Core.Migrations
 
             modelBuilder.Entity("Go1Bet.Core.Entities.Category.CategoryEntity", b =>
                 {
+                    b.Navigation("SportEvents");
+
                     b.Navigation("Subcategories");
                 });
 
@@ -807,6 +858,8 @@ namespace Go1Bet.Core.Migrations
                 {
                     b.Navigation("BalancesParticipation");
 
+                    b.Navigation("FavouriteSportMatches");
+
                     b.Navigation("Odds");
 
                     b.Navigation("Opponents");
@@ -817,6 +870,10 @@ namespace Go1Bet.Core.Migrations
             modelBuilder.Entity("Go1Bet.Core.Entities.User.AppUser", b =>
                 {
                     b.Navigation("Balances");
+
+                    b.Navigation("Bets");
+
+                    b.Navigation("FavouriteSportMatches");
 
                     b.Navigation("PromocodeUsers");
 

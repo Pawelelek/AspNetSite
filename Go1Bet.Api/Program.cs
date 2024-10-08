@@ -123,8 +123,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-await IdentitiesInitializer.SeedIdentities(app);
-await CateogoriesInitializer.SeedCategories(app);
-await BonusesInitializer.SeedBonuses(app);
+//await IdentitiesInitializer.SeedIdentities(app);
+//await CateogoriesInitializer.SeedCategories(app);
+//await BonusesInitializer.SeedBonuses(app);
 
 app.Run();
