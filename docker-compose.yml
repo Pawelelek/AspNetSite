@@ -9,17 +9,17 @@ services:
     image: slobodeniuk47/backend
     build:
       context: .
-      dockerfile: Go1Bet.Api/Dockerfile
-    #
+      dockerfile: ./Go1Bet.Api/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=127.0.0.1;Port=5432;Database=postgres;Username=postgres;Password=Qwerty-1
     ports:
       - "5001:8080"
     depends_on:
-      - postgres_db #Until postgres starts, our service will not start
+      - postgres_db
     networks:
       - myAppNetwork
-    #
+
   client:
     image: slobodeniuk47/frontend
     build:
@@ -27,9 +27,12 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5002:3000"
+    networks:
+      - myAppNetwork
 
   postgres_db:
     container_name: postgres_container
+    restart: always
     image: postgres:16
     environment:
       POSTGRES_USER: postgres
@@ -41,5 +44,20 @@ services:
       - postgres-data:/var/lib/postgresql/data
     networks:
       - myAppNetwork
+
+  # migrate:
+  #   image: mcr.microsoft.com/dotnet/sdk:7.0
+  #   container_name: ef_migration
+  #   build:
+  #     context: .
+  #     dockerfile: ./Go1Bet.Api/Dockerfile
+  #   depends_on:
+  #     - postgres_db
+  #   entrypoint: ["/app/wait-for-it.sh", "postgres_db:5432", "--", "dotnet", "ef", "database", "update"]
+  #   environment:
+  #     - ConnectionStrings__DefaultConnection=Host=postgres_db;Port=5432;Database=postgres;Username=postgres;Password=Qwerty-1
+  #   networks:
+  #     - myAppNetwork
+
 volumes:
   postgres-data:
