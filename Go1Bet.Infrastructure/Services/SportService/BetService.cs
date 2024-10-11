@@ -25,14 +25,14 @@ namespace Go1Bet.Infrastructure.Services.SportService
         {
             try
             {
-                var categories = await _context.Bets
+                var bets = await _context.Bets
 
                     .Select(bet => new BetItemDTO
                     {
                         Id = bet.Id,
                         Amount = bet.Amount,
                         Value = bet.Odd.Value,
-                        BetTime = bet.BetTime,
+                        BetTime = bet.BetTime.ToString("yyyy-MM-dd HH:mm"),
                         OddId = bet.OddId,
                         OddName = bet.Odd.Name,
                         UserId = bet.UserId,
@@ -41,7 +41,7 @@ namespace Go1Bet.Infrastructure.Services.SportService
                 return new ServiceResponse
                 {
                     Success = true,
-                    Payload = categories
+                    Payload = bets
                 };
             }
             catch (Exception ex)
@@ -57,14 +57,14 @@ namespace Go1Bet.Infrastructure.Services.SportService
         {
             try
             {
-                var categories = await _context.Bets
+                var bets = await _context.Bets
                     .Where(bet => bet.Id == id)
                     .Select(bet => new BetItemDTO
                     {
                         Id = bet.Id,
                         Amount = bet.Amount,
                         Value = bet.Odd.Value,
-                        BetTime = bet.BetTime,
+                        BetTime = bet.BetTime.ToString("yyyy-MM-dd HH:mm"),
                         OddId = bet.OddId,
                         OddName = bet.Odd.Name,
                         UserId = bet.UserId,
@@ -74,7 +74,7 @@ namespace Go1Bet.Infrastructure.Services.SportService
                 return new ServiceResponse
                 {
                     Success = true,
-                    Payload = categories
+                    Payload = bets
                 };
             }
             catch (Exception ex)

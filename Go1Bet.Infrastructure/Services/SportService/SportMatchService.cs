@@ -86,7 +86,7 @@ namespace Go1Bet.Infrastructure.Services.SportService
                         .Select(odds => new OddItemDTO 
                         { 
                             Id = odds.Id, Name = odds.Name, OpponentId = odds.OpponentId, SportMatchId = odds.SportMatchId, Type = odds.Type, Value = odds.Value,
-                            Bets = odds.Bets.Where(b => b.OddId == odds.Id).Select(b => new BetItemDTO { Id = b.Id, Amount = b.Amount, BetTime = b.BetTime, OddId = b.OddId, UserId = b.UserId }).ToList(),
+                            Bets = odds.Bets.Where(b => b.OddId == odds.Id).Select(b => new BetItemDTO { Id = b.Id, Amount = b.Amount, BetTime = b.BetTime.ToString("yyyy-MM-dd HH:mm"), OddId = b.OddId, UserId = b.UserId }).ToList(),
                             CountBets = odds.Bets.Count(), 
                             BettingFund = odds.Bets.Sum(b => b.Amount)
                         }).ToList(),

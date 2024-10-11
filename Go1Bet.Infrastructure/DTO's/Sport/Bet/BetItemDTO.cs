@@ -18,7 +18,7 @@ namespace Go1Bet.Infrastructure.DTO_s.Sport.Bet
         public string OddId { get; set; }
         public double Amount { get; set; } // Сума ставки
         public decimal Value { get; set; }
-        public DateTime BetTime { get; set; } // Час здійснення ставки
+        public string BetTime { get; set; } // Час здійснення ставки
         public string UserName { get; set; }
         public string UserId { get; set; } // ID користувача
     }

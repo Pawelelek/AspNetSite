@@ -52,7 +52,7 @@ namespace Go1Bet.Core.Initializers
                         DateCreated = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc),
                     };
                     context.Categories.Add(cat4);
-                    context.SaveChanges();
+                    await context.SaveChangesAsync();
                 }
             }
         }
