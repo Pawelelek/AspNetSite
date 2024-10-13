@@ -1,4 +1,5 @@
-﻿using Go1Bet.Core.Entities.User;
+﻿using Go1Bet.Core.Constants;
+using Go1Bet.Core.Entities.User;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,6 +19,8 @@ namespace Go1Bet.Core.Entities.Sport
         public SportMatchEntity SportMatch { get; set; }
         [ForeignKey(nameof(SportMatch))]
         public string SportMatchId { get; set; }
+        public string CountryCode { get; set; }
+        public int Score { get; set; }
         public ICollection<PersonEntity> Teammates { get; set; }
     }
 }

@@ -178,5 +178,17 @@ namespace Go1Bet.Api.Controllers
             var result = await _userService.ConfirmationEmailAsync(model);
             return Ok(result);
         }
+        [HttpGet("GetBettingHistory")]
+        public async Task<IActionResult> GetBettingHistory(string userId)
+        {
+            var result = await _userService.GetBettingHistory(userId);
+            return Ok(result);
+        }
+        [HttpGet("GetFavouriteSportMatches")]
+        public async Task<IActionResult> GetFavouriteSportMatches(string userId)
+        {
+            var result = await _userService.GetFavouriteSportMatches(userId);
+            return Ok(result);
+        }
     }
 }

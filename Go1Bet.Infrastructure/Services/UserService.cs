@@ -26,6 +26,11 @@ using Go1Bet.Infrastructure.DTO_s.Bonus.Promocode;
 using Microsoft.AspNetCore.Mvc;
 using Go1Bet.Infrastructure.DTO_s.User.ForgetPassword;
 using Go1Bet.Infrastructure.DTO_s.Sport.FavouriteSportMatch;
+using Go1Bet.Infrastructure.DTO_s.Sport.Bet;
+using Go1Bet.Infrastructure.DTO_s.Sport.Odd;
+using Go1Bet.Infrastructure.DTO_s.Sport.Opponent;
+using Go1Bet.Infrastructure.DTO_s.Sport.SportEvent;
+using Go1Bet.Infrastructure.DTO_s.Sport.SportMatch;
 
 namespace Go1Bet.Infrastructure.Services
 {
@@ -89,13 +94,13 @@ namespace Go1Bet.Infrastructure.Services
                 var existRole = await _roleManager.FindByNameAsync(role) != null ? role : Roles.User;
                 await _userManager.AddToRoleAsync(mappedUser, existRole);
 
-                //Send to email confirmation token
-                var token = await _userManager.GenerateEmailConfirmationTokenAsync(mappedUser);
-                string url = $"{_config["BackEndURL"]}/api/User/ConfirmationEmail?userId={mappedUser.Id}&token={token}";
-                //IUrlHelper.Action("ResetPassword", "Account", new { token, email = mappedUser.Email }, Request.Scheme);
+                ////Send to email confirmation token
+                //var token = await _userManager.GenerateEmailConfirmationTokenAsync(mappedUser);
+                //string url = $"{_config["BackEndURL"]}/api/User/ConfirmationEmail?userId={mappedUser.Id}&token={token}";
+                ////IUrlHelper.Action("ResetPassword", "Account", new { token, email = mappedUser.Email }, Request.Scheme);
 
-                string emailBody = $"<h1>Confirm your email</h1> <a href='{url}'>Confirm now</a>";
-                await _emailService.SendEmailAsync(mappedUser.Email, "Email confirmation.", emailBody);
+                //string emailBody = $"<h1>Confirm your email</h1> <a href='{url}'>Confirm now</a>";
+                //await _emailService.SendEmailAsync(mappedUser.Email, "Email confirmation.", emailBody);
                 //==============
                 return new ServiceResponse
                 {
@@ -855,6 +860,102 @@ namespace Go1Bet.Infrastructure.Services
             {
                 Success = false,
                 Message = "Something went wrong"
+            };
+        }
+        public async Task<ServiceResponse> GetBettingHistory(string userId)
+        {
+            var bettingHistory = await _context.Bets
+                    .Where(bet => bet.UserId == userId)
+                    .Select(bet => new BetItemDTO
+                    {
+                        Id = bet.Id,
+                        Amount = bet.Amount,
+                        Value = bet.Odd.Value,
+                        BetTime = bet.BetTime.ToString("yyyy-MM-dd HH:mm"),
+                        OddId = bet.OddId,
+                        OddName = bet.Odd.Name,
+                        UserId = bet.UserId,
+                        UserName = bet.User.FirstName
+                    }).ToListAsync();
+            return new ServiceResponse
+            {
+                Success = true,
+                Payload = bettingHistory
+            };
+        }
+        public async Task<ServiceResponse> GetFavouriteSportMatches(string userId)
+        {
+            var sportEvents = await _context.FavouriteSportMatches
+                
+                .Where(fav => fav.UserId == userId)
+                .Select(fav => new FavouriteSportMatchItemDTO
+                {
+                    UserId = fav.UserId,
+                    UserName = fav.User.FirstName,
+                    SportMatchId = fav.SportMatchId,
+                    SportMatchName = fav.SportMatch.Name,
+                    SportMatch = new SportMatchItemDTO() {
+                        Id = fav.SportMatch.Id,
+                        Name = fav.SportMatch.Name,
+                        DateCreated = fav.SportMatch.DateCreated,
+                        DateEnd = fav.SportMatch.DateEnd,
+                        DateStart = fav.SportMatch.DateStart,
+                        BettingFund = fav.SportMatch.Odds.Sum(x => x.Bets.Sum(b => b.Amount)),
+                        CountBets = fav.SportMatch.Odds.Sum(x => x.Bets.Count()),
+                        Opponents = fav.SportMatch.Opponents.Where(o => o.SportMatchId == fav.SportMatchId)
+                        .Select(o => new OpponentItemDTO
+                        {
+                            Id = o.Id,
+                            Name = o.Name,
+                            SportMatchId = o.SportMatchId,
+                            DateCreated = o.DateCreated,
+                            Score = o.Score,
+                            countTeammates = o.Teammates.Count()
+                        }).ToList(),
+                        //Odds
+                        Odds = fav.SportMatch.Odds.Where(o => o.SportMatchId == fav.SportMatch.Id)
+                        .Select(odds => new OddItemDTO
+                        {
+                            Id = odds.Id,
+                            Name = odds.Name,
+                            OpponentId = odds.OpponentId,
+                            SportMatchId = odds.SportMatchId,
+                            Type = odds.Type,
+                            Value = odds.Value,
+                            Bets = odds.Bets.Where(b => b.OddId == odds.Id).Select(b => new BetItemDTO { Id = b.Id, Amount = b.Amount, BetTime = b.BetTime.ToString("yyyy-MM-dd HH:mm"), OddId = b.OddId, UserId = b.UserId }).ToList(),
+                            CountBets = odds.Bets.Count(),
+                            BettingFund = odds.Bets.Sum(b => b.Amount)
+                        }).ToList(),
+
+                        SportEventId = fav.SportMatch.SportEventId,
+                        SportEventName = fav.SportMatch.SportEvent.Name,
+                        SportEvent = new SportEventItemDTO
+                        {
+                            Id = fav.SportMatch.SportEvent.Id,
+                            Name = fav.SportMatch.SportEvent.Name,
+                            Description = fav.SportMatch.SportEvent.Description,
+                            DateCreated = fav.SportMatch.SportEvent.DateCreated,
+                            DateStart = fav.SportMatch.SportEvent.DateStart,
+                            DateEnd = fav.SportMatch.SportEvent.DateEnd,
+
+                        },
+                        FavouriteSportMatches = fav.SportMatch.FavouriteSportMatches.Where(fsm => fsm.UserId == userId)
+                        .Select(fsm => new FavouriteSportMatchItemDTO
+                        {
+                            SportMatchId = fsm.SportMatchId,
+                            UserId = fsm.User.Id,
+                            SportMatchName = fsm.SportMatch.Name,
+                            UserName = fsm.User.UserName,
+                        }).ToList(),
+                        CountFavouriteSportMatches = fav.SportMatch.FavouriteSportMatches.Count()
+                       
+                    }
+                }).ToListAsync();
+                
+            return new ServiceResponse
+            {
+                Success = true,
+                Payload = sportEvents
             };
         }
 

@@ -25,14 +25,14 @@ namespace Go1Bet.Infrastructure.Services.SportService
         {
             try
             {
-                var categories = await _context.Bets
+                var bets = await _context.Bets
 
                     .Select(bet => new BetItemDTO
                     {
                         Id = bet.Id,
                         Amount = bet.Amount,
                         Value = bet.Odd.Value,
-                        BetTime = bet.BetTime,
+                        BetTime = bet.BetTime.ToString("yyyy-MM-dd HH:mm"),
                         OddId = bet.OddId,
                         OddName = bet.Odd.Name,
                         UserId = bet.UserId,
@@ -41,7 +41,7 @@ namespace Go1Bet.Infrastructure.Services.SportService
                 return new ServiceResponse
                 {
                     Success = true,
-                    Payload = categories
+                    Payload = bets
                 };
             }
             catch (Exception ex)
@@ -57,14 +57,14 @@ namespace Go1Bet.Infrastructure.Services.SportService
         {
             try
             {
-                var categories = await _context.Bets
+                var bets = await _context.Bets
                     .Where(bet => bet.Id == id)
                     .Select(bet => new BetItemDTO
                     {
                         Id = bet.Id,
                         Amount = bet.Amount,
                         Value = bet.Odd.Value,
-                        BetTime = bet.BetTime,
+                        BetTime = bet.BetTime.ToString("yyyy-MM-dd HH:mm"),
                         OddId = bet.OddId,
                         OddName = bet.Odd.Name,
                         UserId = bet.UserId,
@@ -74,7 +74,7 @@ namespace Go1Bet.Infrastructure.Services.SportService
                 return new ServiceResponse
                 {
                     Success = true,
-                    Payload = categories
+                    Payload = bets
                 };
             }
             catch (Exception ex)
@@ -89,14 +89,30 @@ namespace Go1Bet.Infrastructure.Services.SportService
         public async Task<ServiceResponse> CreateAsync(BetCreateDTO model)
         {
             var bet = _mapper.Map<BetEntity>(model);
+            var balance = await _context.Balances.Where(b => b.UserId == model.UserId).FirstOrDefaultAsync();
+            if(model.Amount > balance.Money)
+            {
+                return new ServiceResponse
+                {
+                    Message = "Dont have enought money.",
+                    Success = true,
+                };
+            }
+            var betExist = await _context.Bets.Where(ba => ba.UserId == model.UserId).AnyAsync();
+            if (betExist) 
+            {
+                balance.Money -= model.Amount;
+            }          
+            _context.Balances.Update(balance);
             await _context.Bets.AddAsync(bet);
             await _context.SaveChangesAsync();
             return new ServiceResponse
             {
-                Message = "Opponent was created",
+                Message = "Bet was added",
                 Success = true,
             };
         }
+
         public async Task<ServiceResponse> EditAsync(BetEditDTO model)
         {
             var oldBet = await _context.Bets.Where(x => x.Id == model.Id).FirstOrDefaultAsync();

@@ -35,6 +35,7 @@ namespace Go1Bet.Infrastructure.Services.SportService
                         Position = p.Position,
                         OpponentId = p.OpponentId,
                         OpponentName = p.Opponent.Name,
+                        Number = p.Number,
                     }).ToListAsync();
 
                 return new ServiceResponse
@@ -65,6 +66,7 @@ namespace Go1Bet.Infrastructure.Services.SportService
                         Position = p.Position,
                         OpponentId = p.OpponentId,
                         OpponentName = p.Opponent.Name,
+                        Number = p.Number,
                     }).ToListAsync();
 
                 return new ServiceResponse

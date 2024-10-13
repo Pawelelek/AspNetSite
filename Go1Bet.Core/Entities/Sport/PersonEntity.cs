@@ -13,6 +13,7 @@ namespace Go1Bet.Core.Entities.Sport
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public string Name { get; set; }
         public string Position { get; set; } // Тренер, Помічник, Лікар, Воротарь, Нападник
+        public string Number { get; set; }
         [DisplayName("Opponent")]
         public OpponentEntity Opponent { get; set; }
         [ForeignKey(nameof(Opponent))]

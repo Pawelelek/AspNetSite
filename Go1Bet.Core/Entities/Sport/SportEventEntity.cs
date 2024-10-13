@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Go1Bet.Core.Entities.Sport
 {
-    public class SportEventEntity //Example: Euro2024
+    public class SportEventEntity
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public string Name { get; set; }

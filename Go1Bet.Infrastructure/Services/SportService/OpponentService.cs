@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Go1Bet.Core.Constants;
 using Go1Bet.Core.Context;
 using Go1Bet.Core.Entities.Sport;
 using Go1Bet.Infrastructure.DTO_s.Sport.Opponent;
@@ -34,7 +35,9 @@ namespace Go1Bet.Infrastructure.Services.SportService
                         DateCreated = o.DateCreated,
                         SportMatchName = o.SportMatch.Name,
                         SportMatchId = o.SportMatchId,
-                        countTeammates = o.Teammates.Where(t => t.OpponentId == o.Id).Count()
+                        countTeammates = o.Teammates.Where(t => t.OpponentId == o.Id).Count(),
+                        Score = o.Score,
+                        CountryCode = o.CountryCode,
                     }).ToListAsync();
 
                 return new ServiceResponse
@@ -66,7 +69,9 @@ namespace Go1Bet.Infrastructure.Services.SportService
                         SportMatchName = o.SportMatch.Name,
                         SportMatchId = o.SportMatchId,
                         Teammates = o.Teammates.Where(t => t.OpponentId == o.Id).Select(x => new PersonItemDTO { Id = x.Id, Name = x.Name, OpponentId = x.OpponentId, OpponentName = x.Opponent.Name, Position = x.Position }).ToList(),
-                        countTeammates = o.Teammates.Where(t => t.OpponentId == o.Id).Count()
+                        countTeammates = o.Teammates.Where(t => t.OpponentId == o.Id).Count(),
+                        Score = o.Score,
+                        CountryCode = o.CountryCode,
                     }).ToListAsync();
 
                 return new ServiceResponse
