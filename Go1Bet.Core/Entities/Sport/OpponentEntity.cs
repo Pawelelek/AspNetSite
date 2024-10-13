@@ -20,6 +20,7 @@ namespace Go1Bet.Core.Entities.Sport
         [ForeignKey(nameof(SportMatch))]
         public string SportMatchId { get; set; }
         public string CountryCode { get; set; }
+        public int Score { get; set; }
         public ICollection<PersonEntity> Teammates { get; set; }
     }
 }

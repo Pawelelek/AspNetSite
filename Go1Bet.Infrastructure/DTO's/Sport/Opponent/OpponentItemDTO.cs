@@ -20,5 +20,6 @@ namespace Go1Bet.Infrastructure.DTO_s.Sport.Opponent
         public string CountryCode { get; set; }
         public List<PersonItemDTO> Teammates { get; set; }
         public int countTeammates { get; set; }
+        public int Score { get; set; }
     }
 }

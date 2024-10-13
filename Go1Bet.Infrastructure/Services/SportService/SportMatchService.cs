@@ -59,6 +59,7 @@ namespace Go1Bet.Infrastructure.Services.SportService
                                 Number = p.Number,
                             }).ToList(),
                             countTeammates = o.Teammates.Count(),
+                            Score = o.Score,
                             CountryCode = o.CountryCode,
                         }).ToList(),
                         //Odds
@@ -69,6 +70,8 @@ namespace Go1Bet.Infrastructure.Services.SportService
                             Name = odds.Name,
                             OpponentId = odds.OpponentId,
                             SportMatchId = odds.SportMatchId,
+                            OpponentName = odds.Opponent.Name,
+                            SportMatchName = odds.SportMatch.Name,
                             Type = odds.Type,
                             Value = odds.Value,
                             Bets = odds.Bets.Where(b => b.OddId == odds.Id).Select(b => new BetItemDTO { Id = b.Id, Amount = b.Amount, BetTime = b.BetTime.ToString("yyyy-MM-dd HH:mm"), OddId = b.OddId, UserId = b.UserId }).ToList(),
@@ -142,13 +145,14 @@ namespace Go1Bet.Infrastructure.Services.SportService
                                 Number = p.Number,
                             }).ToList(),
                             countTeammates = o.Teammates.Count(),
+                            Score = o.Score,
                             CountryCode = o.CountryCode,
                         }).ToList(),
                         //Odds
                         Odds = sm.Odds.Where(o=> o.SportMatchId == sm.Id)
                         .Select(odds => new OddItemDTO 
                         { 
-                            Id = odds.Id, Name = odds.Name, OpponentId = odds.OpponentId, SportMatchId = odds.SportMatchId, Type = odds.Type, Value = odds.Value,
+                            Id = odds.Id, Name = odds.Name, OpponentId = odds.OpponentId, SportMatchId = odds.SportMatchId, Type = odds.Type, Value = odds.Value, OpponentName = odds.Opponent.Name, SportMatchName = odds.SportMatch.Name,
                             Bets = odds.Bets.Where(b => b.OddId == odds.Id).Select(b => new BetItemDTO { Id = b.Id, Amount = b.Amount, BetTime = b.BetTime.ToString("yyyy-MM-dd HH:mm"), OddId = b.OddId, UserId = b.UserId }).ToList(),
                             CountBets = odds.Bets.Count(), 
                             BettingFund = odds.Bets.Sum(b => b.Amount)
@@ -245,6 +249,22 @@ namespace Go1Bet.Infrastructure.Services.SportService
             return new ServiceResponse
             {
                 Message = "Favourite Sport Matches List was updated!",
+                Success = true,
+            };
+        }
+        public async Task<ServiceResponse> FinishSportMatchAsync(string matchId)
+        {
+            var matchEntity = await _context.SportMatches.Where(sm => sm.Id == matchId).FirstOrDefaultAsync();
+            matchEntity.DateEnd = DateTime.UtcNow;
+            foreach (var item in matchEntity.Opponents)
+            {
+                item.Score = new Random().Next(0, 9);
+                _context.Opponents.Update(item);
+            }
+            await _context.SaveChangesAsync();
+            return new ServiceResponse
+            {
+                Message = "Sport match has been finished!",
                 Success = true,
             };
         }

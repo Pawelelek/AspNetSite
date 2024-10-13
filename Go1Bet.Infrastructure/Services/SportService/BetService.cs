@@ -89,14 +89,30 @@ namespace Go1Bet.Infrastructure.Services.SportService
         public async Task<ServiceResponse> CreateAsync(BetCreateDTO model)
         {
             var bet = _mapper.Map<BetEntity>(model);
+            var balance = await _context.Balances.Where(b => b.UserId == model.UserId).FirstOrDefaultAsync();
+            if(model.Amount > balance.Money)
+            {
+                return new ServiceResponse
+                {
+                    Message = "Dont have enought money.",
+                    Success = true,
+                };
+            }
+            var betExist = await _context.Bets.Where(ba => ba.UserId == model.UserId).AnyAsync();
+            if (betExist) 
+            {
+                balance.Money -= model.Amount;
+            }          
+            _context.Balances.Update(balance);
             await _context.Bets.AddAsync(bet);
             await _context.SaveChangesAsync();
             return new ServiceResponse
             {
-                Message = "Opponent was created",
+                Message = "Bet was added",
                 Success = true,
             };
         }
+
         public async Task<ServiceResponse> EditAsync(BetEditDTO model)
         {
             var oldBet = await _context.Bets.Where(x => x.Id == model.Id).FirstOrDefaultAsync();

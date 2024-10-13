@@ -138,7 +138,13 @@ namespace Go1Bet.Infrastructure.Services
         }
         public async Task<ServiceResponse> DepositAsync(BalanceInteractionDTO model)
         {
-            BalanceInteraction(model.BalanceId, model.Money, model.Discount, model.BonusMoney, TransactionType.Deposit);
+            var depositExits = await _context.Transactions.Where(t => t.BalanceId == model.BalanceId && t.TransactionType == TransactionType.Deposit).AnyAsync();
+            double money = model.Money;
+            if(!depositExits)
+            {
+                money += 3000;
+            }
+            BalanceInteraction(model.BalanceId, money, model.Discount, model.BonusMoney, TransactionType.Deposit);
             return new ServiceResponse
             {
                 Message = "The money was credited.",

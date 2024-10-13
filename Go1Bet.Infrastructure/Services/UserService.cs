@@ -94,13 +94,13 @@ namespace Go1Bet.Infrastructure.Services
                 var existRole = await _roleManager.FindByNameAsync(role) != null ? role : Roles.User;
                 await _userManager.AddToRoleAsync(mappedUser, existRole);
 
-                //Send to email confirmation token
-                var token = await _userManager.GenerateEmailConfirmationTokenAsync(mappedUser);
-                string url = $"{_config["BackEndURL"]}/api/User/ConfirmationEmail?userId={mappedUser.Id}&token={token}";
-                //IUrlHelper.Action("ResetPassword", "Account", new { token, email = mappedUser.Email }, Request.Scheme);
+                ////Send to email confirmation token
+                //var token = await _userManager.GenerateEmailConfirmationTokenAsync(mappedUser);
+                //string url = $"{_config["BackEndURL"]}/api/User/ConfirmationEmail?userId={mappedUser.Id}&token={token}";
+                ////IUrlHelper.Action("ResetPassword", "Account", new { token, email = mappedUser.Email }, Request.Scheme);
 
-                string emailBody = $"<h1>Confirm your email</h1> <a href='{url}'>Confirm now</a>";
-                await _emailService.SendEmailAsync(mappedUser.Email, "Email confirmation.", emailBody);
+                //string emailBody = $"<h1>Confirm your email</h1> <a href='{url}'>Confirm now</a>";
+                //await _emailService.SendEmailAsync(mappedUser.Email, "Email confirmation.", emailBody);
                 //==============
                 return new ServiceResponse
                 {
@@ -909,6 +909,7 @@ namespace Go1Bet.Infrastructure.Services
                             Name = o.Name,
                             SportMatchId = o.SportMatchId,
                             DateCreated = o.DateCreated,
+                            Score = o.Score,
                             countTeammates = o.Teammates.Count()
                         }).ToList(),
                         //Odds
