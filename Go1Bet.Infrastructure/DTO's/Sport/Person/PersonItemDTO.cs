@@ -13,7 +13,8 @@ namespace Go1Bet.Infrastructure.DTO_s.Sport.Person
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public string Position { get; set; } // Тренер, Помічник, Лікар, Воротарь, Нападник        
+        public string Position { get; set; } // Тренер, Помічник, Лікар, Воротарь, Нападник
+        public string  Number { get; set; }
         public string? OpponentId { get; set; }
         public string OpponentName { get; set; }
     }

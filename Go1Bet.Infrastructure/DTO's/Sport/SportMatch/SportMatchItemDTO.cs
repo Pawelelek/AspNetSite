@@ -27,6 +27,6 @@ namespace Go1Bet.Infrastructure.DTO_s.Sport.SportMatch
         public double BettingFund { get; set; }
         public int CountBets { get; set; }
         public int CountFavouriteSportMatches { get; set; }
-        public List<FavouriteSportMatchItemDTO> FavouriteSportMatches { get; set; }
+        public List<FavouriteSportMatchItemDTO> FavouriteSportMatches { get; set; } = new List<FavouriteSportMatchItemDTO>();
     }
 }

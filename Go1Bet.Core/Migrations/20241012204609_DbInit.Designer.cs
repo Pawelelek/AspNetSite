@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Go1Bet.Core.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241008114600_DbInit")]
+    [Migration("20241012204609_DbInit")]
     partial class DbInit
     {
         /// <inheritdoc />
@@ -131,6 +131,19 @@ namespace Go1Bet.Core.Migrations
                     b.ToTable("Bets");
                 });
 
+            modelBuilder.Entity("Go1Bet.Core.Entities.Sport.CountryEntity", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Countries");
+                });
+
             modelBuilder.Entity("Go1Bet.Core.Entities.Sport.FavouriteSportMatch", b =>
                 {
                     b.Property<string>("Id")
@@ -185,6 +198,9 @@ namespace Go1Bet.Core.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("text");
 
+                    b.Property<string>("CountryCode")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("timestamp with time zone");
 
@@ -207,6 +223,9 @@ namespace Go1Bet.Core.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Number")
                         .HasColumnType("text");
 
                     b.Property<string>("OpponentId")

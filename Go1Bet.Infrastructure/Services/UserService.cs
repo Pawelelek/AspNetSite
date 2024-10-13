@@ -938,7 +938,7 @@ namespace Go1Bet.Infrastructure.Services
                             DateEnd = fav.SportMatch.SportEvent.DateEnd,
 
                         },
-                        FavouriteSportMatches = fav.SportMatch.FavouriteSportMatches.Where(fsm => fsm.SportMatchId == fav.SportMatch.Id)
+                        FavouriteSportMatches = fav.SportMatch.FavouriteSportMatches.Where(fsm => fsm.UserId == userId)
                         .Select(fsm => new FavouriteSportMatchItemDTO
                         {
                             SportMatchId = fsm.SportMatchId,
@@ -947,6 +947,7 @@ namespace Go1Bet.Infrastructure.Services
                             UserName = fsm.User.UserName,
                         }).ToList(),
                         CountFavouriteSportMatches = fav.SportMatch.FavouriteSportMatches.Count()
+                       
                     }
                 }).ToListAsync();
                 

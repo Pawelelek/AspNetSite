@@ -6,6 +6,7 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using Go1Bet.Core.Initializers;
+using Go1Bet.Core.Initializers.Go1Bet.Core.Initializers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -123,8 +124,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-//await IdentitiesInitializer.SeedIdentities(app);
-//await CateogoriesInitializer.SeedCategories(app);
-//await BonusesInitializer.SeedBonuses(app);
+await IdentitiesInitializer.SeedIdentities(app);
+await CateogoriesInitializer.SeedCategories(app);
+await BonusesInitializer.SeedBonuses(app);
+await CountriesInitializer.SeedCountries(app);
+await SportApiInitializer.SeedSportApi(app);
 
 app.Run();

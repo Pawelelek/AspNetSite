@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Go1Bet.Infrastructure.AutoMapper;
 using Go1Bet.Core.Repository;
 using Go1Bet.Infrastructure.Services.SportService;
+using Go1Bet.Infrastructure.Services.SportService.Go1Bet.Infrastructure.Services.SportService;
 
 namespace Go1Bet.Infrastructure
 {
@@ -32,6 +33,7 @@ namespace Go1Bet.Infrastructure
             services.AddTransient<SportEventService>();
             services.AddTransient<OddService>();
             services.AddTransient<BetService>();
+            services.AddTransient<CountryService>();
         }
 
         public static void AddMapping(this IServiceCollection services)

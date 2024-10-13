@@ -20,6 +20,7 @@ using Go1Bet.Infrastructure.DTO_s.Sport.Bet;
 using Go1Bet.Infrastructure.DTO_s.Sport.Odd;
 using Go1Bet.Infrastructure.DTO_s.User.ForgetPassword;
 using Go1Bet.Infrastructure.DTO_s.Sport.FavouriteSportMatch;
+using Go1Bet.Infrastructure.DTO_s.Sport.Country;
 
 namespace Go1Bet.Infrastructure.AutoMapper
 {
@@ -82,6 +83,10 @@ namespace Go1Bet.Infrastructure.AutoMapper
             CreateMap<SportEventEntity, SportEventItemDTO>().ReverseMap();
             CreateMap<SportEventEntity, SportEventCreateDTO>().ReverseMap();
             CreateMap<SportEventEntity, SportEventEditDTO>().ReverseMap();
+
+            CreateMap<CountryEntity, CountryItemDTO>().ReverseMap();
+            CreateMap<CountryEntity, CountryEditDTO>().ReverseMap();
+            CreateMap<CountryEntity, CountryCreateDTO>().ReverseMap();
         }
     }
 }

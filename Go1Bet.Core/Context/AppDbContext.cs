@@ -51,5 +51,6 @@ namespace Go1Bet.Core.Context
         public DbSet<FavouriteSportMatch> FavouriteSportMatches { get; set; }
         public DbSet<BetEntity> Bets { get; set; }
         public DbSet<OddEntity> Odds { get; set; }
+        public DbSet<CountryEntity> Countries { get; set; }
     }
 }

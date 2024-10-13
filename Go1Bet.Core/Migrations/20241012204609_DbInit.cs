@@ -27,6 +27,18 @@ namespace Go1Bet.Core.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Countries",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Countries", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Promocodes",
                 columns: table => new
                 {
@@ -186,7 +198,8 @@ namespace Go1Bet.Core.Migrations
                     Id = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    SportMatchId = table.Column<string>(type: "text", nullable: true)
+                    SportMatchId = table.Column<string>(type: "text", nullable: true),
+                    CountryCode = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -413,6 +426,7 @@ namespace Go1Bet.Core.Migrations
                     Id = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
                     Position = table.Column<string>(type: "text", nullable: true),
+                    Number = table.Column<string>(type: "text", nullable: true),
                     OpponentId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -625,6 +639,9 @@ namespace Go1Bet.Core.Migrations
 
             migrationBuilder.DropTable(
                 name: "Bets");
+
+            migrationBuilder.DropTable(
+                name: "Countries");
 
             migrationBuilder.DropTable(
                 name: "FavouriteSportMatches");
