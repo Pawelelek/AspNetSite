@@ -199,7 +199,8 @@ namespace Go1Bet.Core.Migrations
                     Name = table.Column<string>(type: "text", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     SportMatchId = table.Column<string>(type: "text", nullable: true),
-                    CountryCode = table.Column<string>(type: "text", nullable: true)
+                    CountryCode = table.Column<string>(type: "text", nullable: true),
+                    Score = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -401,7 +402,7 @@ namespace Go1Bet.Core.Migrations
                     Name = table.Column<string>(type: "text", nullable: true),
                     SportMatchId = table.Column<string>(type: "text", nullable: true),
                     OpponentId = table.Column<string>(type: "text", nullable: true),
-                    Value = table.Column<decimal>(type: "numeric", nullable: false),
+                    Value = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
                     Type = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>

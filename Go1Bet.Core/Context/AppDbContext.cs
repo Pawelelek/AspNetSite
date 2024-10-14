@@ -18,6 +18,10 @@ namespace Go1Bet.Core.Context
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<OddEntity>()
+              .Property(o => o.Value)
+              .HasPrecision(18, 2); // 18 цифр загалом, з них 2 після коми
+
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<UserRoleEntity>(permissions =>
             {

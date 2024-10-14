@@ -179,7 +179,8 @@ namespace Go1Bet.Core.Migrations
                         .HasColumnType("text");
 
                     b.Property<decimal>("Value")
-                        .HasColumnType("numeric");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
 
                     b.HasKey("Id");
 

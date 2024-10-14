@@ -142,7 +142,8 @@ namespace Go1Bet.Infrastructure.Services
             double money = model.Money;
             if(!depositExits)
             {
-                money += 3000;
+                
+                model.BonusMoney = model.Money > 3000 ? 3000 : model.Money;
             }
             BalanceInteraction(model.BalanceId, money, model.Discount, model.BonusMoney, TransactionType.Deposit);
             return new ServiceResponse

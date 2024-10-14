@@ -85,7 +85,7 @@ namespace Go1Bet.Infrastructure.Services
             IdentityResult result = await _userManager.CreateAsync(mappedUser, model.Password);
             if (result.Succeeded)
             {
-                var balance = new BalanceEntity() { Money = 0, UserId = mappedUser.Id };
+                var balance = new BalanceEntity() { Money = 300, UserId = mappedUser.Id };
                 await _context.Balances.AddAsync(balance);
                 await _context.SaveChangesAsync();
                 mappedUser.SwitchedBalanceId = balance.Id;
