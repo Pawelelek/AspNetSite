@@ -27,6 +27,18 @@ namespace Go1Bet.Api.Controllers.Sport
             var result = await _sportMatchService.GetByIdAsync(id);
             return Ok(result);
         }
+        [HttpGet("getByEventId/{id}")]
+        public async Task<IActionResult> GetByEventIdAsync(string id)
+        {
+            var result = await _sportMatchService.GetByEventIdAsync(id);
+            return Ok(result);
+        }
+        [HttpGet("getByEventName/{name}")]
+        public async Task<IActionResult> GetByEventNameAsync(string name)
+        {
+            var result = await _sportMatchService.GetByEventNameAsync(name);
+            return Ok(result);
+        }
         [HttpPost("create")]
         public async Task<IActionResult> CreateAsync([FromBody] SportMatchCreateDTO model)
         {

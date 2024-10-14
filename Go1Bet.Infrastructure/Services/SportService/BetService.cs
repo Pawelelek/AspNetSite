@@ -98,17 +98,34 @@ namespace Go1Bet.Infrastructure.Services.SportService
                     Success = true,
                 };
             }
-            var betExist = await _context.Bets.Where(ba => ba.UserId == model.UserId).AnyAsync();
-            if (betExist) 
-            {
-                balance.Money -= model.Amount;
-            }          
-            _context.Balances.Update(balance);
+               
+            
             await _context.Bets.AddAsync(bet);
             await _context.SaveChangesAsync();
+            var value = new Random().Next(0, 4);
+            var odd = await _context.Odds.Where(o => o.Id == model.OddId).FirstOrDefaultAsync();
+            if (value > 2)
+            {
+                var money = model.Amount * (double)odd.Value;
+                balance.Money += money;
+                _context.Balances.Update(balance);
+                await _context.SaveChangesAsync();
+                return new ServiceResponse
+                {
+                    Message = $"Ви виграли {money}",
+                    Success = true,
+                };
+            }
+            var betExist = await _context.Bets.Where(ba => ba.UserId == model.UserId).AnyAsync();
+            if (betExist)
+            {
+                balance.Money -= model.Amount;
+                _context.Balances.Update(balance);
+                await _context.SaveChangesAsync();
+            }
             return new ServiceResponse
             {
-                Message = "Bet was added",
+                Message = "Ви програли ставку",
                 Success = true,
             };
         }

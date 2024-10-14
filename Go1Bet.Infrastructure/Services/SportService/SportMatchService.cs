@@ -116,6 +116,186 @@ namespace Go1Bet.Infrastructure.Services.SportService
                 };
             }
         }
+        public async Task<ServiceResponse> GetByEventIdAsync(string id)
+        {
+            try
+            {
+                var sportEvents = await _context.SportMatches
+                    .Where(p => p.SportEventId == id)
+                    .Select(sm => new SportMatchItemDTO
+                    {
+                        Id = sm.Id,
+                        Name = sm.Name,
+                        DateCreated = sm.DateCreated,
+                        DateEnd = sm.DateEnd,
+                        DateStart = sm.DateStart,
+                        BettingFund = sm.Odds.Sum(x => x.Bets.Sum(b => b.Amount)),
+                        CountBets = sm.Odds.Sum(x => x.Bets.Count()),
+                        Opponents = sm.Opponents.Where(o => o.SportMatchId == sm.Id)
+                        .Select(o => new OpponentItemDTO
+                        {
+                            Id = o.Id,
+                            Name = o.Name,
+                            SportMatchId = o.SportMatchId,
+                            DateCreated = o.DateCreated,
+                            Teammates = o.Teammates.Where(t => t.OpponentId == o.Id).Select(p => new PersonItemDTO
+                            {
+                                Id = p.Id,
+                                Name = p.Name,
+                                Position = p.Position,
+                                OpponentId = p.OpponentId,
+                                OpponentName = p.Opponent.Name,
+                                Number = p.Number,
+                            }).ToList(),
+                            countTeammates = o.Teammates.Count(),
+                            Score = o.Score,
+                            CountryCode = o.CountryCode,
+                        }).ToList(),
+                        //Odds
+                        Odds = sm.Odds.Where(o => o.SportMatchId == sm.Id)
+                        .Select(odds => new OddItemDTO
+                        {
+                            Id = odds.Id,
+                            Name = odds.Name,
+                            OpponentId = odds.OpponentId,
+                            SportMatchId = odds.SportMatchId,
+                            Type = odds.Type,
+                            Value = odds.Value,
+                            OpponentName = odds.Opponent.Name,
+                            SportMatchName = odds.SportMatch.Name,
+                            Bets = odds.Bets.Where(b => b.OddId == odds.Id).Select(b => new BetItemDTO { Id = b.Id, Amount = b.Amount, BetTime = b.BetTime.ToString("yyyy-MM-dd HH:mm"), OddId = b.OddId, UserId = b.UserId }).ToList(),
+                            CountBets = odds.Bets.Count(),
+                            BettingFund = odds.Bets.Sum(b => b.Amount)
+                        }).ToList(),
+
+                        SportEventId = sm.SportEventId,
+                        SportEventName = sm.SportEvent.Name,
+                        SportEvent = new SportEventItemDTO
+                        {
+                            Id = sm.SportEvent.Id,
+                            Name = sm.SportEvent.Name,
+                            Description = sm.SportEvent.Description,
+                            DateCreated = sm.SportEvent.DateCreated,
+                            DateStart = sm.SportEvent.DateStart,
+                            DateEnd = sm.SportEvent.DateEnd,
+
+                        },
+                        FavouriteSportMatches = sm.FavouriteSportMatches.Where(fsm => fsm.SportMatchId == sm.Id)
+                        .Select(fsm => new FavouriteSportMatchItemDTO
+                        {
+                            SportMatchId = fsm.SportMatchId,
+                            UserId = fsm.User.Id,
+                            SportMatchName = fsm.SportMatch.Name,
+                            UserName = fsm.User.UserName,
+                        }).ToList(),
+                        CountFavouriteSportMatches = sm.FavouriteSportMatches.Count()
+                    }).ToListAsync();
+
+                return new ServiceResponse
+                {
+                    Success = true,
+                    Payload = sportEvents
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse
+                {
+                    Success = false,
+                    Message = ex.Message
+                };
+            }
+        }
+        public async Task<ServiceResponse> GetByEventNameAsync(string name)
+        {
+            try
+            {
+                var sportEvents = await _context.SportMatches
+                    .Where(p => p.SportEvent.Name == name)
+                    .Select(sm => new SportMatchItemDTO
+                    {
+                        Id = sm.Id,
+                        Name = sm.Name,
+                        DateCreated = sm.DateCreated,
+                        DateEnd = sm.DateEnd,
+                        DateStart = sm.DateStart,
+                        BettingFund = sm.Odds.Sum(x => x.Bets.Sum(b => b.Amount)),
+                        CountBets = sm.Odds.Sum(x => x.Bets.Count()),
+                        Opponents = sm.Opponents.Where(o => o.SportMatchId == sm.Id)
+                        .Select(o => new OpponentItemDTO
+                        {
+                            Id = o.Id,
+                            Name = o.Name,
+                            SportMatchId = o.SportMatchId,
+                            DateCreated = o.DateCreated,
+                            Teammates = o.Teammates.Where(t => t.OpponentId == o.Id).Select(p => new PersonItemDTO
+                            {
+                                Id = p.Id,
+                                Name = p.Name,
+                                Position = p.Position,
+                                OpponentId = p.OpponentId,
+                                OpponentName = p.Opponent.Name,
+                                Number = p.Number,
+                            }).ToList(),
+                            countTeammates = o.Teammates.Count(),
+                            Score = o.Score,
+                            CountryCode = o.CountryCode,
+                        }).ToList(),
+                        //Odds
+                        Odds = sm.Odds.Where(o => o.SportMatchId == sm.Id)
+                        .Select(odds => new OddItemDTO
+                        {
+                            Id = odds.Id,
+                            Name = odds.Name,
+                            OpponentId = odds.OpponentId,
+                            SportMatchId = odds.SportMatchId,
+                            Type = odds.Type,
+                            Value = odds.Value,
+                            OpponentName = odds.Opponent.Name,
+                            SportMatchName = odds.SportMatch.Name,
+                            Bets = odds.Bets.Where(b => b.OddId == odds.Id).Select(b => new BetItemDTO { Id = b.Id, Amount = b.Amount, BetTime = b.BetTime.ToString("yyyy-MM-dd HH:mm"), OddId = b.OddId, UserId = b.UserId }).ToList(),
+                            CountBets = odds.Bets.Count(),
+                            BettingFund = odds.Bets.Sum(b => b.Amount)
+                        }).ToList(),
+
+                        SportEventId = sm.SportEventId,
+                        SportEventName = sm.SportEvent.Name,
+                        SportEvent = new SportEventItemDTO
+                        {
+                            Id = sm.SportEvent.Id,
+                            Name = sm.SportEvent.Name,
+                            Description = sm.SportEvent.Description,
+                            DateCreated = sm.SportEvent.DateCreated,
+                            DateStart = sm.SportEvent.DateStart,
+                            DateEnd = sm.SportEvent.DateEnd,
+
+                        },
+                        FavouriteSportMatches = sm.FavouriteSportMatches.Where(fsm => fsm.SportMatchId == sm.Id)
+                        .Select(fsm => new FavouriteSportMatchItemDTO
+                        {
+                            SportMatchId = fsm.SportMatchId,
+                            UserId = fsm.User.Id,
+                            SportMatchName = fsm.SportMatch.Name,
+                            UserName = fsm.User.UserName,
+                        }).ToList(),
+                        CountFavouriteSportMatches = sm.FavouriteSportMatches.Count()
+                    }).ToListAsync();
+
+                return new ServiceResponse
+                {
+                    Success = true,
+                    Payload = sportEvents
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse
+                {
+                    Success = false,
+                    Message = ex.Message
+                };
+            }
+        }
         public async Task<ServiceResponse> GetByIdAsync(string id)
         {
             try
@@ -249,22 +429,6 @@ namespace Go1Bet.Infrastructure.Services.SportService
             return new ServiceResponse
             {
                 Message = "Favourite Sport Matches List was updated!",
-                Success = true,
-            };
-        }
-        public async Task<ServiceResponse> FinishSportMatchAsync(string matchId)
-        {
-            var matchEntity = await _context.SportMatches.Where(sm => sm.Id == matchId).FirstOrDefaultAsync();
-            matchEntity.DateEnd = DateTime.UtcNow;
-            foreach (var item in matchEntity.Opponents)
-            {
-                item.Score = new Random().Next(0, 9);
-                _context.Opponents.Update(item);
-            }
-            await _context.SaveChangesAsync();
-            return new ServiceResponse
-            {
-                Message = "Sport match has been finished!",
                 Success = true,
             };
         }
